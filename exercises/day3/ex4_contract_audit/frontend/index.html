@@ -55,6 +55,18 @@
     .quick-questions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .quick-q { padding: 6px 12px; font-size: 12px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: var(--surface); color: var(--text-secondary); }
     .quick-q:hover { border-color: var(--primary-light); color: var(--primary); background: #f5f3ff; }
+    /* Contract Samples */
+    .sample-section { margin-top: 16px; text-align: left; }
+    .sample-section .section-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
+    .sample-cards { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sample-card { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.2s; background: var(--surface); max-width: 200px; }
+    .sample-card:hover { border-color: var(--primary-light); background: #fef2f2; }
+    .sample-card .card-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .sample-card .card-tag { font-size: 11px; padding: 1px 6px; border-radius: 10px; display: inline-block; }
+    .sample-card .card-tag.low { background: #ecfdf5; color: #059669; }
+    .sample-card .card-tag.mid { background: #fffbeb; color: #d97706; }
+    .sample-card .card-tag.high { background: #fef2f2; color: #dc2626; }
+    .loading-sample { font-size: 12px; color: var(--text-secondary); }
     .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
     .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); animation: blink 1.4s infinite both; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
@@ -73,9 +85,19 @@
       <div v-if="messages.length === 0" class="empty-state">
         <div class="icon">AI</div>
         <h3 style="font-size:16px; margin-bottom:8px;">合同风险智能审查</h3>
-        <p style="font-size:13px;">合同风险智能审查 - Structured Output</p>
-        <div class="quick-questions" style="justify-content:center; margin-top:20px;">
+        <p style="font-size:13px;">选择合同样本或粘贴合同文本进行风险审查</p>
+        <div class="quick-questions" style="justify-content:center; margin-top:16px;">
           <span v-for="q in quickQuestions" :key="q" class="quick-q" @click="useQuick(q)">{{ q }}</span>
+        </div>
+        <div class="sample-section" style="margin-top:20px;">
+          <div class="section-title">合同样本（点击加载）</div>
+          <div class="sample-cards">
+            <div v-for="s in contractSamples" :key="s.file" class="sample-card" @click="loadSample(s)">
+              <div class="card-title">{{ s.title }}</div>
+              <span class="card-tag" :class="s.riskClass">{{ s.risk }}</span>
+            </div>
+          </div>
+          <div v-if="loadingSample" class="loading-sample">加载中...</div>
         </div>
       </div>
 
@@ -94,6 +116,12 @@
     </div>
 
     <div class="input-area">
+      <div v-if="messages.length > 0" style="margin-bottom:8px; display:flex; gap:6px; flex-wrap:wrap;">
+        <span v-for="s in contractSamples" :key="s.file" class="sample-card" style="padding:4px 10px; max-width:none;" @click="loadSample(s)">
+          <span class="card-title">{{ s.title }}</span>
+          <span class="card-tag" :class="s.riskClass" style="margin-left:4px;">{{ s.risk }}</span>
+        </span>
+      </div>
       <div class="input-box">
         <textarea
           v-model="inputText"
@@ -119,6 +147,15 @@
       const apiHealthy = ref(false);
       const messagesContainer = ref(null);
       const quickQuestions = ['甲方应在合同签订后7日内支付全部款项，乙方不承担逾期交付责任', '本合同项下的知识产权归甲方所有，乙方不得在任何情况下使用相关技术', '任何一方违约，应向守约方支付合同总金额的50%作为违约金'];
+      const loadingSample = ref(false);
+      const contractSamples = [
+        { file: 'data/01_procurement_low_risk.md', title: '设备采购合同', risk: '低风险', riskClass: 'low' },
+        { file: 'data/02_procurement_high_risk.md', title: '设备采购合同', risk: '高风险', riskClass: 'high' },
+        { file: 'data/03_employment_medium_risk.md', title: '劳动合同', risk: '中风险', riskClass: 'mid' },
+        { file: 'data/04_lease_low_risk.md', title: '房屋租赁合同', risk: '低风险', riskClass: 'low' },
+        { file: 'data/05_tech_service_high_risk.md', title: '技术服务合同', risk: '高风险', riskClass: 'high' },
+        { file: 'data/06_construction_medium_risk.md', title: '工程施工合同', risk: '中风险', riskClass: 'mid' },
+      ];
 
       function scrollToBottom() {
         nextTick(() => {
@@ -131,6 +168,20 @@
       function useQuick(q) {
         inputText.value = q;
         sendMessage();
+      }
+
+      async function loadSample(sample) {
+        loadingSample.value = true;
+        try {
+          const basePath = window.location.origin + '/';
+          const res = await fetch(basePath + sample.file);
+          if (!res.ok) throw new Error('文件加载失败');
+          const text = await res.text();
+          inputText.value = text;
+        } catch (e) {
+          inputText.value = `（加载失败：${e.message}，请手动粘贴合同文本）`;
+        }
+        loadingSample.value = false;
       }
 
       function formatMessage(msg) {
@@ -209,7 +260,8 @@
 
       return {
         messages, inputText, loading, apiHealthy, messagesContainer,
-        quickQuestions, useQuick, sendMessage, formatMessage,
+        quickQuestions, loadingSample, contractSamples,
+        useQuick, loadSample, sendMessage, formatMessage,
       };
     }
   }).mount('#app');
