@@ -296,14 +296,19 @@
             }),
           });
           const data = await res.json();
-          conversationId.value = data.conversation_id;
-          const isObj = typeof data.answer === 'object' && data.answer !== null;
-          messages.value.push({
-            role: 'assistant',
-            content: isObj ? data.answer : String(data.answer),
-            isObject: isObj,
-            sources: data.sources || [],
-          });
+          if (!res.ok) {
+            const errMsg = data.detail || data.error || `服务错误（${res.status}）`;
+            messages.value.push({ role: 'assistant', content: errMsg, isObject: false, sources: [] });
+          } else {
+            conversationId.value = data.conversation_id;
+            const isObj = typeof data.answer === 'object' && data.answer !== null;
+            messages.value.push({
+              role: 'assistant',
+              content: isObj ? data.answer : String(data.answer ?? ''),
+              isObject: isObj,
+              sources: data.sources || [],
+            });
+          }
         } catch (e) {
           messages.value.push({
             role: 'assistant',

@@ -53,11 +53,6 @@ async def startup():
 app.include_router(health.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 
-# Serve data directory (contract samples)
-data_dir = Path(__file__).resolve().parent.parent / "data"
-if data_dir.exists():
-    app.mount("/data", StaticFiles(directory=str(data_dir)), name="data")
-
 # Serve frontend static files
 frontend_dir = Path(__file__).resolve().parent.parent / "frontend"
 serve_dir = frontend_dir / "dist" if (frontend_dir / "dist").exists() else frontend_dir

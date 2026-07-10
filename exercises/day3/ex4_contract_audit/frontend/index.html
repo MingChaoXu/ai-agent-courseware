@@ -66,7 +66,6 @@
     .sample-card .card-tag.low { background: #ecfdf5; color: #059669; }
     .sample-card .card-tag.mid { background: #fffbeb; color: #d97706; }
     .sample-card .card-tag.high { background: #fef2f2; color: #dc2626; }
-    .loading-sample { font-size: 12px; color: var(--text-secondary); }
     .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
     .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); animation: blink 1.4s infinite both; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
@@ -97,7 +96,6 @@
               <span class="card-tag" :class="s.riskClass">{{ s.risk }}</span>
             </div>
           </div>
-          <div v-if="loadingSample" class="loading-sample">加载中...</div>
         </div>
       </div>
 
@@ -147,7 +145,6 @@
       const apiHealthy = ref(false);
       const messagesContainer = ref(null);
       const quickQuestions = ['甲方应在合同签订后7日内支付全部款项，乙方不承担逾期交付责任', '本合同项下的知识产权归甲方所有，乙方不得在任何情况下使用相关技术', '任何一方违约，应向守约方支付合同总金额的50%作为违约金'];
-      const loadingSample = ref(false);
       const contractSamples = [
         { file: 'data/01_procurement_low_risk.md', title: '设备采购合同', risk: '低风险', riskClass: 'low' },
         { file: 'data/02_procurement_high_risk.md', title: '设备采购合同', risk: '高风险', riskClass: 'high' },
@@ -171,7 +168,6 @@
       }
 
       async function loadSample(sample) {
-        loadingSample.value = true;
         try {
           const basePath = window.location.origin + '/';
           const res = await fetch(basePath + sample.file);
@@ -181,27 +177,32 @@
         } catch (e) {
           inputText.value = `（加载失败：${e.message}，请手动粘贴合同文本）`;
         }
-        loadingSample.value = false;
       }
 
       function formatMessage(msg) {
         if (msg.isObject) {
           let html = '<div class="structured-result">';
-          if (Array.isArray(msg.content)) {
-            msg.content.forEach((item, i) => {
-              html += '<div class="result-item"><span class="item-num">#' + (i+1) + '</span>';
-              if (typeof item === 'object' && item !== null) {
-                for (const [key, val] of Object.entries(item)) {
-                  html += '<div class="field"><span class="field-label">' + key + '</span><span class="field-value">' + (typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)) + '</span></div>';
-                }
-              } else {
-                html += '<span class="field-value">' + String(item) + '</span>';
-              }
-              html += '</div>';
-            });
-          } else if (typeof msg.content === 'object' && msg.content !== null) {
+          const renderVal = (val) => {
+            if (typeof val === 'object' && val !== null) {
+              return '<span class="field-value">' + JSON.stringify(val, null, 2).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
+            }
+            let t = String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+            t = t.replace(/\n/g, '<br>');
+            return '<span class="field-value">' + t + '</span>';
+          };
+          if (typeof msg.content === 'object' && msg.content !== null && !Array.isArray(msg.content)) {
+            const labelMap = {
+              overall_risk_level: '整体风险等级',
+              risk_items: '风险条款',
+              missing_clauses: '缺失条款',
+              recommendations: '审查建议',
+              summary: '审查总结',
+            };
             for (const [key, val] of Object.entries(msg.content)) {
-              html += '<div class="field"><span class="field-label">' + key + '</span><span class="field-value">' + (typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)) + '</span></div>';
+              const label = labelMap[key] || key;
+              html += '<div class="result-item"><span class="item-num">' + label + '</span>' + renderVal(val) + '</div>';
             }
           }
           html += '</div>';
@@ -240,11 +241,14 @@
             body: JSON.stringify({ question: text }),
           });
           const data = await res.json();
-          if (data.error) {
+          if (!res.ok) {
+            const errMsg = data.detail || data.error || `服务错误（${res.status}）`;
+            messages.value.push({ role: 'assistant', content: errMsg, isObject: false });
+          } else if (data.error) {
             messages.value.push({ role: 'assistant', content: data.error, isObject: false });
           } else {
             const isObj = typeof data.answer === 'object' && data.answer !== null;
-            messages.value.push({ role: 'assistant', content: isObj ? data.answer : String(data.answer), isObject: isObj });
+            messages.value.push({ role: 'assistant', content: isObj ? data.answer : String(data.answer ?? ''), isObject: isObj });
           }
         } catch (e) {
           messages.value.push({ role: 'assistant', content: `请求失败：${e.message}`, isObject: false });
@@ -260,7 +264,7 @@
 
       return {
         messages, inputText, loading, apiHealthy, messagesContainer,
-        quickQuestions, loadingSample, contractSamples,
+        quickQuestions, contractSamples,
         useQuick, loadSample, sendMessage, formatMessage,
       };
     }

@@ -189,11 +189,14 @@
             body: JSON.stringify({ question: text }),
           });
           const data = await res.json();
-          if (data.error) {
+          if (!res.ok) {
+            const errMsg = data.detail || data.error || `服务错误（${res.status}）`;
+            messages.value.push({ role: 'assistant', content: errMsg, isObject: false });
+          } else if (data.error) {
             messages.value.push({ role: 'assistant', content: data.error, isObject: false });
           } else {
             const isObj = typeof data.answer === 'object' && data.answer !== null;
-            messages.value.push({ role: 'assistant', content: isObj ? data.answer : String(data.answer), isObject: isObj });
+            messages.value.push({ role: 'assistant', content: isObj ? data.answer : String(data.answer ?? ''), isObject: isObj });
           }
         } catch (e) {
           messages.value.push({ role: 'assistant', content: `请求失败：${e.message}`, isObject: false });
