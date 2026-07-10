@@ -121,3 +121,5 @@ python main.py
 - **后端**: FastAPI + LangChain 1.x + FAISS
 - **前端**: Vue 3 (CDN) + Tailwind CSS
 - **技能**: TeleAgent Skill（可安装到智能体平台）
+
+> AI生成

@@ -1,5 +1,5 @@
 """
-Industrial Maintenance Knowledge Base Backend - FastAPI Main Entry Point
+Industrial Maintenance Knowledge Base Backend - FastAPI Main Entry Point (RAG)
 """
 
 import sys
@@ -14,12 +14,12 @@ from fastapi.staticfiles import StaticFiles
 
 from config import settings
 from agent import agent
-from api import chat, health
+from api import chat, health, knowledge
 
 # ---- App Init ----
 app = FastAPI(
     title="Industrial Maintenance Knowledge Base",
-    description="工业运维知识库 - AI Agent Backend",
+    description="工业运维知识库 - RAG Agent Backend",
     version="1.0.0",
 )
 
@@ -35,6 +35,7 @@ app.add_middleware(
 # ---- Initialize Agent ----
 agent_instance = agent.create_agent() if settings.is_configured() else None
 chat.agent_instance = agent_instance
+knowledge.knowledge_base = agent_instance["kb"] if agent_instance else None
 
 
 @app.on_event("startup")
@@ -46,12 +47,14 @@ async def startup():
         return
     agent_instance = agent.create_agent()
     chat.agent_instance = agent_instance
+    knowledge.knowledge_base = agent_instance["kb"]
     print(f"[STARTUP] Agent initialized: 工业运维知识库")
 
 
 # ---- Register Routers ----
 app.include_router(health.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
+app.include_router(knowledge.router, prefix="/api")
 
 # Serve frontend static files
 frontend_dir = Path(__file__).resolve().parent.parent / "frontend"
