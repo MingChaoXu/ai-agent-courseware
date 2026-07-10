@@ -15,11 +15,11 @@
 ## 目录说明
 
 ```
-├── Day1_AI理论与实践基础.html
-├── Day2_TeleAgent实战与RAG原理.html
-├── Day3_上下文工程与文档审核.html
-├── Day4_多模态工具生态与数据分析.html
-├── Day5_复杂智能体评估与路演.html
+├── Day1_AITheoryAndPractice.html
+├── Day2_TeleAgentAndRAG.html
+├── Day3_ContextEngineeringAndDocReview.html
+├── Day4_MultimodalAndDataAnalysis.html
+├── Day5_ComplexAgentAndRoadshow.html
 ├── requirements.txt
 ├── .env.example
 └── exercises/
