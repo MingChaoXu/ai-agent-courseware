@@ -54,7 +54,18 @@
     .input-box button:disabled { opacity: 0.5; cursor: not-allowed; }
     .quick-questions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .quick-q { padding: 6px 12px; font-size: 12px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: var(--surface); color: var(--text-secondary); }
-    .quick-q:hover { border-color: var(--primary-light); color: var(--primary); background: #f5f3ff; }
+    .quick-q:hover { border-color: var(--primary-light); color: var(--primary); background: #eff6ff; }
+    /* Sample Cards */
+    .sample-section { margin-top: 16px; text-align: left; }
+    .sample-section .section-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
+    .sample-cards { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sample-card { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.2s; background: var(--surface); max-width: 220px; }
+    .sample-card:hover { border-color: var(--primary-light); background: #eff6ff; }
+    .sample-card .card-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .sample-card .card-subtitle { color: var(--text-secondary); font-size: 11px; margin-bottom: 2px; }
+    .sample-card .card-tag { font-size: 11px; padding: 1px 6px; border-radius: 10px; display: inline-block; }
+    .sample-card .card-tag.open { background: #eff6ff; color: #1d4ed8; }
+    .sample-card .card-tag.negotiate { background: #fffbeb; color: #d97706; }
     .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
     .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); animation: blink 1.4s infinite both; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
@@ -73,9 +84,19 @@
       <div v-if="messages.length === 0" class="empty-state">
         <div class="icon">AI</div>
         <h3 style="font-size:16px; margin-bottom:8px;">招标文件智能分析</h3>
-        <p style="font-size:13px;">招标文件智能分析 - Structured Output</p>
-        <div class="quick-questions" style="justify-content:center; margin-top:20px;">
+        <p style="font-size:13px;">选择招标文件样本或粘贴文本进行智能分析</p>
+        <div class="quick-questions" style="justify-content:center; margin-top:16px;">
           <span v-for="q in quickQuestions" :key="q" class="quick-q" @click="useQuick(q)">{{ q }}</span>
+        </div>
+        <div class="sample-section" style="margin-top:20px;">
+          <div class="section-title">招标文件样本（点击加载）</div>
+          <div class="sample-cards">
+            <div v-for="s in biddingSamples" :key="s.key" class="sample-card" @click="loadSample(s)">
+              <div class="card-title">{{ s.title }}</div>
+              <div class="card-subtitle">{{ s.budget }}</div>
+              <span class="card-tag" :class="s.tagClass">{{ s.method }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -94,6 +115,12 @@
     </div>
 
     <div class="input-area">
+      <div v-if="messages.length > 0" style="margin-bottom:8px; display:flex; gap:6px; flex-wrap:wrap;">
+        <span v-for="s in biddingSamples" :key="s.key" class="sample-card" style="padding:4px 10px; max-width:none;" @click="loadSample(s)">
+          <span class="card-title">{{ s.title }}</span>
+          <span class="card-tag" :class="s.tagClass" style="margin-left:4px;">{{ s.method }}</span>
+        </span>
+      </div>
       <div class="input-box">
         <textarea
           v-model="inputText"
@@ -120,6 +147,23 @@
       const messagesContainer = ref(null);
       const quickQuestions = ['项目名称：智慧城市建设采购项目，预算500万，截止日期2026年8月15日', '投标人须具备ISO9001认证，近三年类似项目业绩不少于3个', '技术评分占60%，商务评分占40%，价格分最低者得满分'];
 
+      const biddingSamples = [
+        { title: 'W市政务云平台扩容', budget: '¥680万', method: '公开招标', tagClass: 'open', key: 'gov_cloud' },
+        { title: 'N县办公设备批量采购', budget: '¥95万', method: '竞争性谈判', tagClass: 'negotiate', key: 'office_equip' },
+        { title: 'S市网络安全运维服务', budget: '¥320万', method: '公开招标', tagClass: 'open', key: 'cybersecurity' },
+        { title: 'G区智慧城市管理平台', budget: '¥1200万', method: '公开招标', tagClass: 'open', key: 'smart_city' },
+      ];
+
+      const embeddedBiddings = {
+        gov_cloud: `政务云平台建设招标文件\n\n第一部分 招标公告\n\n项目名称：W市政务云平台扩容及安全加固项目\n项目编号：WZCG-2026-0415\n采购方式：公开招标\n预算金额：人民币陆佰捌拾万元整（¥6,800,000.00）\n最高限价：¥6,800,000.00，超过最高限价的投标按废标处理\n\n采购人：W市大数据管理中心\n地址：W市政务新区行政服务中心6楼\n联系人：张工\n联系电话：0XXX-8XXXXXXX\n\n第二部分 投标人资格要求\n\n1. 具有独立法人资格，持有有效的营业执照；\n2. 具备计算机信息系统集成二级及以上资质或电子与智能化工程专业承包二级及以上资质；\n3. 具有有效期内的ISO9001质量管理体系认证和ISO27001信息安全管理体系认证；\n4. 近三年（2023年1月1日至今）至少完成3个单项合同金额200万元以上的政务云平台或政务信息化项目（须提供合同复印件及验收证明）；\n5. 拟派项目经理须具备PMP或信息系统项目管理师（高级）资格，且有5年以上政务信息化项目管理经验；\n6. 本项目不接受联合体投标；\n7. 单位负责人为同一人或存在控股、管理关系的不同单位，不得参加同一标段的投标。\n\n第三部分 项目需求\n\n3.1 项目背景\nW市现有政务云平台于2022年建成投入使用，随着政务数字化程度不断加深，现有平台在算力、存储、安全防护等方面已无法满足需求。本项目旨在对现有政务云平台进行扩容升级及安全加固。\n\n3.2 建设内容\n1. 计算资源扩容：新增物理服务器20台，虚拟化平台授权扩展，满足200个政务应用部署需求；\n2. 存储资源扩容：新增分布式存储容量200TB，满足未来3年政务数据存储需求；\n3. 网络安全加固：部署下一代防火墙、Web应用防火墙、数据库审计系统、堡垒机等安全设备；\n4. 容灾备份建设：建设同城灾备中心，实现RPO≤1小时、RTO≤4小时；\n5. 运维管理平台：建设统一运维监控平台，实现对计算、存储、网络、安全资源的统一监控和管理。\n\n3.3 技术要求\n1. 服务器采用国产化CPU（鲲鹏或海光），支持信创生态；\n2. 虚拟化平台支持VMware vSphere及国产化HyperCloud双栈；\n3. 存储系统须支持SSD+HDD混闪，提供不少于3份数据副本；\n4. 安全设备须具备国家信息安全测评认证证书；\n5. 全部系统支持IPv4/IPv6双栈。\n\n第四部分 评分标准（总分100分）\n\n4.1 商务评分（30分）\n- 企业资质（8分）：ISO9001得2分，ISO27001得2分，CMMI3级及以上得4分\n- 类似业绩（10分）：每提供1个200万以上政务云项目得2分，最高10分\n- 项目经理（6分）：PMP或高级项目管理师得3分，5年以上经验得3分\n- 售后服务方案（6分）：评委综合评议\n\n4.2 技术评分（40分）\n- 总体技术方案（15分）：方案完整性、可行性、先进性\n- 信创适配方案（8分）：国产化方案成熟度\n- 安全加固方案（10分）：安全防护体系完整性\n- 容灾备份方案（7分）：RPO/RTO达标情况及切换方案\n\n4.3 价格评分（30分）\n采用低价优先法计算：价格得分 =（评审基准价/投标报价）× 30\n\n第五部分 投标截止信息\n\n投标截止时间：2026年8月15日上午10:00（北京时间）\n开标时间：2026年8月15日上午10:00（北京时间）\n投标地点：W市公共资源交易中心第三开标室\n投标方式：电子投标文件通过W市公共资源交易平台提交；纸质投标文件密封送达开标现场\n投标保证金：人民币壹拾万元整（¥100,000.00）\n\n第六部分 其他条款\n\n1. 投标有效期自开标日起90个日历天；\n2. 采购人有权在验收前对中标人进行实地考察；\n3. 中标人不得将项目转包或违法分包；\n4. 付款方式：合同签订后支付30%，设备到货验收后支付40%，系统终验后支付25%，质保期满后支付5%。`,
+
+        office_equip: `办公设备批量采购招标文件\n\n第一部分 招标公告\n\n项目名称：N县2026年度办公设备批量采购项目\n项目编号：NXCg-2026-0089\n采购方式：竞争性谈判\n预算金额：人民币玖拾伍万元整（¥950,000.00）\n\n采购人：N县机关事务管理中心\n联系人：李主任\n联系电话：0XXX-5XXXXXXX\n\n第二部分 投标人资格要求\n\n1. 具有独立法人资格，持有有效的营业执照；\n2. 经营范围须包含计算机及办公设备销售；\n3. 本项目接受代理商投标，但须提供所投产品制造商出具的本项目授权书；\n4. 近两年无重大违法记录声明。\n\n第三部分 采购需求\n\n3.1 采购清单\n\n| 序号 | 设备名称 | 规格 | 数量 | 预算单价 |\n|------|---------|------|------|---------|\n| 1 | 台式电脑 | Intel i5/16GB/512GB SSD/23寸显示器 | 80台 | ¥4,500 |\n| 2 | 笔记本电脑 | Intel i7/16GB/512GB SSD/14寸 | 30台 | ¥6,500 |\n| 3 | A3黑白激光打印机 | 双面打印/网络打印/月负荷5万页 | 10台 | ¥4,000 |\n| 4 | A4彩色激光一体机 | 打印复印扫描传真/网络 | 15台 | ¥3,500 |\n| 5 | 投影仪 | 4000流明/1920×1080/无线投屏 | 8台 | ¥5,000 |\n\n3.2 技术要求\n1. 所有设备须为全新正品，不得使用翻新件或返修件；\n2. 台式电脑和笔记本电脑须预装正版操作系统及办公软件；\n3. 所有设备提供3年上门保修服务；\n4. 交货地点：N县机关事务管理中心指定仓库。\n\n3.3 交货时间\n合同签订后15个工作日内完成全部设备交付及安装调试。\n\n第四部分 评分标准\n\n本项目采用最低评标价法，满足资格要求且技术响应合格的投标人中，报价最低者中标。\n如有效投标人不足3家，本项目废标。\n\n第五部分 投标截止信息\n\n投标截止时间：2026年7月28日下午15:00\n开标地点：N县公共资源交易中心谈判室\n投标方式：现场递交密封投标文件\n\n第六部分 合同条款\n\n1. 付款方式：设备到货验收合格后15个工作日内一次性支付全额；\n2. 质保期内如有设备故障，供应商须在24小时内上门处理，72小时内修复或更换；\n3. 供应商须提供设备使用培训不少于1次。`,
+
+        cybersecurity: `网络安全运维服务招标文件\n\n第一部分 招标公告\n\n项目名称：S市电子政务网络安全运维服务项目\n项目编号：SWLAQ-2026-0237\n采购方式：公开招标\n预算金额：人民币叁佰贰拾万元整（¥3,200,000.00）\n最高限价：¥3,200,000.00\n\n采购人：S市政务服务和大数据管理局\n地址：S市政务中心A座12层\n联系人：王工\n联系电话：0XXX-3XXXXXXX\n\n第二部分 投标人资格要求\n\n1. 具有独立法人资格，持有有效的营业执照；\n2. 具备中国信息安全测评中心颁发的信息安全服务资质（安全运维类）二级及以上；\n3. 具有有效期内的ISO27001信息安全管理体系认证；\n4. 近三年（2023年1月1日至今）至少完成2个单项合同金额100万元以上的网络安全运维项目（须提供合同复印件）；\n5. 拟派项目经理须持有CISP（注册信息安全专业人员）证书，且有3年以上网络安全运维管理经验；\n6. 运维团队至少5人持有CISP或CISAW证书；\n7. 本项目不接受联合体投标。\n\n第三部分 项目需求\n\n3.1 项目背景\nS市电子政务外网承载全市120余个政务信息系统，涉及60余家市直单位。近年来网络安全形势日趋严峻，多次受到境外APT攻击和勒索病毒威胁，急需专业安全运维服务保障政务系统安全稳定运行。\n\n3.2 服务内容\n1. 日常安全监测：7×24小时安全事件监测与研判，覆盖网络边界、主机系统、应用系统、数据安全；\n2. 漏洞管理：每月进行1次全面漏洞扫描，每季度进行1次渗透测试，出具风险评估报告并跟踪整改；\n3. 应急响应：安全事件发生后2小时内到场、4小时内出具初步分析报告、24小时内完成处置；\n4. 安全巡检：每周对核心网络设备、安全设备进行1次安全配置审计；\n5. 安全培训：每季度开展1次全市政务系统安全意识培训，全年不少于4次；\n6. 重保支撑：在国家重大活动期间提供驻场安全保障服务；\n7. 等保合规：协助完成等级保护测评整改，确保系统符合等保2.0标准。\n\n3.3 服务要求\n1. 服务期限为1年，期满经考核合格可续签1年（最多续签1次）；\n2. 驻场运维人员不少于3人，其中安全分析师不少于1人；\n3. 所有安全事件需在24小时内上报主管部门；\n4. 不得将项目转包或将核心服务内容分包；\n5. 服务期内如发生重大安全责任事故，采购人有权单方解除合同。\n\n第四部分 评分标准（总分100分）\n\n4.1 商务评分（25分）\n- 企业资质（8分）：安全运维二级得4分，一级得8分；ISO27001得2分（上限8分）\n- 类似业绩（7分）：每提供1个100万以上网络安全运维项目得2分，最高7分\n- 项目经理（5分）：CISP得3分，5年以上经验得2分\n- 售后服务承诺（5分）：评委综合评议\n\n4.2 技术评分（45分）\n- 安全运维方案（15分）：方案完整性、科学性、可行性\n- 应急响应方案（10分）：响应流程、处置能力\n- 等保合规方案（10分）：合规整改措施及实施路径\n- 团队能力（10分）：人员资质、经验配置\n\n4.3 价格评分（30分）\n采用低价优先法计算：价格得分 =（评审基准价/投标报价）× 30\n\n第五部分 投标截止信息\n\n投标截止时间：2026年9月1日上午9:30（北京时间）\n开标时间：2026年9月1日上午9:30（北京时间）\n投标地点：S市公共资源交易中心第2开标室\n投标方式：电子投标文件通过S市公共资源交易平台提交\n投标保证金：人民币伍万元整（¥50,000.00）\n\n第六部分 其他条款\n\n1. 投标有效期自开标日起60个日历天；\n2. 付款方式：按季度支付，每季度末经考核合格后支付合同总额的25%；\n3. 考核不合格的季度，采购人有权扣减当季服务费用的10%；\n4. 采购人每季度对运维服务质量进行考核评估；\n5. 中标人须在合同签订后5个工作日内安排人员到位。`,
+
+        smart_city: `智慧城市综合管理平台招标文件\n\n第一部分 招标公告\n\n项目名称：G区智慧城市综合管理平台建设项目\n项目编号：GHCS-2026-0518\n采购方式：公开招标\n预算金额：人民币壹仟贰佰万元整（¥12,000,000.00）\n最高限价：¥12,000,000.00\n\n采购人：G区城市管理和综合执法局\n地址：G区行政服务中心8楼\n联系人：陈主任\n联系电话：0XXX-7XXXXXXX\n\n第二部分 投标人资格要求\n\n1. 具有独立法人资格，持有有效的营业执照；\n2. 具备电子与智能化工程专业承包一级或建筑智能化系统设计专项甲级资质；\n3. 具有有效期内的ISO9001质量管理体系认证、ISO27001信息安全管理体系认证及CMMI3级及以上认证；\n4. 近三年（2023年1月1日至今）至少完成2个单项合同金额500万元以上的智慧城市或城市综合管理平台项目（须提供合同复印件及验收证明）；\n5. 拟派项目经理须具备信息系统项目管理师（高级）资格，且有5年以上智慧城市项目管理经验；\n6. 拟派技术负责人须具备高级工程师职称，且有3年以上物联网或大数据项目经验；\n7. 本项目接受联合体投标，联合体各方均须满足第1、3项要求，联合体牵头人须满足第2项要求；\n8. 联合体成员不超过2家，须签订联合体协议并明确分工。\n\n第三部分 项目需求\n\n3.1 项目背景\nG区作为国家新型智慧城市试点区，已建成了部分信息化系统，但各系统之间数据孤岛问题突出，缺乏统一的城市管理指挥调度平台。本项目旨在建设集城市运行监测、综合指挥调度、便民服务于一体的智慧城市综合管理平台。\n\n3.2 建设内容\n1. 城市运行监测中心：整合交通、环保、安防、市政、水务等领域实时数据，建设城市运行"一张图"；\n2. AI视频分析子系统：基于计算机视觉实现占道经营、垃圾满溢、积水内涝、违停违建等场景自动识别和预警；\n3. 综合指挥调度系统：实现跨部门事件上报、分派、处置、反馈全流程闭环管理；\n4. 便民服务小程序：提供市民报事、生活缴费、政务查询等便民功能；\n5. 数据中台：建设统一数据标准、数据接入、数据治理、数据共享交换能力；\n6. IoT感知接入平台：支持接入10万级物联网终端，实现设备统一接入和管理。\n\n3.3 技术要求\n1. 平台须支持微服务架构，提供容器化部署方案；\n2. AI视频分析支持接入海康、大华等主流品牌摄像头，识别准确率不低于90%；\n3. 数据中台须提供不少于200个标准API接口，支持与省市级平台数据互通；\n4. 系统须通过等保2.0三级测评，支持国密算法；\n5. 平台支持PC端和移动端（含国产化操作系统）访问；\n6. 全部系统支持IPv4/IPv6双栈，兼容主流国产化软硬件环境。\n\n第四部分 评分标准（总分100分）\n\n4.1 商务评分（20分）\n- 企业资质（6分）：CMMI3级得3分，CMMI4级及以上得6分\n- 类似业绩（6分）：每提供1个500万以上智慧城市项目得2分，最高6分\n- 项目团队（4分）：项目经理3分，技术负责人1分\n- 售后服务（4分）：评委综合评议\n\n4.2 技术评分（50分）\n- 总体设计方案（12分）：架构合理性、技术先进性、可扩展性\n- AI视频分析方案（10分）：识别精度、场景覆盖度、训练方案\n- 数据中台方案（8分）：数据治理能力、API开放性\n- 指挥调度方案（8分）：流程设计、协同效率\n- 信创适配方案（6分）：国产化兼容方案完整性\n- 实施方案（6分）：项目计划、风险管控、质量保障\n\n4.3 价格评分（30分）\n采用低价优先法计算：价格得分 =（评审基准价/投标报价）× 30\n\n第五部分 投标截止信息\n\n投标截止时间：2026年9月15日上午10:00（北京时间）\n开标时间：2026年9月15日上午10:00（北京时间）\n投标地点：G区公共资源交易中心第1开标室\n投标方式：电子投标文件通过G区公共资源交易平台提交；纸质投标文件密封送达开标现场\n投标保证金：人民币贰拾万元整（¥200,000.00）\n\n第六部分 其他条款\n\n1. 投标有效期自开标日起90个日历天；\n2. 付款方式：合同签订后支付20%，中期验收后支付30%，系统终验后支付40%，质保期满后支付10%；\n3. 中标人须提供项目源代码及相关技术文档；\n4. 中标人不得将项目整体转包，核心业务系统不得分包；\n5. 项目实施过程中须接受采购人及第三方监理的监督检查。`,
+      };
+
       function scrollToBottom() {
         nextTick(() => {
           if (messagesContainer.value) {
@@ -133,31 +177,48 @@
         sendMessage();
       }
 
+      function loadSample(sample) {
+        const text = embeddedBiddings[sample.key];
+        if (text) {
+          inputText.value = text;
+        } else {
+          inputText.value = '（招标文件内容加载失败，请手动粘贴文本）';
+        }
+      }
+
       function formatMessage(msg) {
         if (msg.isObject) {
           let html = '<div class="structured-result">';
-          if (Array.isArray(msg.content)) {
-            msg.content.forEach((item, i) => {
-              html += '<div class="result-item"><span class="item-num">#' + (i+1) + '</span>';
-              if (typeof item === 'object' && item !== null) {
-                for (const [key, val] of Object.entries(item)) {
-                  html += '<div class="field"><span class="field-label">' + key + '</span><span class="field-value">' + (typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)) + '</span></div>';
-                }
-              } else {
-                html += '<span class="field-value">' + String(item) + '</span>';
-              }
-              html += '</div>';
-            });
-          } else if (typeof msg.content === 'object' && msg.content !== null) {
+          const renderVal = (val) => {
+            if (typeof val === 'object' && val !== null) {
+              return '<span class="field-value">' + JSON.stringify(val, null, 2).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</span>';
+            }
+            let t = String(val).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+            t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            t = t.replace(/`([^`]+)`/g, '<code>$1</code>');
+            t = t.replace(/\n/g, '<br>');
+            return '<span class="field-value">' + t + '</span>';
+          };
+          if (typeof msg.content === 'object' && msg.content !== null && !Array.isArray(msg.content)) {
+            const labelMap = {
+              project_info: '项目基本信息',
+              qualification_req: '投标人资格要求',
+              technical_summary: '技术要求摘要',
+              scoring_criteria: '评分标准分析',
+              deadline_info: '投标截止信息',
+              risk_alerts: '风险提示',
+              recommendations: '投标建议',
+            };
             for (const [key, val] of Object.entries(msg.content)) {
-              html += '<div class="field"><span class="field-label">' + key + '</span><span class="field-value">' + (typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)) + '</span></div>';
+              const label = labelMap[key] || key;
+              html += '<div class="result-item"><span class="item-num">' + label + '</span>' + renderVal(val) + '</div>';
             }
           }
           html += '</div>';
           return html;
         }
         let text = String(msg.content);
-        text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g,'&gt;');
         text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
         text = text.replace(/\n/g, '<br>');
@@ -212,7 +273,8 @@
 
       return {
         messages, inputText, loading, apiHealthy, messagesContainer,
-        quickQuestions, useQuick, sendMessage, formatMessage,
+        quickQuestions, biddingSamples,
+        useQuick, loadSample, sendMessage, formatMessage,
       };
     }
   }).mount('#app');
