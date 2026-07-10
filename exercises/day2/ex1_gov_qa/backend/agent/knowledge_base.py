@@ -6,6 +6,8 @@ Handles document loading, chunking, embedding, and persistence.
 import os
 import json
 import uuid
+import shutil
+import tempfile
 from pathlib import Path
 from typing import List, Dict, Optional
 
@@ -130,7 +132,15 @@ class KnowledgeBase:
         """Persist FAISS index to disk."""
         if self._vectorstore and self._index_dir:
             self._index_dir.mkdir(parents=True, exist_ok=True)
-            self._vectorstore.save_local(str(self._index_dir))
+            # FAISS C++ uses fopen which can't handle non-ASCII paths on Windows.
+            # Save to a temp dir (ASCII-only), then copy files to the real location.
+            try:
+                self._vectorstore.save_local(str(self._index_dir))
+            except RuntimeError:
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    self._vectorstore.save_local(tmpdir)
+                    for f in os.listdir(tmpdir):
+                        shutil.copy2(os.path.join(tmpdir, f), self._index_dir / f)
             # Save metadata
             meta_path = self._index_dir / "metadata.json"
             with open(meta_path, "w", encoding="utf-8") as f:
@@ -153,7 +163,23 @@ class KnowledgeBase:
                     self._documents = json.load(f)
             return True
         except Exception:
-            return False
+            # Fallback: copy to ASCII temp dir, then load from there
+            try:
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    for f in os.listdir(self._index_dir):
+                        shutil.copy2(self._index_dir / f, os.path.join(tmpdir, f))
+                    self._vectorstore = FAISS.load_local(
+                        tmpdir,
+                        self._embeddings,
+                        allow_dangerous_deserialization=True,
+                    )
+                    meta_path = self._index_dir / "metadata.json"
+                    if meta_path.exists():
+                        with open(meta_path, "r", encoding="utf-8") as f:
+                            self._documents = json.load(f)
+                    return True
+            except Exception:
+                return False
 
     def load_default_data(self) -> dict:
         """
