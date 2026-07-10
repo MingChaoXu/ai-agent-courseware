@@ -112,11 +112,11 @@
     <!-- Sidebar: Knowledge Base -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <h2>Knowledge Base</h2>
-        <p>Manage your document repository</p>
+        <h2>知识库</h2>
+        <p>管理文档与知识数据</p>
         <div class="stats">
-          <span class="stat"><strong>{{ totalChunks }}</strong> chunks</span>
-          <span class="stat"><strong>{{ documents.length }}</strong> docs</span>
+          <span class="stat"><strong>{{ totalChunks }}</strong> 条知识</span>
+          <span class="stat"><strong>{{ documents.length }}</strong> 篇文档</span>
         </div>
       </div>
 
@@ -130,8 +130,8 @@
              @click="$refs.fileInput.click()">
           <input ref="fileInput" type="file" accept=".txt,.md,.json" style="display:none" @change="handleFileUpload" />
           <div class="icon">+</div>
-          <p>Drop files here or click to upload</p>
-          <p style="font-size:11px; margin-top:4px;">Supports .txt .md .json</p>
+          <p>拖拽文件到此处或点击上传</p>
+          <p style="font-size:11px; margin-top:4px;">支持 .txt .md .json</p>
         </div>
 
         <!-- Document List -->
@@ -141,13 +141,13 @@
             <div class="meta">{{ doc.chunks }} chunks</div>
           </div>
           <div v-if="documents.length === 0" style="text-align:center; color:var(--text-secondary); font-size:13px; padding:20px;">
-            No documents yet
+            暂无文档
           </div>
         </div>
 
         <!-- KB Search -->
         <div class="kb-search">
-          <input v-model="kbSearchQuery" placeholder="Search knowledge base..." @keyup.enter="searchKb" />
+          <input v-model="kbSearchQuery" placeholder="搜索知识库..." @keyup.enter="searchKb" />
           <div v-for="r in kbSearchResults" :key="r.content" class="search-result">
             {{ r.content.substring(0, 150) }}...
           </div>
@@ -156,7 +156,7 @@
 
       <div class="sidebar-footer">
         <button @click="reloadKb" style="width:100%; padding:8px; border:1px solid var(--border); border-radius:6px; background:white; cursor:pointer; font-size:13px;">
-          Reload Default Data
+          重新加载默认数据
         </button>
       </div>
     </aside>
@@ -164,16 +164,16 @@
     <!-- Main: Chat Area -->
     <main class="main">
       <div class="chat-header">
-        <h1>Gov QA Assistant</h1>
-        <span class="badge" :class="{ error: !apiHealthy }">{{ apiHealthy ? 'Online' : 'Offline' }}</span>
+        <h1>政务问答助手</h1>
+        <span class="badge" :class="{ error: !apiHealthy }">{{ apiHealthy ? '在线' : '离线' }}</span>
       </div>
 
       <div class="messages" ref="messagesContainer">
         <!-- Empty State -->
         <div v-if="messages.length === 0" class="empty-state">
           <div class="icon">Q</div>
-          <h3 style="font-size:16px; margin-bottom:8px;">Government Services QA</h3>
-          <p style="font-size:13px;">Ask questions about household registration, social security, housing fund, etc.</p>
+          <h3 style="font-size:16px; margin-bottom:8px;">政务服务智能问答</h3>
+          <p style="font-size:13px;">可询问户籍、社保、公积金、不动产等政务问题</p>
           <div class="quick-questions" style="justify-content:center; margin-top:20px;">
             <span v-for="q in quickQuestions" :key="q" class="quick-q" @click="askQuick(q)">{{ q }}</span>
           </div>
@@ -181,12 +181,12 @@
 
         <!-- Messages -->
         <div v-for="(msg, idx) in messages" :key="idx" class="msg" :class="msg.role">
-          <div class="msg-avatar">{{ msg.role === 'user' ? 'U' : 'A' }}</div>
+          <div class="msg-avatar">{{ msg.role === 'user' ? '问' : '答' }}</div>
           <div class="msg-body">
             <div v-html="formatMessage(msg.content)"></div>
             <!-- Sources -->
             <div v-if="msg.sources && msg.sources.length" class="sources">
-              <div class="sources-label">References</div>
+              <div class="sources-label">参考来源</div>
               <div v-for="(src, si) in msg.sources" :key="si" class="source-card">
                 {{ src.content.substring(0, 200) }}...
               </div>
@@ -209,11 +209,11 @@
           <textarea
             v-model="inputText"
             @keydown.enter.exact.prevent="sendMessage"
-            placeholder="Ask a question about government services..."
+            placeholder="请输入您要咨询的政务问题..."
             rows="1"
             :disabled="loading"
           ></textarea>
-          <button @click="sendMessage" :disabled="loading || !inputText.trim()">Send</button>
+          <button @click="sendMessage" :disabled="loading || !inputText.trim()">发送</button>
         </div>
       </div>
     </main>
@@ -243,10 +243,10 @@
       const kbSearchResults = ref([]);
 
       const quickQuestions = [
-        'How to register a newborn?',
-        'How to transfer social security from another city?',
-        'What is the maximum housing provident fund loan?',
-        'How to apply for a residence permit?',
+        '新生儿如何办理户口登记？',
+        '社保从外地转入怎么办理？',
+        '公积金贷款最高额度是多少？',
+        '居住证如何申请？',
       ];
 
       function scrollToBottom() {
@@ -312,7 +312,7 @@
         } catch (e) {
           messages.value.push({
             role: 'assistant',
-            content: `Request failed: ${e.message}. Please check if the backend is running.`,
+            content: `请求失败：${e.message}，请检查后端服务是否正常运行。`,
             sources: [],
           });
         }
