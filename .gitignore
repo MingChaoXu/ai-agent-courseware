@@ -27,8 +27,11 @@ skill-examples/
 *.swp
 *.swo
 
-# Old / superseded files
-区县AI赋能培训_课程大纲.docx
+# Office documents
+*.docx
 
-# Large files (optional — uncomment if too large for GitHub)
-# AI大模型与智能体_开启智能办公新时代.pdf
+# PDF documents
+*.pdf
+
+# Scene images
+16个AI场景.png
