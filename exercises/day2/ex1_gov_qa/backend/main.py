@@ -66,9 +66,11 @@ app.include_router(chat.router, prefix="/api")
 app.include_router(knowledge.router, prefix="/api")
 
 # Serve frontend static files
-frontend_dir = Path(__file__).resolve().parent.parent / "frontend" / "dist"
-if frontend_dir.exists():
-    app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
+frontend_dir = Path(__file__).resolve().parent.parent / "frontend"
+# Support both frontend/index.html and frontend/dist/index.html
+serve_dir = frontend_dir / "dist" if (frontend_dir / "dist").exists() else frontend_dir
+if serve_dir.exists():
+    app.mount("/", StaticFiles(directory=str(serve_dir), html=True), name="frontend")
 
 
 if __name__ == "__main__":
