@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '7b8de2fd-bb0b-445a-83ff-7513653c6c1a'
-  PropagateID: '7b8de2fd-bb0b-445a-83ff-7513653c6c1a'
-  ReservedCode1: '98e16fca-d3e1-489f-b095-8d8b1a09c51e'
-  ReservedCode2: '98e16fca-d3e1-489f-b095-8d8b1a09c51e'
----
-
 # 信息化设备采购合同-低风险
 
 ## 合同编号：CG-2026-0312

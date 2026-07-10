@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '00b4b304-9f99-4a19-97de-6f28803c6336'
-  PropagateID: '00b4b304-9f99-4a19-97de-6f28803c6336'
-  ReservedCode1: '6b2568cc-0441-4e87-9103-09d62c7639c9'
-  ReservedCode2: '6b2568cc-0441-4e87-9103-09d62c7639c9'
----
-
 # 房屋租赁合同-低风险
 
 **出租方（甲方）：** 锦绣商务物业管理（杭州）有限公司

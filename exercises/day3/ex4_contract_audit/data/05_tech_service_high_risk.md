@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '0f201cd8-9171-4fc3-b20a-8cbf11135b61'
-  PropagateID: '0f201cd8-9171-4fc3-b20a-8cbf11135b61'
-  ReservedCode1: 'cf96d6f3-c458-490e-968e-5b2d705df635'
-  ReservedCode2: 'cf96d6f3-c458-490e-968e-5b2d705df635'
----
-
 # 技术服务合同-高风险
 
 **甲方（委托方）：** 金城水务集团有限公司

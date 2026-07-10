@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'df29e196-4211-44bc-8bf6-08155e5f72d8'
-  PropagateID: 'df29e196-4211-44bc-8bf6-08155e5f72d8'
-  ReservedCode1: '659873a2-39a1-4d4b-a204-06b6995ca0ee'
-  ReservedCode2: '659873a2-39a1-4d4b-a204-06b6995ca0ee'
----
-
 # 建设工程施工合同-中风险
 
 **发包人（甲方）：** X县住房和城乡建设局

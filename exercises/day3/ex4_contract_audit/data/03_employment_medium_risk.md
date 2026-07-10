@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'c5d452ec-8465-4d7b-adc3-f8ecfcd0e98c'
-  PropagateID: 'c5d452ec-8465-4d7b-adc3-f8ecfcd0e98c'
-  ReservedCode1: 'e10f9891-0e0b-42f7-9d83-2a6a1fc03f80'
-  ReservedCode2: 'e10f9891-0e0b-42f7-9d83-2a6a1fc03f80'
----
-
 # 劳动合同-中风险
 
 **甲方（用人单位）：** 东方数联信息技术有限公司
