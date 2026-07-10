@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ReAct推理原理实验</title>
+  <title>RAG原理深入实验</title>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --primary: #7c3aed;
-      --primary-light: #7c3aed88;
+      --primary: #059669;
+      --primary-light: #05966988;
       --bg: #f8fafc;
       --surface: #ffffff;
       --border: #e2e8f0;
@@ -65,15 +65,15 @@
 <body>
   <div id="app" class="app">
     <div class="header">
-      <h1>ReAct推理原理实验</h1>
+      <h1>RAG原理深入实验</h1>
       <span class="badge" :class="{ error: !apiHealthy }">{{ apiHealthy ? '在线' : '离线' }}</span>
     </div>
 
     <div class="messages" ref="messagesContainer">
       <div v-if="messages.length === 0" class="empty-state">
         <div class="icon">AI</div>
-        <h3 style="font-size:16px; margin-bottom:8px;">ReAct推理原理实验</h3>
-        <p style="font-size:13px;">ReAct推理原理实验 - Agent</p>
+        <h3 style="font-size:16px; margin-bottom:8px;">RAG原理深入实验</h3>
+        <p style="font-size:13px;">RAG原理深入实验 - Comparison</p>
         <div class="quick-questions" style="justify-content:center; margin-top:20px;">
           <span v-for="q in quickQuestions" :key="q" class="quick-q" @click="useQuick(q)">{{ q }}</span>
         </div>
@@ -98,7 +98,7 @@
         <textarea
           v-model="inputText"
           @keydown.enter.exact.prevent="sendMessage"
-          placeholder="请输入您的政务咨询问题..."
+          placeholder="请输入关于RAG原理的问题..."
           rows="2"
           :disabled="loading"
         ></textarea>
@@ -118,7 +118,7 @@
       const loading = ref(false);
       const apiHealthy = ref(false);
       const messagesContainer = ref(null);
-      const quickQuestions = ['外地户口在苏州工作8年，想把户口迁过来，社保能一起转吗？', '新生儿落户需要什么材料？', '公积金贷款最高额度是多少？'];
+      const quickQuestions = ['什么是Embedding？为什么它能用于语义检索？', '稠密检索和稀疏检索有什么区别？', '什么是Agentic RAG？它和传统RAG有什么不同？'];
 
       function scrollToBottom() {
         nextTick(() => {

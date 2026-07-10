@@ -62,6 +62,15 @@
     .msg-body { padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.7; max-width: 560px; white-space: pre-wrap; word-break: break-word; }
     .msg.user .msg-body { background: var(--primary); color: white; border-bottom-right-radius: 4px; }
     .msg.assistant .msg-body { background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+    .msg-body .structured-result { background: #f1f5f9; padding: 12px; border-radius: 8px; font-size: 13px; margin-top: 8px; }
+    .msg-body .structured-result .result-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .msg-body .structured-result .result-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .msg-body .structured-result .item-num { font-weight: 600; color: var(--primary); margin-right: 8px; }
+    .msg-body .structured-result .field { display: flex; gap: 8px; margin-top: 4px; align-items: baseline; }
+    .msg-body .structured-result .field-label { font-weight: 600; color: var(--text); min-width: 80px; flex-shrink: 0; }
+    .msg-body .structured-result .field-value { color: var(--text-secondary); }
+    .msg-body code { background: #e2e8f0; padding: 1px 4px; border-radius: 3px; font-size: 12px; }
+    .msg-body strong { font-weight: 600; }
 
     /* Sources */
     .sources { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
@@ -181,8 +190,9 @@
         <!-- Messages -->
         <div v-for="(msg, idx) in messages" :key="idx" class="msg" :class="msg.role">
           <div class="msg-avatar">{{ msg.role === 'user' ? '问' : 'AI' }}</div>
-          <div class="msg-body">
-            <div>{{ msg.content }}</div>
+          <div class="msg-body" v-if="msg.role === 'user'">{{ msg.content }}</div>
+          <div class="msg-body" v-else>
+            <div v-html="formatMessage(msg)"></div>
             <!-- Sources -->
             <div v-if="msg.sources && msg.sources.length" class="sources">
               <div class="sources-label">参考来源</div>
@@ -287,15 +297,18 @@
           });
           const data = await res.json();
           conversationId.value = data.conversation_id;
+          const isObj = typeof data.answer === 'object' && data.answer !== null;
           messages.value.push({
             role: 'assistant',
-            content: data.answer,
+            content: isObj ? data.answer : String(data.answer),
+            isObject: isObj,
             sources: data.sources || [],
           });
         } catch (e) {
           messages.value.push({
             role: 'assistant',
             content: `请求失败：${e.message}`,
+            isObject: false,
             sources: [],
           });
         }
@@ -307,6 +320,37 @@
       function useQuick(q) {
         inputText.value = q;
         sendMessage();
+      }
+
+      function formatMessage(msg) {
+        if (msg.isObject) {
+          let html = '<div class="structured-result">';
+          if (Array.isArray(msg.content)) {
+            msg.content.forEach((item, i) => {
+              html += '<div class="result-item"><span class="item-num">#' + (i+1) + '</span>';
+              if (typeof item === 'object' && item !== null) {
+                for (const [key, val] of Object.entries(item)) {
+                  html += '<div class="field"><span class="field-label">' + key + '</span><span class="field-value">' + (typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)) + '</span></div>';
+                }
+              } else {
+                html += '<span class="field-value">' + String(item) + '</span>';
+              }
+              html += '</div>';
+            });
+          } else if (typeof msg.content === 'object' && msg.content !== null) {
+            for (const [key, val] of Object.entries(msg.content)) {
+              html += '<div class="field"><span class="field-label">' + key + '</span><span class="field-value">' + (typeof val === 'object' ? JSON.stringify(val, null, 2) : String(val)) + '</span></div>';
+            }
+          }
+          html += '</div>';
+          return html;
+        }
+        let text = String(msg.content);
+        text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+        text = text.replace(/\n/g, '<br>');
+        return text;
       }
 
       async function handleFileUpload(e) {
@@ -365,7 +409,7 @@
         messages, inputText, loading, apiHealthy, conversationId, messagesContainer,
         documents, totalChunks, isDragging, kbSearchQuery, kbSearchResults,
         quickQuestions,
-        useQuick, sendMessage,
+        useQuick, sendMessage, formatMessage,
         handleFileUpload, handleDrop, searchKb, reloadKb,
       };
     }
