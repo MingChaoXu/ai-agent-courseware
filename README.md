@@ -22,6 +22,8 @@
 ├── Day5_ComplexAgentAndRoadshow.html
 ├── requirements.txt
 ├── .env.example
+├── projects/                    # Full-stack projects
+│   └── gov-qa/                  # Government Services QA (FastAPI + Vue + Skill)
 └── exercises/
     ├── common/
     │   ├── shared_utils.py
