@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1 - AI理论与实践基础 | 区县AI赋能培训</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f7fa;--bg2:#ffffff;--bg3:#eef2f7;--sidebar:#ffffff;--accent:#2563eb;--accent2:#059669;--accent3:#d97706;--accent4:#dc2626;--accent5:#7c3aed;--text:#1e293b;--text2:#475569;--text3:#94a3b8;--border:#e2e8f0;--card:#dbeafe;--code-bg:#f8fafc;--success:#059669;--warning:#d97706;--danger:#dc2626}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;display:flex;min-height:100vh}
+.sidebar{width:280px;min-width:280px;background:var(--sidebar);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-header .day-badge{display:inline-block;background:linear-gradient(135deg,#4a9eff,#a78bfa);color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.sidebar-header h2{font-size:15px;color:var(--text);font-weight:700;margin-bottom:4px}
+.sidebar-header p{font-size:11px;color:var(--text3)}
+.sidebar-nav{padding:12px 0}
+.nav-group{margin-bottom:8px}
+.nav-group-title{padding:8px 20px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.nav-item{display:block;padding:8px 20px 8px 32px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.nav-item:hover{color:var(--text);background:rgba(74,158,255,.08);border-left-color:var(--accent)}
+.nav-item.active{color:var(--accent);background:rgba(74,158,255,.12);border-left-color:var(--accent);font-weight:600}
+.nav-item .time-badge{float:right;font-size:10px;background:var(--bg3);padding:1px 6px;border-radius:8px;color:var(--text3)}
+.main{margin-left:280px;flex:1;min-width:0}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 30px;display:flex;align-items:center;gap:16px}
+.topbar .menu-btn{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
+.topbar h1{font-size:16px;font-weight:700;flex:1}
+.progress-wrap{width:200px;display:flex;align-items:center;gap:8px}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .5s;width:0%}
+.progress-text{font-size:11px;color:var(--text3);min-width:32px;text-align:right}
+.content{padding:30px;max-width:1100px}
+.section{margin-bottom:50px;scroll-margin-top:70px}
+.section-header{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.section-header .section-tag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.section-header .section-tag.morning{background:rgba(245,158,11,.15);color:var(--accent3)}
+.section-header .section-tag.afternoon{background:rgba(99,102,241,.15);color:#818cf8}
+.section-header h2{font-size:26px;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-header p{color:var(--text2);font-size:14px}
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+.topic-card h3{font-size:18px;font-weight:700;margin-bottom:12px;color:var(--accent)}
+.topic-card h4{font-size:15px;font-weight:700;margin:16px 0 8px;color:var(--text)}
+.topic-card p{color:var(--text2);font-size:14px;margin-bottom:10px}
+.topic-card ul,.topic-card ol{margin:8px 0 12px 20px;color:var(--text2);font-size:14px}
+.topic-card li{margin-bottom:5px}
+.principle-card{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:18px 20px;margin:16px 0;position:relative;overflow:hidden}
+.principle-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)}
+.principle-card .pc-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.principle-card .pc-body{font-size:13px;color:var(--text2);line-height:1.8}
+.principle-card .pc-body code{background:rgba(74,158,255,.12);color:var(--accent);padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Fira Code',monospace}
+.principle-card.warn{border-color:var(--accent3);background:rgba(245,158,11,.06)}
+.principle-card.warn::before{background:var(--accent3)}
+.principle-card.warn .pc-title{color:var(--accent3)}
+.principle-card.green{border-color:var(--accent2);background:rgba(54,211,153,.06)}
+.principle-card.green::before{background:var(--accent2)}
+.principle-card.green .pc-title{color:var(--accent2)}
+.step-block{margin:16px 0;padding:16px 20px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent2)}
+.step-block .step-num{display:inline-block;background:var(--accent2);color:var(--bg);width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:8px}
+.step-block h4{display:inline;font-size:14px;font-weight:700;color:var(--accent2)}
+.step-block p{margin-top:8px;font-size:13px;color:var(--text2)}
+.code-block{position:relative;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--code-bg);border-bottom:1px solid var(--border)}
+.code-header .lang-badge{font-size:11px;color:var(--accent);font-weight:600;background:rgba(74,158,255,.1);padding:2px 8px;border-radius:4px}
+.code-header .copy-btn{background:none;border:1px solid var(--border);color:var(--text3);padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .2s}
+.code-header .copy-btn:hover{color:var(--accent);border-color:var(--accent)}
+.code-body{padding:16px;background:var(--code-bg);overflow-x:auto;font-family:'Fira Code','Consolas',monospace;font-size:12.5px;line-height:1.65;tab-size:4;white-space:pre;color:#334155}
+.code-body .kw{color:#cf222e}
+.code-body .fn{color:#8250df}
+.code-body .str{color:#0a3069}
+.code-body .com{color:#6e7781;font-style:italic}
+.code-body .num{color:#0550ae}
+.code-body .cls{color:#953800}
+.code-body .dec{color:#116329}
+.code-body .op{color:#cf222e}
+.code-body .fstr{color:#0a3069}
+.compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.compare-table th{background:var(--card);color:var(--accent);padding:10px 14px;text-align:left;font-weight:600;border-bottom:2px solid var(--accent);font-size:12px}
+.compare-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+.compare-table tr:hover td{background:rgba(74,158,255,.05)}
+.compare-table td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+.flow-diagram{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;font-family:'Fira Code',monospace;font-size:12px;color:var(--accent2);white-space:pre;overflow-x:auto;line-height:1.5}
+.tips-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:16px 20px;margin:16px 0}
+.tips-box .tips-title{font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:8px}
+.tips-box p{font-size:13px;color:var(--text2);margin-bottom:4px}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:16px 0}
+.concept-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;transition:all .2s}
+.concept-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.concept-card .cc-icon{font-size:24px;margin-bottom:6px}
+.concept-card .cc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.concept-card .cc-desc{font-size:11px;color:var(--text3);line-height:1.6}
+.metric-bar{display:flex;align-items:center;gap:10px;margin:6px 0}
+.metric-bar .label{min-width:140px;font-size:12px;color:var(--text2)}
+.metric-bar .bar{flex:1;height:18px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.metric-bar .fill{height:100%;border-radius:4px;transition:width .8s}
+.metric-bar .val{min-width:60px;font-size:12px;color:var(--text);font-weight:600;text-align:right}
+.timeline{position:relative;padding:20px 0 20px 30px;margin:16px 0}
+.timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline .tl-item{position:relative;margin-bottom:20px;padding-left:20px}
+.timeline .tl-item::before{content:'';position:absolute;left:-22px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg)}
+.timeline .tl-item .tl-time{font-size:11px;color:var(--accent);font-weight:700}
+.timeline .tl-item .tl-title{font-size:13px;font-weight:600;color:var(--text);margin:2px 0}
+.timeline .tl-item .tl-desc{font-size:12px;color:var(--text3)}
+.quiz-box{background:var(--card);border:1px solid var(--accent5);border-radius:10px;padding:18px 20px;margin:16px 0}
+.quiz-box .quiz-q{font-size:14px;font-weight:700;color:var(--accent5);margin-bottom:8px}
+.quiz-box .quiz-a{font-size:13px;color:var(--text2);margin-bottom:6px;cursor:pointer;padding:6px 10px;border-radius:6px;transition:all .2s;border:1px solid transparent}
+.quiz-box .quiz-a:hover{background:rgba(167,139,250,.1);border-color:var(--accent5)}
+.quiz-box .quiz-a.correct{background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success)}
+.quiz-box .quiz-a.wrong{background:rgba(239,68,68,.1);border-color:var(--danger);color:var(--danger)}
+.summary-card{background:linear-gradient(135deg,var(--card),var(--bg2));border:1px solid var(--accent);border-radius:14px;padding:30px;margin:30px 0;text-align:center}
+.summary-card h3{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:12px}
+.summary-card p{font-size:14px;color:var(--text2);max-width:600px;margin:0 auto 16px}
+.footer{margin-top:50px;padding:30px 0;border-top:1px solid var(--border);text-align:center}
+.footer p{font-size:12px;color:var(--text3)}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.topbar .menu-btn{display:block}
+}
+@media(max-width:600px){
+.content{padding:16px}
+.concept-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="day-badge">DAY 1 / 5</div>
+<h2>AI理论与实践基础</h2>
+<p>上午：AI核心理论 | 下午：Prompt工程+ReAct实战</p>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-group">
+<div class="nav-group-title">上午 · AI核心理论</div>
+<a class="nav-item" href="#s1" onclick="navClick(this)">1.1 AI发展与大模型时代<span class="time-badge">20min</span></a>
+<a class="nav-item" href="#s1-1" onclick="navClick(this)">├ 从规则到涌现</a>
+<a class="nav-item" href="#s1-2" onclick="navClick(this)">├ 大模型能力边界</a>
+<a class="nav-item" href="#s1-3" onclick="navClick(this)">└ 电信行业AI应用图谱</a>
+<a class="nav-item" href="#s2" onclick="navClick(this)">1.2 LLM核心原理<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s2-1" onclick="navClick(this)">├ Transformer架构</a>
+<a class="nav-item" href="#s2-2" onclick="navClick(this)">├ 注意力机制与自回归</a>
+<a class="nav-item" href="#s2-3" onclick="navClick(this)">├ Token化与上下文窗口</a>
+<a class="nav-item" href="#s2-4" onclick="navClick(this)">└ 温度与采样策略</a>
+<a class="nav-item" href="#s3" onclick="navClick(this)">1.3 Agent = LLM + 上下文 + 工具<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s3-1" onclick="navClick(this)">├ Agent核心公式</a>
+<a class="nav-item" href="#s3-2" onclick="navClick(this)">├ 三大组件详解</a>
+<a class="nav-item" href="#s3-3" onclick="navClick(this)">└ 从ChatBot到Agent演进</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">下午 · Prompt工程与ReAct</div>
+<a class="nav-item" href="#s4" onclick="navClick(this)">2.1 Prompt工程核心技巧<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s4-1" onclick="navClick(this)">├ System Prompt设计</a>
+<a class="nav-item" href="#s4-2" onclick="navClick(this)">├ Few-shot与输出格式</a>
+<a class="nav-item" href="#s4-3" onclick="navClick(this)">└ 常见陷阱与规避</a>
+<a class="nav-item" href="#s5" onclick="navClick(this)">2.2 ReAct循环原理<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s5-1" onclick="navClick(this)">├ Thought-Action-Observation</a>
+<a class="nav-item" href="#s5-2" onclick="navClick(this)">├ 完整循环演示</a>
+<a class="nav-item" href="#s5-3" onclick="navClick(this)">└ 上下文消融实验</a>
+<a class="nav-item" href="#s6" onclick="navClick(this)">2.3 RAG原理与检索策略<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s6-1" onclick="navClick(this)">├ 嵌入向量与语义检索</a>
+<a class="nav-item" href="#s6-2" onclick="navClick(this)">├ 三种检索策略对比</a>
+<a class="nav-item" href="#s6-3" onclick="navClick(this)">└ 被动RAG vs Agentic RAG</a>
+<a class="nav-item" href="#s7" onclick="navClick(this)">2.4 TeleAgent平台概览<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s7-1" onclick="navClick(this)">├ API架构与客户端</a>
+<a class="nav-item" href="#s7-2" onclick="navClick(this)">├ 智能体创建流程</a>
+<a class="nav-item" href="#s7-3" onclick="navClick(this)">└ 5天课程全景图</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">Day 1 总结</div>
+<a class="nav-item" href="#summary" onclick="navClick(this)">核心知识点回顾</a>
+<a class="nav-item" href="#quiz" onclick="navClick(this)">自测练习</a>
+<a class="nav-item" href="#preview" onclick="navClick(this)">Day 2 预告</a>
+</div>
+</nav>
+</aside>
+
+<div class="main">
+<div class="topbar">
+<button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
+<h1>Day 1 · AI理论与实践基础</h1>
+<div class="progress-wrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-text" id="progressText">0%</div>
+</div>
+</div>
+
+<div class="content">
+
+<!-- ============================================================ -->
+<!-- SECTION 1: AI发展与大模型时代 -->
+<!-- ============================================================ -->
+<div class="section" id="s1">
+<div class="section-header">
+<span class="section-tag morning">上午 · 1.1</span>
+<h2>AI发展与大模型时代</h2>
+<p>从规则引擎到涌现能力，理解AI为什么在今天真正可用 · 20分钟</p>
+</div>
+
+<div class="topic-card" id="s1-1">
+<h3>从规则到涌现：AI的三次范式跃迁</h3>
+
+<div class="timeline">
+<div class="tl-item">
+<div class="tl-time">1950s-1980s</div>
+<div class="tl-title">符号主义：规则引擎</div>
+<div class="tl-desc">人类编写IF-THEN规则，机器执行。专家系统如MYCIN可诊断血液感染，但规则爆炸导致无法扩展。</div>
+</div>
+<div class="tl-item">
+<div class="tl-time">2010s</div>
+<div class="tl-title">统计学习：深度学习</div>
+<div class="tl-desc">从数据中自动学习特征。CNN识别图像、RNN处理序列，但每个任务需独立训练模型，泛化能力弱。</div>
+</div>
+<div class="tl-item">
+<div class="tl-time">2020s</div>
+<div class="tl-title">大语言模型：涌现能力</div>
+<div class="tl-desc">GPT系列模型在千亿参数规模下涌现出推理、翻译、编程等未被显式训练的能力——"量变引起质变"。</div>
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 核心概念：涌现能力（Emergent Abilities）</div>
+<div class="pc-body">
+当模型参数量从10亿增长到1000亿时，某些能力不是渐进提升的，而是在某个阈值突然"涌现"出来。这就像水温从99°C到100°C——不是"更热的水"，而是"质的改变"。<br><br>
+涌现的关键能力包括：<br>
+1. <strong>链式推理</strong>（Chain-of-Thought）：能分步骤解决复杂问题<br>
+2. <strong>指令遵循</strong>（Instruction Following）：理解并执行自然语言指令<br>
+3. <strong>上下文学习</strong>（In-Context Learning）：无需微调，从示例中学习新任务<br><br>
+这三个能力是Agent技术得以实现的<strong>前提条件</strong>——没有推理能力就无法规划，没有指令遵循就无法控制，没有上下文学习就无法适配新场景。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s1-2">
+<h3>大模型的能力边界：能做什么，不能做什么</h3>
+
+<table class="compare-table">
+<thead>
+<tr><th>能力维度</th><th>LLM 擅长 ✅</th><th>LLM 不擅长 ❌</th></tr>
+</thead>
+<tbody>
+<tr><td>语言理解</td><td>意图识别、情感分析、文本摘要</td><td>精确数学计算、逻辑证明</td></tr>
+<tr><td>知识问答</td><td>通识领域、常见专业领域</td><td>实时信息、超长尾知识</td></tr>
+<tr><td>内容生成</td><td>文案、代码草稿、报告框架</td><td>需要精确数据的报表</td></tr>
+<tr><td>推理规划</td><td>多步骤任务拆解、方案设计</td><td>需要外部验证的推理链</td></tr>
+<tr><td>工具调用</td><td>选择合适工具、构造参数</td><td>执行实际操作、访问实时数据</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888; 关键风险：幻觉（Hallucination）</div>
+<div class="pc-body">
+LLM会<strong>自信地生成看似合理但实际错误的内容</strong>。这是因为它不是在"检索事实"，而是在"预测下一个Token"。当训练数据中缺少相关信息时，模型会"编造"听起来合理的答案。<br><br>
+应对策略：<br>
+1. <strong>RAG</strong>：先检索真实文档，再基于文档生成回答<br>
+2. <strong>工具调用</strong>：让Agent查数据库、调API，而非凭记忆回答<br>
+3. <strong>人机协同（HITL）</strong>：高风险决策必须经人工确认<br>
+4. <strong>System Prompt约束</strong>：明确告知"不知道就说不知道"
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s1-3">
+<h3>电信行业AI应用图谱</h3>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">&#128222;</div>
+<div class="cc-name">智能客服</div>
+<div class="cc-desc">7×24政务/业务咨询，RAG+知识库实现精准回答</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128200;</div>
+<div class="cc-name">商机挖掘</div>
+<div class="cc-desc">多模态感知+多Agent协同，自动发现和跟进商机</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128203;</div>
+<div class="cc-name">合同审核</div>
+<div class="cc-desc">风险条款自动识别，HITL人机协同审批</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128202;</div>
+<div class="cc-name">BI分析</div>
+<div class="cc-desc">自然语言查询数据，代码解释器统计分析</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128065;</div>
+<div class="cc-name">质量检测</div>
+<div class="cc-desc">CV视觉质检，三种多模态模式按需选择</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128276;</div>
+<div class="cc-name">运营监控</div>
+<div class="cc-desc">事件驱动Agent，自动巡检+告警+闭环</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: LLM核心原理 -->
+<!-- ============================================================ -->
+<div class="section" id="s2">
+<div class="section-header">
+<span class="section-tag morning">上午 · 1.2</span>
+<h2>LLM核心原理</h2>
+<p>理解大语言模型的运作机制，建立正确的技术直觉 · 30分钟</p>
+</div>
+
+<div class="topic-card" id="s2-1">
+<h3>Transformer架构：一切的基础</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; Transformer的核心创新：自注意力机制</div>
+<div class="pc-body">
+2017年Google论文《Attention Is All You Need》提出Transformer，核心思想：<br><br>
+<strong>每个词都"看"到句子中的所有其他词</strong>，通过计算注意力权重决定"谁对我最重要"。<br><br>
+示例：句子「<u>银行</u>利率调整影响<u>银行</u>股价」<br>
+- 第一个「银行」→ 关注「利率」(权重0.7) + 「调整」(权重0.2)<br>
+- 第二个「银行」→ 关注「股价」(权重0.6) + 「调整」(权重0.3)<br><br>
+同样的"银行"，因为上下文不同，关注点完全不同——这就是自注意力的威力。<br><br>
+Transformer vs RNN：<br>
+- RNN：从左到右逐词处理，长距离信息衰减 → 无法并行<br>
+- Transformer：所有位置同时计算注意力 → 可并行 + 长距离建模
+</div>
+</div>
+
+<div class="flow-diagram">
+Transformer 编码器结构（简化）：
+
+输入文本 → Token嵌入 + 位置编码
+              │
+              ▼
+    ┌─── 多头自注意力 ───┐
+    │  Q·K^T / √d → Softmax │  ← 计算每个Token对其他Token的关注度
+    │  结果 × V              │  ← 加权汇总信息
+    └────────┬──────────┘
+             │ + 残差连接 & 层归一化
+             ▼
+    ┌─── 前馈神经网络 ───┐
+    │  Linear → ReLU → Linear │  ← 逐位置非线性变换
+    └────────┬──────────┘
+             │ + 残差连接 & 层归一化
+             ▼
+         编码输出
+
+GPT系列 = Transformer解码器堆叠（仅保留自注意力+前馈层）
+BERT系列 = Transformer编码器堆叠</div>
+</div>
+
+<div class="topic-card" id="s2-2">
+<h3>注意力机制与自回归生成</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; 核心原理：LLM是"逐Token预测"的</div>
+<div class="pc-body">
+GPT系列模型的工作方式是<strong>自回归（Autoregressive）</strong>：<br><br>
+输入：「公积金提取需要」<br>
+Step 1: 预测下一个Token → 「哪些」<br>
+Step 2: 输入变为「公积金提取需要哪些」→ 预测 → 「材料」<br>
+Step 3: 输入变为「公积金提取需要哪些材料」→ 预测 → 「？」<br>
+...<br><br>
+每次只预测一个Token，然后把预测结果拼到输入中，再预测下一个。这就是为什么：<br>
+1. 生成越长越慢（每步都要重新计算注意力）<br>
+2. 早期的错误会"滚雪球"式传播（幻觉的根源之一）<br>
+3. <code>max_tokens</code>参数控制最多生成多少Token
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s2-3">
+<h3>Token化与上下文窗口</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; Token：LLM的最小处理单位</div>
+<div class="pc-body">
+文本不是按"字"或"词"输入模型的，而是按<strong>Token</strong>。Token是分词器（Tokenizer）划分的最小单元：<br><br>
+英文："Hello world" → [<code>Hello</code>, <code> world</code>] = 2 tokens<br>
+中文："你好世界" → [<code>你好</code>, <code>世界</code>] ≈ 2-4 tokens<br>
+数字："3.14159" → [<code>3</code>, <code>.</code>, <code>14159</code>] = 3 tokens<br><br>
+关键规则：<br>
+1. <strong>1个汉字 ≈ 1-2个Token</strong>，1个英文单词 ≈ 1-2个Token<br>
+2. <strong>1个Token ≈ 0.75个英文单词 ≈ 0.5个中文字</strong>（粗略估算）<br>
+3. <strong>上下文窗口</strong> = 模型一次能处理的最大Token数（如4K/8K/128K）<br>
+4. Token数直接影响<strong>成本</strong>和<strong>延迟</strong>
+</div>
+</div>
+
+<table class="compare-table">
+<thead>
+<tr><th>模型</th><th>上下文窗口</th><th>约等于中文字数</th><th>典型用途</th></tr>
+</thead>
+<tbody>
+<tr><td>GPT-3.5</td><td>4K tokens</td><td>~2,000字</td><td>简单对话</td></tr>
+<tr><td>GPT-4</td><td>8K-128K tokens</td><td>~4,000-64,000字</td><td>长文档处理</td></tr>
+<tr><td>Claude 3</td><td>200K tokens</td><td>~100,000字</td><td>超长文档分析</td></tr>
+<tr><td>国产大模型</td><td>8K-128K tokens</td><td>~4,000-64,000字</td><td>政务/企业场景</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888; 上下文窗口 ≠ 有效注意力</div>
+<div class="pc-body">
+虽然模型技术上支持128K上下文，但<strong>并非所有128K Token都能被同等关注</strong>。研究表明：<br>
+1. 模型对<strong>开头</strong>和<strong>结尾</strong>的内容注意力最强（"首因效应"+"近因效应"）<br>
+2. 中间部分的内容容易被"遗忘"（Lost in the Middle现象）<br>
+3. 这就是为什么System Prompt放在开头（首因效应）、最新对话放在末尾（近因效应）<br>
+4. <strong>上下文压缩策略</strong>（Day 3学习）的核心目的就是解决窗口受限问题
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s2-4">
+<h3>温度与采样策略</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; Temperature：控制输出的"创造性"</div>
+<div class="pc-body">
+<code>temperature</code>参数控制模型从概率分布中采样的"随机性"：<br><br>
+<strong>temperature = 0</strong>（贪心解码）：每次选概率最高的Token → 输出确定性强、无创意<br>
+<strong>temperature = 0.3</strong>（低温度）：大部分时候选高概率Token，偶尔有变化 → 适合事实性问答<br>
+<strong>temperature = 0.7</strong>（中温度）：较平衡 → 适合一般对话<br>
+<strong>temperature = 1.0</strong>（高温度）：更多探索低概率Token → 适合创意写作<br><br>
+实战建议：<br>
+- 政务问答/合同审核：<code>temperature=0.1~0.3</code>（准确性优先）<br>
+- 文案生成/营销策略：<code>temperature=0.6~0.8</code>（创意性优先）<br>
+- 代码生成：<code>temperature=0.2</code>（确定性优先）
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: Agent = LLM + 上下文 + 工具 -->
+<!-- ============================================================ -->
+<div class="section" id="s3">
+<div class="section-header">
+<span class="section-tag morning">上午 · 1.3</span>
+<h2>Agent = LLM + 上下文 + 工具</h2>
+<p>理解Agent的核心公式和三大组件 · 30分钟</p>
+</div>
+
+<div class="topic-card" id="s3-1">
+<h3>Agent核心公式</h3>
+
+<div class="flow-diagram">
+Agent 核心公式：
+
+    Agent = LLM + Context + Tools
+
+    ┌─────────────────────────────────────────┐
+    │              Agent 运行循环              │
+    │                                         │
+    │  ┌─────┐   ┌─────────┐   ┌───────┐    │
+    │  │ LLM │ ◄─┤ Context │ ◄─┤ Tools │    │
+    │  │(推理)│──►│(上下文) │──►│(工具) │    │
+    │  └─────┘   └─────────┘   └───────┘    │
+    │     │           ▲             │        │
+    │     │           │             │        │
+    │     ▼           │             ▼        │
+    │  Thought ──► Action ──► Observation    │
+    │     │                               │   │
+    │     └─────► 更新Context ◄────────────┘   │
+    │                                         │
+    │  三大组件：                              │
+    │  1) LLM：大语言模型，负责推理和决策       │
+    │  2) Context：对话历史+系统提示+工具结果   │
+    │  3) Tools：可调用的外部工具集             │
+    └─────────────────────────────────────────┘
+
+    ReAct (Reasoning + Acting) 循环：
+    每轮迭代 = Thought → Action → Observation
+    循环直到得到最终答案或达到最大迭代次数</div>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 三大组件缺一不可</div>
+<div class="pc-body">
+<strong>没有LLM</strong>：无法推理，Agent无智能 → 退化成规则脚本<br>
+<strong>没有Context</strong>：无法记忆，每轮都是"失忆"状态 → 无法做多轮对话<br>
+<strong>没有Tools</strong>：无法行动，只能纯文本对话 → 退化为ChatBot<br><br>
+三者组合才能产生真正的Agent行为：LLM推理需要Context，Context由Tool结果填充，Tool选择由LLM决策。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3-2">
+<h3>三大组件详解</h3>
+
+<h4>组件1：LLM — 推理引擎</h4>
+<p>LLM在Agent中的角色不是"聊天"，而是<strong>推理和决策</strong>。它需要决定：</p>
+<ul>
+<li>当前情况是否需要调用工具？调用哪个？</li>
+<li>工具返回的结果是否足够？是否需要继续？</li>
+<li>如何将多个工具的结果综合成最终答案？</li>
+</ul>
+
+<h4>组件2：Context — 工作记忆</h4>
+<p>Context是Agent的"工作记忆"，包含三个层次：</p>
+<table class="compare-table">
+<thead>
+<tr><th>层次</th><th>内容</th><th>类比</th></tr>
+</thead>
+<tbody>
+<tr><td>System Prompt</td><td>角色定义、行为约束、输出格式</td><td>岗位说明书</td></tr>
+<tr><td>对话历史</td><td>用户与Agent的交互记录</td><td>会议纪要</td></tr>
+<tr><td>工具结果</td><td>工具调用返回的信息</td><td>调查报告</td></tr>
+</tbody>
+</table>
+
+<h4>组件3：Tools — 行动能力</h4>
+<p>工具让Agent从"纸上谈兵"变为"能办实事"。三大工具类型：</p>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">&#128225;</div>
+<div class="cc-name">感知工具</div>
+<div class="cc-desc">获取外部信息：网络搜索、多模态理解、文件系统、数据库查询、公共数据源</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#9881;</div>
+<div class="cc-name">执行工具</div>
+<div class="cc-desc">执行操作：代码解释器、文件操作、系统命令、图表生成（安全沙箱保护）</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#129309;</div>
+<div class="cc-name">协作工具</div>
+<div class="cc-desc">人机协同：浏览器自动化、通知推送、人工审批、定时任务</div>
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3-3">
+<h3>从ChatBot到Agent的演进</h3>
+
+<div class="flow-diagram">
+AI应用能力演进路径：
+
+Level 0 ── ChatBot（纯对话）
+  │  只能用训练知识回答，无法获取新信息
+  │  示例：早期的GPT-3聊天
+  ▼
+Level 1 ── RAG增强问答
+  │  能检索知识库，基于真实文档回答
+  │  示例：政务服务FAQ问答系统
+  ▼
+Level 2 ── 工具调用Agent
+  │  能调用工具（搜索、计算、代码执行）
+  │  示例：BI数据分析助手
+  ▼
+Level 3 ── 多Agent协同
+  │  多个专业Agent分工协作，工作流编排
+  │  示例：政务全链路5Agent协同
+  ▼
+Level 4 ── 事件驱动Agent
+  │  自动感知事件，主动服务，7×24运行
+  │  示例：区县运营智能体（定时+数据+外部触发）
+  ▼
+Level 5 ── 自主Agent（未来）
+     自主规划、自主学习、自主进化
+     示例：完全自主的商业决策Agent
+
+  本课程覆盖：Level 1 → Level 4</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: Prompt工程核心技巧 -->
+<!-- ============================================================ -->
+<div class="section" id="s4">
+<div class="section-header">
+<span class="section-tag afternoon">下午 · 2.1</span>
+<h2>Prompt工程核心技巧</h2>
+<p>System Prompt设计、Few-shot示例、常见陷阱 · 30分钟</p>
+</div>
+
+<div class="topic-card" id="s4-1">
+<h3>System Prompt设计：Agent的"宪法"</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; System Prompt三元组：角色 + 职责 + 格式</div>
+<div class="pc-body">
+一个好的System Prompt必须包含三个要素：<br><br>
+<strong>1. 角色声明</strong>：告诉LLM"你是谁"<br>
+<code>你是政务大厅前台问答Agent。</code><br><br>
+<strong>2. 职责定义</strong>：划清"该做什么"和"不该做什么"的边界<br>
+<code>职责：理解市民诉求，判断业务类型并提取关键信息。</code><br>
+<code>业务类型：户籍办理 | 社保业务 | 公积金业务 | 不动产登记 | 婚姻登记 | 其他</code><br><br>
+<strong>3. 输出格式</strong>：指定结构化输出，确保下游可解析<br>
+<code>输出格式：JSON {"intent": "业务类型", "keywords": ["关键词"], "urgency": "普通/加急"}</code><br><br>
+为什么输出格式如此重要？因为<strong>工作流中Agent的输出是下一个Agent的输入</strong>。如果问答Agent输出自然语言，推荐Agent就无法精准提取业务类型。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">System Prompt 示例</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># ❌ 不好的System Prompt</span>
+你是政务助手。
+
+<span class="com"># ✅ 好的System Prompt（三元组完整）</span>
+你是政务大厅前台问答Agent。
+
+职责：理解市民诉求，判断业务类型并提取关键信息。
+业务类型：户籍办理 | 社保业务 | 公积金业务 | 不动产登记 | 婚姻登记 | 其他
+
+输出格式：JSON {"intent": "业务类型", "keywords": ["关键词"], "urgency": "普通/加急"}
+
+示例：
+用户：「我想把户口从老家迁过来」
+输出：{"intent": "户籍办理", "keywords": ["户口迁移", "迁入"], "urgency": "普通"}
+
+<span class="com"># ✅ 更好的System Prompt（增加边界约束）</span>
+你是政务大厅前台问答Agent。
+
+职责：理解市民诉求，判断业务类型并提取关键信息。
+业务类型：户籍办理 | 社保业务 | 公积金业务 | 不动产登记 | 婚姻登记 | 其他
+
+输出格式：JSON {"intent": "业务类型", "keywords": ["关键词"], "urgency": "普通/加急"}
+
+约束：
+1. 如果用户意图不明确，请追问而非猜测
+2. 如果超出业务范围，明确告知并建议咨询12345热线
+3. 不要编造政策信息
+
+示例：
+用户：「我想把户口从老家迁过来」
+输出：{"intent": "户籍办理", "keywords": ["户口迁移", "迁入"], "urgency": "普通"}</div>
+</div>
+</div>
+
+<div class="topic-card" id="s4-2">
+<h3>Few-shot示例与输出格式控制</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; Few-shot：用示例代替规则</div>
+<div class="pc-body">
+LLM擅长"从示例中学习"（In-Context Learning）。与其用大量文字描述"应该怎么做"，不如给出1-3个具体示例。<br><br>
+<strong>Zero-shot</strong>（无示例）："请判断以下文本的情感" → 模型可能输出格式不一致<br>
+<strong>One-shot</strong>（1个示例）："示例：输入'太好了'→输出'正面'。请判断：'还行吧'" → 格式更一致<br>
+<strong>Few-shot</strong>（2-3个示例）：给出正例+反例 → 准确率和格式一致性最高<br><br>
+在Agent的<code>system_prompt</code>中，示例应该覆盖<strong>典型case + 边界case</strong>。<br>
+例如政务问答Agent的示例应包含：普通case（公积金提取）+ 边界case（超出业务范围）
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s4-3">
+<h3>常见Prompt陷阱与规避</h3>
+
+<table class="compare-table">
+<thead>
+<tr><th>陷阱</th><th>表现</th><th>规避方法</th></tr>
+</thead>
+<tbody>
+<tr><td>指令模糊</td><td>"帮我处理一下" → Agent不知道做什么</td><td>明确任务目标、输入、输出</td></tr>
+<tr><td>角色缺失</td><td>没有"你是XX"声明 → 回答泛泛</td><td>始终声明角色+职责边界</td></tr>
+<tr><td>格式未指定</td><td>输出是自然语言段落 → 下游无法解析</td><td>指定JSON/Markdown/编号列表</td></tr>
+<tr><td>缺少约束</td><td>Agent编造政策或越权回答</td><td>加"不知道就说不知道"约束</td></tr>
+<tr><td>上下文过长</td><td>塞太多示例/规则 → 中间信息被忽略</td><td>精炼Prompt，关键信息放首尾</td></tr>
+<tr><td>语气不当</td><td>政务场景用口语 → 用户不信任</td><td>指定"专业正式语气"</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">&#9989; Prompt优化黄金法则</div>
+<div class="pc-body">
+1. <strong>角色+职责+格式</strong>三元组必须完整<br>
+2. 示例比描述更有效（Show, don't tell）<br>
+3. 关键信息放在Prompt的<strong>开头和结尾</strong><br>
+4. 明确约束比隐式期望更可靠<br>
+5. 迭代优化：每次改一个变量，用消融实验验证（Day 3学习）
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: ReAct循环原理 -->
+<!-- ============================================================ -->
+<div class="section" id="s5">
+<div class="section-header">
+<span class="section-tag afternoon">下午 · 2.2</span>
+<h2>ReAct循环原理</h2>
+<p>Thought-Action-Observation：Agent的核心运行机制 · 30分钟</p>
+</div>
+
+<div class="topic-card" id="s5-1">
+<h3>Thought → Action → Observation 循环</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; ReAct = Reasoning + Acting</div>
+<div class="pc-body">
+ReAct是Agent最核心的运行模式，由Yao et al. 2022年提出。核心思想：<br><br>
+<strong>Thought（思考）</strong>：LLM分析当前情况，决定下一步做什么<br>
+<strong>Action（行动）</strong>：调用工具获取信息或执行操作<br>
+<strong>Observation（观察）</strong>：接收工具返回的结果<br><br>
+循环：Thought → Action → Observation → Thought → Action → ... → 最终答案<br><br>
+为什么ReAct比纯推理或纯行动更好？<br>
+- <strong>纯推理（Chain-of-Thought）</strong>：没有工具，无法获取新信息，容易幻觉<br>
+- <strong>纯行动（Act-only）</strong>：没有推理，工具调用无规划，效率低且容易走错<br>
+- <strong>ReAct</strong>：推理指导行动，行动验证推理，两者协同效果最佳
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s5-2">
+<h3>完整循环演示</h3>
+
+<div class="flow-diagram">
+用户问题：「我是外地户口在苏州工作8年，想把户口迁过来，社保能一起转吗？」
+
+─── 迭代 1 ───
+💭 Thought: 用户问的是户口迁移的条件，我需要先搜索苏州户口迁移政策
+🔧 Action: 搜索("苏州户口迁移")
+👁 Observation: 苏州市户口迁移需满足：1)合法稳定住所；2)参加社保满3年；3)无犯罪记录。
+              办理地点：辖区派出所户籍窗口。
+
+─── 迭代 2 ───
+💭 Thought: 搜索结果提到需要社保满3年，我来算一下用户2018年开始交社保到现在够不够3年
+🔧 Action: 计算器("2026 - 2018")
+👁 Observation: 计算结果: 8
+
+─── 迭代 3 ───
+💭 Thought: 已交社保8年，满足3年条件。再搜索一下社保转移能否同步办理
+🔧 Action: 搜索("苏州社保转移")
+👁 Observation: 苏州社保转移流程：1)原参保地开具参保凭证；2)新参保地提交转移
+              申请；3)45个工作日内完成转移。线上可通过国家社会保险公共服务平台办理。
+
+─── 迭代 4 ───
+💭 Thought: 现在信息足够了，可以综合回答
+✅ 最终答案: 根据查询结果：1)户口迁移需合法稳定住所+社保满3年+无犯罪记录
+            （您已交8年社保，满足条件）；2)社保转移可同步在线办理，
+            通过国家社会保险公共服务平台，45个工作日完成。</div>
+
+<p>这个4轮循环展示了ReAct的核心特征：<strong>先思考再行动，根据观察调整策略</strong>。第2轮的"计算器"调用是基于第1轮观察结果的推理决策——这正是纯推理无法做到的。</p>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python · ReAct模拟器</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">from</span> training_utils <span class="kw">import</span> ReActLoopSimulator, ReActStep
+
+<span class="com"># 定义模拟工具</span>
+<span class="kw">def</span> <span class="fn">mock_search</span>(query: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    mock_data = {
+        <span class="str">"苏州户口迁移"</span>: <span class="str">"需满足：1)合法稳定住所；2)社保满3年；3)无犯罪记录"</span>,
+        <span class="str">"苏州社保转移"</span>: <span class="str">"流程：1)参保凭证；2)转移申请；3)45个工作日完成"</span>,
+    }
+    <span class="kw">for</span> key, value <span class="kw">in</span> mock_data.items():
+        <span class="kw">if</span> <span class="kw">any</span>(k <span class="kw">in</span> query <span class="kw">for</span> k <span class="kw">in</span> key):
+            <span class="kw">return</span> value
+    <span class="kw">return</span> <span class="fstr">f"未找到与「{query}」直接相关的结果"</span>
+
+<span class="kw">def</span> <span class="fn">mock_calculator</span>(expression: <span class="cls">str</span>) -> <span class="cls">str</span>:
+    <span class="kw">try</span>:
+        allowed = <span class="fn">set</span>(<span class="str">"0123456789+-*/().% "</span>)
+        <span class="kw">if</span> <span class="fn">all</span>(c <span class="kw">in</span> allowed <span class="kw">for</span> c <span class="kw">in</span> expression):
+            <span class="kw">return</span> <span class="fstr">f"计算结果: {eval(expression)}"</span>
+        <span class="kw">return</span> <span class="str">"表达式包含不允许的字符"</span>
+    <span class="kw">except</span> <span class="cls">Exception</span>:
+        <span class="kw">return</span> <span class="str">"计算错误"</span>
+
+<span class="com"># 运行ReAct循环</span>
+tools = {<span class="str">"搜索"</span>: mock_search, <span class="str">"计算器"</span>: mock_calculator}
+sim = ReActLoopSimulator(tools=tools, max_iterations=<span class="num">5</span>, verbose=<span class="kw">True</span>)
+result = sim.run(<span class="str">"外地户口迁苏州，社保能一起转吗？"</span>)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s5-3">
+<h3>上下文消融实验：验证组件不可替代性</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128300; 消融实验：移除组件，观察退化</div>
+<div class="pc-body">
+消融实验（Ablation Study）是验证Agent各组件价值的方法：<strong>逐个移除上下文中的不同部分，观察Agent能力如何退化</strong>。<br><br>
+实验配置与结果：
+</div>
+</div>
+
+<table class="compare-table">
+<thead>
+<tr><th>消融模式</th><th>Token占比</th><th>效果</th></tr>
+</thead>
+<tbody>
+<tr><td>FULL（完整上下文）</td><td>100%</td><td>基线性能，完整能力</td></tr>
+<tr><td>NO_HISTORY（移除对话历史）</td><td>60%</td><td>无法追问，多轮对话能力丧失</td></tr>
+<tr><td>NO_REASONING（移除推理链）</td><td>75%</td><td>复杂推理断裂，准确率下降</td></tr>
+<tr><td>NO_TOOL_RESULTS（移除工具返回）</td><td>70%</td><td>相当于无工具，回到纯聊天</td></tr>
+<tr><td>MINIMAL（仅系统提示+问题）</td><td>20%</td><td>几乎无Agent能力</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">&#9989; 核心认知</div>
+<div class="pc-body">
+Context是Agent的"工作记忆"，每个组件都不可省略。这就是为什么后续Day 3要学<strong>上下文压缩策略</strong>——不是删减组件，而是在保留关键信息的前提下减少Token消耗。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python · 消融实验</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 运行上下文消融实验</span>
+results = sim.context_ablation(<span class="str">"外地户口迁移苏州"</span>)
+
+<span class="com"># 查看各消融模式的估计Token和效果</span>
+<span class="kw">for</span> mode, info <span class="kw">in</span> results.items():
+    <span class="fn">print</span>(<span class="fstr">f"{mode:<25} Token:{info['estimated_tokens']:>6}  {info['effect']}"</span>)
+
+<span class="com"># 输出：</span>
+<span class="com"># FULL                 Token:  100%  基线性能，完整能力</span>
+<span class="com"># NO_HISTORY           Token:   60%  无法追问，多轮对话能力丧失</span>
+<span class="com"># NO_REASONING         Token:   75%  复杂推理断裂，准确率下降</span>
+<span class="com"># NO_TOOL_RESULTS      Token:   70%  相当于无工具，回到纯聊天</span>
+<span class="com"># MINIMAL              Token:   20%  几乎无Agent能力</span></div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: RAG原理与检索策略 -->
+<!-- ============================================================ -->
+<div class="section" id="s6">
+<div class="section-header">
+<span class="section-tag afternoon">下午 · 2.3</span>
+<h2>RAG原理与检索策略</h2>
+<p>嵌入向量、三种检索策略、被动RAG vs Agentic RAG · 30分钟</p>
+</div>
+
+<div class="topic-card" id="s6-1">
+<h3>嵌入向量与语义检索</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 嵌入（Embedding）：文本→向量，语义相近→向量相近</div>
+<div class="pc-body">
+嵌入是RAG的基石——将文本转化为高维向量，使<strong>语义相近的文本在向量空间中距离更近</strong>。<br><br>
+<code>「公积金提取」  → [0.12, -0.34, 0.56, ...]</code><br>
+<code>「住房公积金取出」→ [0.11, -0.32, 0.55, ...]</code> ← 语义相近，向量相近<br>
+<code>「天气预报」    → [-0.45, 0.78, 0.23, ...]</code> ← 语义无关，向量远离<br><br>
+度量方式：<strong>余弦相似度</strong>（Cosine Similarity），值域[-1, 1]，越接近1越相似。<br>
+RAG检索时：用户问题→嵌入→与知识库所有文档向量计算余弦相似度→返回Top-K最相似的文档。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python · 嵌入向量演示</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">from</span> training_utils <span class="kw">import</span> EmbeddingVisualizer
+
+viz = EmbeddingVisualizer()
+
+<span class="com"># 演示语义相似度</span>
+viz.demo_semantic_similarity()
+
+<span class="com"># 输出：</span>
+<span class="com"># 「公积金怎么提取」vs「住房公积金如何取出」余弦相似度: +0.92 ████</span>
+<span class="com"># 「公积金怎么提取」vs「社保转移怎么办」     余弦相似度: +0.45 ██</span>
+<span class="com"># 「公积金怎么提取」vs「今天的天气怎么样」   余弦相似度: -0.15</span>
+
+<span class="com"># 计算两个向量的余弦相似度</span>
+v1 = viz.mock_embed(<span class="str">"公积金提取"</span>)
+v2 = viz.mock_embed(<span class="str">"住房公积金取出"</span>)
+sim = viz.cosine_similarity(v1, v2)
+<span class="fn">print</span>(<span class="fstr">f"相似度: {sim:.3f}"</span>)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s6-2">
+<h3>三种检索策略对比</h3>
+
+<table class="compare-table">
+<thead>
+<tr><th>检索方式</th><th>原理</th><th>优势</th><th>劣势</th></tr>
+</thead>
+<tbody>
+<tr><td>稀疏检索(BM25)</td><td>关键词TF-IDF匹配</td><td>精确术语匹配强</td><td>无法理解同义词</td></tr>
+<tr><td>稠密检索</td><td>语义向量相似度</td><td>模糊语义匹配强</td><td>精确术语可能遗漏</td></tr>
+<tr><td>混合检索</td><td>两路融合+重排序</td><td>兼顾精确和模糊</td><td>计算成本更高</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; 实战建议：优先混合检索</div>
+<div class="pc-body">
+查询「公积金怎么取出来」：<br><br>
+<strong>稀疏检索</strong>命中"公积金贷款额度计算方法"（精确匹配"公积金"但不相关）<br>
+<strong>稠密检索</strong>命中"住房公积金提取条件及流程"（语义匹配"取出来→提取"）<br>
+<strong>混合检索</strong>：两路结果通过RRF（Reciprocal Rank Fusion）融合，再用Cross-Encoder重排序 → 最终"住房公积金提取条件"排第一<br><br>
+生产环境推荐：<code>混合检索 = 稠密(语义) + 稀疏(关键词) + 重排序</code>
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s6-3">
+<h3>被动RAG vs Agentic RAG</h3>
+
+<div class="flow-diagram">
+╔══════════════════════════════════════════════════════════════╗
+║                    传统被动 RAG 流程                         ║
+║                                                              ║
+║   用户问题 ──► 检索1次 ──► 拼接上下文 ──► LLM生成回答       ║
+║                                                              ║
+║   特点：检索是「被动」的，只做1次，不管检索结果够不够        ║
+╚══════════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════════╗
+║                    Agentic RAG 流程                          ║
+║                                                              ║
+║   用户问题 ──► Agent思考 ──► 需要检索吗？                   ║
+║                    │         │                               ║
+║                    │    ┌────┴────┐                          ║
+║                    │    │不需要    │需要                       ║
+║                    │    ▼         ▼                           ║
+║                    │  直接回答   检索+评估                    ║
+║                    │               │                         ║
+║                    │         ┌─────┴──────┐                  ║
+║                    │     够了│         │不够                 ║
+║                    │         ▼         ▼                     ║
+║                    │       生成回答  换关键词再检索            ║
+║                    │                   └──► 最多N次           ║
+╚══════════════════════════════════════════════════════════════╝</div>
+
+<table class="compare-table">
+<thead>
+<tr><th>场景</th><th>被动RAG</th><th>Agentic RAG</th></tr>
+</thead>
+<tbody>
+<tr><td>简单问题</td><td>检索1次→命中→回答 ✅</td><td>思考→检索→评估(够了)→回答 ✅</td></tr>
+<tr><td>复杂问题</td><td>检索1次→信息不全→回答不完整 ❌</td><td>检索→评估(不够)→再检索→完整回答 ✅</td></tr>
+<tr><td>超出范围</td><td>检索无命中→仍尝试生成→可能幻觉 ⚠️</td><td>思考→决定不检索→告知超出范围 ✅</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">&#9989; Agentic RAG三大核心能力</div>
+<div class="pc-body">
+1. <strong>自主决策</strong>：判断是否需要检索（节省不必要的检索开销）<br>
+2. <strong>自主迭代</strong>：检索结果不够时自动换关键词再检索<br>
+3. <strong>自主拒绝</strong>：超出知识范围时直接说"不知道"，避免幻觉<br><br>
+本质区别：被动RAG是"检索管道"，Agentic RAG是"有判断力的检索员"。
+</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: TeleAgent平台概览 -->
+<!-- ============================================================ -->
+<div class="section" id="s7">
+<div class="section-header">
+<span class="section-tag afternoon">下午 · 2.4</span>
+<h2>TeleAgent平台概览</h2>
+<p>API架构、智能体创建流程、5天课程全景图 · 30分钟</p>
+</div>
+
+<div class="topic-card" id="s7-1">
+<h3>API架构与Python客户端</h3>
+
+<div class="flow-diagram">
+TeleAgent 平台架构：
+
+┌──────────┐   REST API    ┌──────────────┐
+│  Python  │ ◄────────────►│  TeleAgent   │
+│  客户端   │   JSON/HTTP   │   服务平台    │
+└──────────┘               └──────────────┘
+    │                           │
+    │ 封装API调用               │ 管理
+    ▼                           ▼
+ ┌──────────────────────────────────────┐
+ │  核心API：                           │
+ │  • create_agent()   创建智能体       │
+ │  • chat()           与智能体对话     │
+ │  • create_knowledge_base()  创建KB   │
+ │  • upload_text()    上传知识文档     │
+ │  • create_skill()   创建技能         │
+ │  • bind_skill_to_agent() 绑定技能    │
+ │  • create_workflow() 创建工作流      │
+ │  • run_workflow()   运行工作流       │
+ │  • call_tool()      调用平台工具     │
+ └──────────────────────────────────────┘</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python · TeleAgent客户端</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">from</span> teleagent_client <span class="kw">import</span> TeleAgentClient, get_client
+
+<span class="com"># 获取默认客户端（自动读取环境变量）</span>
+client = get_client()
+
+<span class="com"># 测试连接</span>
+agents = client.list_agents()
+<span class="fn">print</span>(<span class="fstr">f"连接成功！当前智能体数量: {len(agents)}"</span>)
+
+<span class="com"># 创建智能体</span>
+agent = client.create_agent(
+    name=<span class="str">"政务问答助手"</span>,
+    description=<span class="str">"政务服务智能问答"</span>,
+    system_prompt=<span class="str">"你是政务问答助手..."</span>,
+    model=<span class="str">"default"</span>
+)
+agent_id = agent.get(<span class="str">"id"</span>)
+
+<span class="com"># 与智能体对话</span>
+result = client.chat(agent_id, <span class="str">"公积金提取需要什么材料？"</span>)
+<span class="fn">print</span>(result.get(<span class="str">"content"</span>, <span class="str">""</span>))
+
+<span class="com"># 创建知识库</span>
+kb = client.create_knowledge_base(
+    name=<span class="str">"政务FAQ知识库"</span>,
+    description=<span class="str">"户籍、社保、公积金等FAQ"</span>
+)
+kb_id = kb.get(<span class="str">"id"</span>)
+
+<span class="com"># 上传文档到知识库</span>
+client.upload_text(kb_id,
+    title=<span class="str">"公积金提取FAQ"</span>,
+    content=<span class="str">"购房提取需提供：购房合同、身份证..."</span>
+)
+
+<span class="com"># 创建RAG技能并绑定</span>
+skill = client.create_skill(<span class="str">"政务问答"</span>, <span class="str">"rag"</span>, {
+    <span class="str">"knowledge_base_id"</span>: kb_id,
+    <span class="str">"retrieval_top_k"</span>: <span class="num">3</span>,
+    <span class="str">"temperature"</span>: <span class="num">0.3</span>
+})
+client.bind_skill_to_agent(agent_id, skill.get(<span class="str">"id"</span>))</div>
+</div>
+</div>
+
+<div class="topic-card" id="s7-2">
+<h3>智能体创建流程</h3>
+
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>定义System Prompt（角色+职责+格式）</h4>
+<p>写清楚Agent是谁、做什么、怎么输出。这是整个流程中最重要的环节。</p>
+</div>
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>调用create_agent()创建智能体</h4>
+<p>传入name、description、system_prompt、model参数，获得agent_id。</p>
+</div>
+<div class="step-block">
+<span class="step-num">3</span>
+<h4>创建知识库并上传文档（如需RAG）</h4>
+<p>调用create_knowledge_base()、upload_text()，文档自动分块→嵌入→索引。</p>
+</div>
+<div class="step-block">
+<span class="step-num">4</span>
+<h4>创建RAG技能并绑定到智能体</h4>
+<p>配置检索参数（top_k、temperature、prompt_template），绑定到Agent。</p>
+</div>
+<div class="step-block">
+<span class="step-num">5</span>
+<h4>调用chat()测试对话</h4>
+<p>多轮对话测试，覆盖正常case和边界case，验证回答质量。</p>
+</div>
+</div>
+
+<div class="topic-card" id="s7-3">
+<h3>5天课程全景图</h3>
+
+<table class="compare-table">
+<thead>
+<tr><th>Day</th><th>主题</th><th>核心能力</th><th>课题数</th></tr>
+</thead>
+<tbody>
+<tr><td>Day 1</td><td>AI理论与实践基础</td><td>LLM原理、Prompt工程、ReAct循环、RAG原理</td><td>7个原理工具</td></tr>
+<tr><td>Day 2</td><td>TeleAgent实战入门</td><td>智能问答、知识库RAG、MCP工具、上下文压缩</td><td>6个</td></tr>
+<tr><td>Day 3</td><td>文档生成与审核</td><td>合同审核(HITL)、文件生成、记忆管理、Prompt消融</td><td>7个</td></tr>
+<tr><td>Day 4</td><td>数据分析与多模态</td><td>BI分析、精准营销、多模态质检、MCP协议</td><td>7个</td></tr>
+<tr><td>Day 5</td><td>复杂智能体与路演</td><td>多Agent协同、事件驱动、消融评估、综合路演</td><td>5个</td></tr>
+</tbody>
+</table>
+
+<div class="flow-diagram">
+能力进阶路线：
+
+Day1: 理解原理        Day2: 单Agent实战      Day3: 文档场景深耕
+ ┃                      ┃                      ┃
+ ┣ LLM原理              ┣ 政务问答(RAG)        ┣ 合同审核(HITL)
+ ┣ Prompt工程            ┣ 工业知识库            ┣ 文件生成
+ ┣ ReAct循环             ┣ RAG原理深入           ┣ 记忆系统
+ ┗ RAG原理               ┗ 上下文压缩            ┗ Prompt消融
+
+Day4: 数据+多模态      Day5: 复杂智能体+路演
+ ┃                      ┃
+ ┣ BI数据分析            ┣ 5Agent协同(政务)
+ ┣ 精准营销              ┣ 4Agent协同(治理)
+ ┣ 多模态质检            ┣ 事件驱动Agent
+ ┣ CV安全助手            ┣ 消融评估
+ ┗ MCP工具协议           ┗ 综合路演
+
+演进路径：理解原理 → 单场景实战 → 场景深耕 → 多模态扩展 → 复杂协同+评估</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- Day 1 总结 -->
+<!-- ============================================================ -->
+<div class="section" id="summary">
+<div class="summary-card">
+<h3>Day 1 核心知识点回顾</h3>
+<p>7个核心概念，建立AI Agent技术直觉</p>
+</div>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">&#127919;</div>
+<div class="cc-name">1. 涌现能力</div>
+<div class="cc-desc">千亿参数→推理/指令遵循/上下文学习突然涌现，Agent的前提条件</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#9889;</div>
+<div class="cc-name">2. 自回归生成</div>
+<div class="cc-desc">逐Token预测，早期错误会传播，这就是幻觉的根源之一</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128230;</div>
+<div class="cc-name">3. Token与窗口</div>
+<div class="cc-desc">1汉字≈1-2 Token，窗口有限，首尾信息注意力最强</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#127922;</div>
+<div class="cc-name">4. 温度参数</div>
+<div class="cc-desc">temperature=0确定性，=1创造性，政务场景用0.1-0.3</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#129302;</div>
+<div class="cc-name">5. Agent三组件</div>
+<div class="cc-desc">LLM(推理)+Context(记忆)+Tools(行动)，缺一不可</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128260;</div>
+<div class="cc-name">6. ReAct循环</div>
+<div class="cc-desc">Thought→Action→Observation循环，推理指导行动</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128269;</div>
+<div class="cc-name">7. RAG检索</div>
+<div class="cc-desc">嵌入→向量检索→注入上下文→生成，混合检索最优</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="quiz">
+<h3 style="text-align:center;margin-bottom:20px">自测练习</h3>
+
+<div class="quiz-box">
+<div class="quiz-q">Q1: Agent = LLM + Context + Tools，如果移除Tools，Agent退化为？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 规则引擎</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. ChatBot（纯对话）</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 知识库</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 完全无法运行</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q2: 政务问答场景应该设置temperature为多少？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 1.0（高创造性）</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. 0.1-0.3（准确性优先）</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 0.7（平衡）</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 2.0（最高创造性）</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q3: RAG中"混合检索"是指？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 同时使用多个LLM</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. 稠密检索+稀疏检索+重排序</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 检索+生成交替进行</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 多个知识库同时检索</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q4: System Prompt三元组是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 输入+处理+输出</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. 角色+职责+格式</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 问题+检索+回答</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 思考+行动+观察</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q5: Agentic RAG相比被动RAG的核心优势是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 检索速度更快</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">B. 支持更多文件格式</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">C. 自主决策是否检索、自主迭代补充检索、自主拒绝超范围问题</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 不需要知识库</div>
+</div>
+</div>
+
+<div class="section" id="preview">
+<div class="summary-card">
+<h3>Day 2 预告：TeleAgent实战入门</h3>
+<p>明天将动手搭建第一个智能体——政务服务问答助手，从创建Agent到构建知识库到RAG问答全流程实战。</p>
+<p style="font-size:13px;color:var(--accent)">课题0: ReAct循环实验 | 课题1: 政务问答助手 | 课题2: 工业知识库 | 课题2.5: RAG原理深入 | 课题3: 病历生成 | 课题3.5: 上下文压缩</p>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+<p>区县AI赋能培训 · Day 1 · AI理论与实践基础</p>
+<p>5天22个实战课题 · 从理论到路演 · 2026年7月</p>
+</div>
+</div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function navClick(el){document.getElementById('sidebar').classList.remove('open');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active')}
+function copyCode(btn){const code=btn.closest('.code-block').querySelector('.code-body').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='已复制!';setTimeout(()=>btn.textContent='复制',1500)})}
+function checkQuiz(el,correct){const box=el.closest('.quiz-box');box.querySelectorAll('.quiz-a').forEach(a=>{a.style.pointerEvents='none';if(a===el){a.classList.add(correct?'correct':'wrong')}else if(correct&&a!==el){}});if(!correct){const answers=box.querySelectorAll('.quiz-a');answers.forEach(a=>{if(!a.classList.contains('wrong'))a.style.opacity='0.4'})}}
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;const p=h>0?Math.round(window.scrollY/h*100):0;document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressText').textContent=p+'%';
+const sections=document.querySelectorAll('.section');let active=null;sections.forEach(s=>{if(s.getBoundingClientRect().top<120)active=s});if(active){document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.getAttribute('href')==='#'+active.id)})}});
+</script>
+</body>
+</html>

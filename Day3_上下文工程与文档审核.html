@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 3 - 文档生成与审核 | 区县AI赋能培训</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f7fa;--bg2:#ffffff;--bg3:#eef2f7;--sidebar:#ffffff;--accent:#2563eb;--accent2:#059669;--accent3:#d97706;--accent4:#dc2626;--accent5:#7c3aed;--text:#1e293b;--text2:#475569;--text3:#94a3b8;--border:#e2e8f0;--card:#dbeafe;--code-bg:#f8fafc;--success:#059669;--warning:#d97706;--danger:#dc2626}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;display:flex;min-height:100vh}
+.sidebar{width:280px;min-width:280px;background:var(--sidebar);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-header .day-badge{display:inline-block;background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.sidebar-header h2{font-size:15px;color:var(--text);font-weight:700;margin-bottom:4px}
+.sidebar-header p{font-size:11px;color:var(--text3)}
+.sidebar-nav{padding:12px 0}
+.nav-group{margin-bottom:8px}
+.nav-group-title{padding:8px 20px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.nav-item{display:block;padding:8px 20px 8px 32px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.nav-item:hover{color:var(--text);background:rgba(74,158,255,.08);border-left-color:var(--accent)}
+.nav-item.active{color:var(--accent);background:rgba(74,158,255,.12);border-left-color:var(--accent);font-weight:600}
+.nav-item .time-badge{float:right;font-size:10px;background:var(--bg3);padding:1px 6px;border-radius:8px;color:var(--text3)}
+.main{margin-left:280px;flex:1;min-width:0}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 30px;display:flex;align-items:center;gap:16px}
+.topbar .menu-btn{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
+.topbar h1{font-size:16px;font-weight:700;flex:1}
+.progress-wrap{width:200px;display:flex;align-items:center;gap:8px}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent3),var(--accent4));border-radius:3px;transition:width .5s;width:0%}
+.progress-text{font-size:11px;color:var(--text3);min-width:32px;text-align:right}
+.content{padding:30px;max-width:1100px}
+.section{margin-bottom:50px;scroll-margin-top:70px}
+.section-header{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.section-header .section-tag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.section-header .section-tag.morning{background:rgba(245,158,11,.15);color:var(--accent3)}
+.section-header .section-tag.afternoon{background:rgba(99,102,241,.15);color:#818cf8}
+.section-header h2{font-size:26px;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--text),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-header p{color:var(--text2);font-size:14px}
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+.topic-card h3{font-size:18px;font-weight:700;margin-bottom:12px;color:var(--accent3)}
+.topic-card h4{font-size:15px;font-weight:700;margin:16px 0 8px;color:var(--text)}
+.topic-card p{color:var(--text2);font-size:14px;margin-bottom:10px}
+.topic-card ul,.topic-card ol{margin:8px 0 12px 20px;color:var(--text2);font-size:14px}
+.topic-card li{margin-bottom:5px}
+.principle-card{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:18px 20px;margin:16px 0;position:relative;overflow:hidden}
+.principle-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)}
+.principle-card .pc-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.principle-card .pc-body{font-size:13px;color:var(--text2);line-height:1.8}
+.principle-card .pc-body code{background:rgba(74,158,255,.12);color:var(--accent);padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Fira Code',monospace}
+.principle-card.warn{border-color:var(--accent3);background:rgba(245,158,11,.06)}
+.principle-card.warn::before{background:var(--accent3)}
+.principle-card.warn .pc-title{color:var(--accent3)}
+.principle-card.green{border-color:var(--accent2);background:rgba(54,211,153,.06)}
+.principle-card.green::before{background:var(--accent2)}
+.principle-card.green .pc-title{color:var(--accent2)}
+.step-block{margin:16px 0;padding:16px 20px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent2)}
+.step-block .step-num{display:inline-block;background:var(--accent2);color:var(--bg);width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:8px}
+.step-block h4{display:inline;font-size:14px;font-weight:700;color:var(--accent2)}
+.step-block p{margin-top:8px;font-size:13px;color:var(--text2)}
+.code-block{position:relative;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--code-bg);border-bottom:1px solid var(--border)}
+.code-header .lang-badge{font-size:11px;color:var(--accent);font-weight:600;background:rgba(74,158,255,.1);padding:2px 8px;border-radius:4px}
+.code-header .copy-btn{background:none;border:1px solid var(--border);color:var(--text3);padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .2s}
+.code-header .copy-btn:hover{color:var(--accent);border-color:var(--accent)}
+.code-body{padding:16px;background:var(--code-bg);overflow-x:auto;font-family:'Fira Code','Consolas',monospace;font-size:12.5px;line-height:1.65;tab-size:4;white-space:pre;color:#334155}
+.code-body .kw{color:#cf222e}
+.code-body .fn{color:#8250df}
+.code-body .str{color:#0a3069}
+.code-body .com{color:#6e7781;font-style:italic}
+.code-body .num{color:#0550ae}
+.code-body .cls{color:#953800}
+.code-body .dec{color:#116329}
+.code-body .op{color:#cf222e}
+.code-body .fstr{color:#0a3069}
+.compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.compare-table th{background:var(--card);color:var(--accent3);padding:10px 14px;text-align:left;font-weight:600;border-bottom:2px solid var(--accent3);font-size:12px}
+.compare-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+.compare-table tr:hover td{background:rgba(245,158,11,.05)}
+.compare-table td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+.flow-diagram{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;font-family:'Fira Code',monospace;font-size:12px;color:var(--accent3);white-space:pre;overflow-x:auto;line-height:1.5}
+.tips-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:16px 20px;margin:16px 0}
+.tips-box .tips-title{font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:8px}
+.tips-box p{font-size:13px;color:var(--text2);margin-bottom:4px}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:16px 0}
+.concept-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;transition:all .2s}
+.concept-card:hover{border-color:var(--accent3);transform:translateY(-2px)}
+.concept-card .cc-icon{font-size:24px;margin-bottom:6px}
+.concept-card .cc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.concept-card .cc-desc{font-size:11px;color:var(--text3);line-height:1.6}
+.quiz-box{background:var(--card);border:1px solid var(--accent5);border-radius:10px;padding:18px 20px;margin:16px 0}
+.quiz-box .quiz-q{font-size:14px;font-weight:700;color:var(--accent5);margin-bottom:8px}
+.quiz-box .quiz-a{font-size:13px;color:var(--text2);margin-bottom:6px;cursor:pointer;padding:6px 10px;border-radius:6px;transition:all .2s;border:1px solid transparent}
+.quiz-box .quiz-a:hover{background:rgba(167,139,250,.1);border-color:var(--accent5)}
+.quiz-box .quiz-a.correct{background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success)}
+.quiz-box .quiz-a.wrong{background:rgba(239,68,68,.1);border-color:var(--danger);color:var(--danger)}
+.summary-card{background:linear-gradient(135deg,var(--card),var(--bg2));border:1px solid var(--accent3);border-radius:14px;padding:30px;margin:30px 0;text-align:center}
+.summary-card h3{font-size:22px;font-weight:800;color:var(--accent3);margin-bottom:12px}
+.summary-card p{font-size:14px;color:var(--text2);max-width:600px;margin:0 auto 16px}
+.footer{margin-top:50px;padding:30px 0;border-top:1px solid var(--border);text-align:center}
+.footer p{font-size:12px;color:var(--text3)}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.topbar .menu-btn{display:block}
+}
+@media(max-width:600px){
+.content{padding:16px}
+.concept-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="day-badge">DAY 3 / 5</div>
+<h2>文档生成与审核</h2>
+<p>上午：记忆系统+合同审核+招投标 | 下午：公文+HR审查+消融+简报</p>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-group">
+<div class="nav-group-title">上午 · 记忆与审核</div>
+<a class="nav-item" href="#s38" onclick="navClick(this)">课题3.8: 用户记忆系统<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s38-1" onclick="navClick(this)">├ 三种记忆架构</a>
+<a class="nav-item" href="#s38-2" onclick="navClick(this)">├ 记录→检索→注入</a>
+<a class="nav-item" href="#s38-3" onclick="navClick(this)">└ 有无记忆对比</a>
+<a class="nav-item" href="#s4" onclick="navClick(this)">课题4: 合同审核(HITL)<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s4-1" onclick="navClick(this)">├ 创建审核智能体</a>
+<a class="nav-item" href="#s4-2" onclick="navClick(this)">├ 合同审核测试</a>
+<a class="nav-item" href="#s4-3" onclick="navClick(this)">└ HITL人工审批</a>
+<a class="nav-item" href="#s5" onclick="navClick(this)">课题5: 招投标文件<span class="time-badge">20min</span></a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">下午 · 文档与原理</div>
+<a class="nav-item" href="#s6" onclick="navClick(this)">课题6: 公文生成<span class="time-badge">15min</span></a>
+<a class="nav-item" href="#s7" onclick="navClick(this)">课题7: HR制度审查(记忆联动)<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s7-1" onclick="navClick(this)">├ 初始化审查记忆</a>
+<a class="nav-item" href="#s7-2" onclick="navClick(this)">├ 制度审查测试</a>
+<a class="nav-item" href="#s7-3" onclick="navClick(this)">└ 一致性检查</a>
+<a class="nav-item" href="#s75" onclick="navClick(this)">课题7.5: Prompt消融实验<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s8" onclick="navClick(this)">课题8: 治理简报<span class="time-badge">15min</span></a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">总结与测验</div>
+<a class="nav-item" href="#quiz" onclick="navClick(this)">课堂测验</a>
+<a class="nav-item" href="#preview" onclick="navClick(this)">Day 4 预告</a>
+</div>
+</nav>
+</aside>
+
+<div class="main">
+<div class="topbar">
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
+<h1>Day 3 · 文档生成与审核 + 上下文工程</h1>
+<div class="progress-wrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<span class="progress-text" id="progressText">0%</span>
+</div>
+</div>
+
+<div class="content">
+
+<div class="section" id="s38">
+<div class="section-header">
+<div class="section-tag morning">上午 · 原理层</div>
+<h2>课题3.8: 用户记忆系统实验</h2>
+<p>从「通用工具」到「专属助手」——记忆系统让Agent记住用户偏好和历史上下文</p>
+</div>
+
+<div class="topic-card" id="s38-1">
+<h3>步骤1: 三种记忆架构对比</h3>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">📝</div>
+<div class="cc-name">扁平笔记</div>
+<div class="cc-desc">[{content, timestamp}, ...] 简单易实现，但无结构化，检索效率低</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">🗂️</div>
+<div class="cc-name">JSON层级</div>
+<div class="cc-desc">{category: {key: value}} 结构清晰，但层级固定，扩展性差</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">🧠</div>
+<div class="cc-name">高级JSON卡片</div>
+<div class="cc-desc">[{category, key, value, timestamp, metadata}] 灵活可扩展，支持检索和上下文注入</div>
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 三种架构代码对比</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 架构1: 扁平笔记</span>
+flat_memory = []
+flat_memory.<span class="fn">append</span>({<span class="str">"content"</span>: <span class="str">"用户姓名：王主任"</span>, <span class="str">"timestamp"</span>: time.<span class="fn">time</span>()})
+flat_memory.<span class="fn">append</span>({<span class="str">"content"</span>: <span class="str">"负责领域：社会综合治理"</span>, <span class="str">"timestamp"</span>: time.<span class="fn">time</span>()})
+<span class="com"># 优缺点: 简单易实现 / 无结构化，检索效率低</span>
+
+<span class="com"># 架构2: JSON层级</span>
+json_memory = {
+    <span class="str">"个人信息"</span>: {<span class="str">"姓名"</span>: <span class="str">"王主任"</span>, <span class="str">"职务"</span>: <span class="str">"综治中心主任"</span>},
+    <span class="str">"业务偏好"</span>: {<span class="str">"简报风格"</span>: <span class="str">"数据先行"</span>, <span class="str">"关注领域"</span>: <span class="str">"矛盾纠纷"</span>},
+    <span class="str">"交互记录"</span>: {<span class="str">"咨询次数"</span>: <span class="num">5</span>, <span class="str">"上次话题"</span>: <span class="str">"劳资纠纷处理"</span>}
+}
+<span class="com"># 优缺点: 结构清晰 / 层级固定，扩展性差</span>
+
+<span class="com"># 架构3: 高级JSON卡片（MemoryManager）</span>
+mm = <span class="cls">MemoryManager</span>(filepath=<span class="str">"memory_demo.json"</span>)
+mm.<span class="fn">add_fact</span>(<span class="str">"个人信息"</span>, <span class="str">"姓名"</span>, <span class="str">"王主任"</span>)
+mm.<span class="fn">add_fact</span>(<span class="str">"个人信息"</span>, <span class="str">"职务"</span>, <span class="str">"综治中心主任"</span>)
+mm.<span class="fn">add_fact</span>(<span class="str">"业务偏好"</span>, <span class="str">"简报风格"</span>, <span class="str">"数据先行"</span>)
+mm.<span class="fn">add_fact</span>(<span class="str">"业务偏好"</span>, <span class="str">"关注领域"</span>, <span class="str">"矛盾纠纷"</span>)
+<span class="com"># 优缺点: 灵活可扩展 / 实现复杂度较高</span>
+
+<span class="com"># MemoryManager 核心方法：</span>
+<span class="com"># add_fact(category, key, value, metadata) — 添加记忆</span>
+<span class="com"># search(query, top_k) — 关键词检索</span>
+<span class="com"># get_context_for_prompt(query) — 生成可注入Prompt的记忆摘要</span></div>
+</div>
+</div>
+
+<div class="topic-card" id="s38-2">
+<h3>步骤2: 政务场景实践 — 记录→检索→注入Prompt</h3>
+
+<div class="flow-diagram">记录用户信息          检索相关记忆           注入Prompt
+    │                    │                     │
+    ▼                    ▼                     ▼
+┌──────────┐      ┌──────────────┐      ┌────────────────┐
+│ add_fact │ ──► │   search()   │ ──► │get_context_    │
+│ 6条记忆  │      │ "报告"       │      │for_prompt()    │
+│ 用户画像  │      │ → 匹配3条    │      │ → 生成记忆文本  │
+│ 工作偏好  │      │ 部门/业务/风格│      │ → 注入system_  │
+│ 历史任务  │      │              │      │   prompt       │
+└──────────┘      └──────────────┘      └────────────────┘</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 步骤1: 记录用户信息</span>
+mm2 = <span class="cls">MemoryManager</span>(filepath=<span class="str">"gov_memory.json"</span>)
+mm2.<span class="fn">add_fact</span>(<span class="str">"用户画像"</span>, <span class="str">"部门"</span>, <span class="str">"XX区住建局"</span>, {<span class="str">"来源"</span>: <span class="str">"首次对话"</span>})
+mm2.<span class="fn">add_fact</span>(<span class="str">"用户画像"</span>, <span class="str">"负责业务"</span>, <span class="str">"老旧小区改造"</span>, {<span class="str">"来源"</span>: <span class="str">"首次对话"</span>})
+mm2.<span class="fn">add_fact</span>(<span class="str">"用户画像"</span>, <span class="str">"职级"</span>, <span class="str">"科室负责人"</span>, {<span class="str">"来源"</span>: <span class="str">"首次对话"</span>})
+mm2.<span class="fn">add_fact</span>(<span class="str">"工作偏好"</span>, <span class="str">"报告风格"</span>, <span class="str">"数据驱动、问题导向"</span>, {<span class="str">"来源"</span>: <span class="str">"对话推断"</span>})
+mm2.<span class="fn">add_fact</span>(<span class="str">"工作偏好"</span>, <span class="str">"常用文种"</span>, <span class="str">"通知、情况报告"</span>, {<span class="str">"来源"</span>: <span class="str">"对话推断"</span>})
+mm2.<span class="fn">add_fact</span>(<span class="str">"历史任务"</span>, <span class="str">"上次生成"</span>, <span class="str">"第三季度安全检查通知"</span>, {<span class="str">"来源"</span>: <span class="str">"交互记录"</span>})
+
+<span class="com"># 步骤2: 检索与「报告」相关记忆</span>
+results = mm2.<span class="fn">search</span>(<span class="str">"报告"</span>)
+<span class="kw">for</span> r <span class="kw">in</span> results:
+    <span class="fn">print</span>(<span class="str">f"  [{</span>{r[<span class="str">'category'</span>]}<span class="str">}] {</span>{r[<span class="str">'key'</span>]}<span class="str">}: {</span>{r[<span class="str">'value'</span>]}<span class="str">}"</span>)
+
+<span class="com"># 步骤3: 注入Prompt记忆上下文</span>
+mem_context = mm2.<span class="fn">get_context_for_prompt</span>(<span class="str">"老旧小区改造报告"</span>)
+agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"记忆增强政务助手"</span>,
+    system_prompt=<span class="str">f"""你是一个政务文件生成助手。
+
+{mem_context}
+
+根据以上用户记忆，个性化生成文件：
+- 匹配用户部门和工作领域
+- 采用用户偏好的文风和格式
+- 参考历史任务经验"""</span>,
+    model=<span class="str">"default"</span>
+)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s38-3">
+<h3>步骤3: 对比有无记忆的对话质量差异</h3>
+
+<table class="compare-table">
+<tr><th>维度</th><th>无记忆</th><th>有记忆</th></tr>
+<tr><td>部门归属</td><td>泛化（未知）</td><td>XX区住建局</td></tr>
+<tr><td>文风匹配</td><td>默认公文风</td><td>数据驱动风</td></tr>
+<tr><td>业务深度</td><td>通用水准</td><td>老旧小区专项</td></tr>
+<tr><td>历史参考</td><td>无</td><td>参考上次任务</td></tr>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">核心洞察：记忆系统让Agent从「通用工具」进化为「专属助手」</div>
+<div class="pc-body">
+没有记忆的Agent，每次对话都是「新朋友」——它不知道你是谁、做什么、喜欢什么风格。<br>
+有记忆的Agent，就像「老同事」——它知道你的部门、负责的业务、偏好的文风，甚至记得上次帮你做了什么。<br><br>
+选择建议：轻量场景用扁平笔记，业务场景用JSON层级，复杂场景用高级JSON卡片（MemoryManager）。<br>
+记忆注入Prompt是最简单有效的上下文工程手段之一。
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s4">
+<div class="section-header">
+<div class="section-tag morning">上午 · 实战层</div>
+<h2>课题4: 金融领域自动化合同审核（含HITL审批）</h2>
+<p>Agent自动识别风险条款 + 人工审批(HITL)流程 = 自动化与安全性的平衡</p>
+</div>
+
+<div class="topic-card" id="s4-1">
+<h3>步骤1: 创建合同审核智能体</h3>
+
+<div class="principle-card">
+<div class="pc-title">合同审核5大维度</div>
+<div class="pc-body">
+1. <strong>利率条款</strong>：检查是否存在银行单方面调价权、浮动利率未设上限<br>
+2. <strong>担保条款</strong>：担保方式是否明确、评估价值是否充足、保证期间是否合理<br>
+3. <strong>违约条款</strong>：违约金比例是否过高（>3%为高风险）、交叉违约是否过于宽泛<br>
+4. <strong>争议解决</strong>：仲裁条款是否明确仲裁地点和规则<br>
+5. <strong>权利失衡</strong>：是否存在单方面解除权、不对等的提前还款违约金
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"合同审核智能体"</span>,
+    description=<span class="str">"银行信贷合同批量审核，识别风险条款并生成审核报告，支持HITL审批"</span>,
+    system_prompt=<span class="str">"""你是一个专业的合同审核助手，负责审核银行信贷合同并识别风险条款。
+
+审核维度：
+1. 【利率条款】检查是否存在银行单方面调价权、浮动利率未设上限
+2. 【担保条款】检查担保方式是否明确、担保物评估价值是否充足、保证期间是否合理
+3. 【违约条款】检查违约金比例是否过高（>3%为高风险）、交叉违约条款是否过于宽泛
+4. 【争议解决】检查仲裁条款是否明确仲裁地点和规则
+5. 【权利失衡】检查是否存在单方面解除权、不对等的提前还款违约金
+
+风险等级判定：
+- 🟢低风险：无风险条款或仅有轻微提示项
+- 🟡中风险：存在1-2条中等风险条款
+- 🔴高风险：存在3条及以上风险条款，或任一条款违约金>5%
+
+输出格式：
+## 合同审核报告
+**风险等级**: 🟢低风险 / 🟡中风险 / 🔴高风险
+**风险条款数**: X条
+**需人工审批**: 是/否
+
+### 风险条款详情
+| 序号 | 条款 | 风险类型 | 风险等级 | 问题描述 | 修改建议 |
+
+### 审核建议"""</span>,
+    model=<span class="str">"default"</span>
+)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s4-2">
+<h3>步骤2: 合同审核测试</h3>
+<p>用两个典型案例测试：一个低风险合同、一个高风险合同。</p>
+
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>低风险合同：个人住房贷款</h4>
+<p>贷款金额80万元，年利率4.2%（固定），期限30年，等额本息还款。担保方式：所购房产抵押，评估价值120万元。违约金：提前还款收取1%手续费。争议解决：XX市仲裁委员会。</p>
+<p style="color:var(--accent2);font-weight:600">预期结果：🟢低风险，自动通过</p>
+</div>
+
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>高风险合同：企业经营贷款</h4>
+<p>贷款金额500万元，年利率为<strong style="color:var(--accent4)">浮动利率（银行有权单方面调整）</strong>，期限5年。担保方式：<strong style="color:var(--accent4)">企业全部资产抵押（未明确评估价值）</strong>。违约金：<strong style="color:var(--accent4)">逾期还款收取每日0.5%罚息+5%违约金</strong>。银行有权在任何时候要求提前偿还全部贷款。争议解决：由银行总部所在地法院管辖。</p>
+<p style="color:var(--accent4);font-weight:600">预期结果：🔴高风险，需人工审批（至少4处风险条款）</p>
+</div>
+</div>
+
+<div class="topic-card" id="s4-3">
+<h3>步骤3: HITL (Human-in-the-Loop) 人工审批流程</h3>
+
+<div class="flow-diagram">Agent审核合同 → 风险分级 → 分级处理
+                               │
+                    ┌──────────┼──────────┐
+                    │          │          │
+                🟢低风险    🟡中风险    🔴高风险
+                    │          │          │
+                自动通过   建议人工复核  必须人工审批
+                    │          │          │
+                    ▼          ▼          ▼
+                  完成     复核通过?   3种审批选项:
+                           │          1. 同意拒绝
+                        y─►完成      2. 修改后通过
+                        n─►详细复核   3. 强制通过(需原因)
+                                      │
+                                      ▼
+                                   审批留痕</div>
+
+<div class="principle-card warn">
+<div class="pc-title">HITL设计4大要点</div>
+<div class="pc-body">
+1. <strong>风险分级</strong>：低风险自动→中风险复核→高风险审批，避免一刀切<br>
+2. <strong>审批留痕</strong>：所有人工决策必须记录原因，可追溯<br>
+3. <strong>Agent→Human</strong>：Agent给出建议，人做最终决策（Agent不直接执行高风险操作）<br>
+4. <strong>异常兜底</strong>：强制通过需写明特殊原因（如「战略客户特批」），防止滥用
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - HITL审批逻辑</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">for</span> title, risk <span class="kw">in</span> risk_labels:
+    <span class="kw">if</span> risk == <span class="str">"high"</span>:
+        <span class="fn">print</span>(<span class="str">f"📋 合同「</span>{title}<span class="str">」需人工审批"</span>)
+        <span class="fn">print</span>(<span class="str">"  Agent建议: 🔴高风险，建议拒绝或要求修改条款"</span>)
+        <span class="fn">print</span>(<span class="str">"  ┌─────────────────────────────────┐"</span>)
+        <span class="fn">print</span>(<span class="str">"  │ 人工审批选项:                    │"</span>)
+        <span class="fn">print</span>(<span class="str">"  │   1. 同意Agent建议（拒绝合同）   │"</span>)
+        <span class="fn">print</span>(<span class="str">"  │   2. 修改后通过（指定修改要求）   │"</span>)
+        <span class="fn">print</span>(<span class="str">"  │   3. 覆盖风险标记（强制通过）     │"</span>)
+        <span class="fn">print</span>(<span class="str">"  └─────────────────────────────────┘"</span>)
+        human_decision = <span class="fn">input</span>(<span class="str">"  请选择审批操作 (1/2/3): "</span>)
+
+        <span class="kw">if</span> human_decision == <span class="str">"1"</span>:
+            <span class="fn">print</span>(<span class="str">"  ✅ 审批结果: 同意Agent建议，合同已拒绝"</span>)
+        <span class="kw">elif</span> human_decision == <span class="str">"2"</span>:
+            modification = <span class="fn">input</span>(<span class="str">"  请输入修改要求: "</span>)
+            <span class="fn">print</span>(<span class="str">f"  ✅ 审批结果: 要求修改后通过"</span>)
+            <span class="com"># Agent根据修改要求提出修改方案</span>
+            result = client.<span class="fn">chat</span>(agent_id,
+                <span class="str">f"根据人工审批要求，对合同「</span>{title}<span class="str">」提出具体修改方案: </span>{modification}<span class="str">"</span>)
+        <span class="kw">elif</span> human_decision == <span class="str">"3"</span>:
+            reason = <span class="fn">input</span>(<span class="str">"  请输入强制通过原因: "</span>)
+            <span class="fn">print</span>(<span class="str">f"  ⚠️ 审批结果: 覆盖风险标记，强制通过。原因: </span>{reason}<span class="str">"</span>)
+            <span class="fn">print</span>(<span class="str">"  📝 审批记录已存档"</span>)
+
+    <span class="kw">elif</span> risk == <span class="str">"medium"</span>:
+        <span class="fn">print</span>(<span class="str">f"📋 合同「</span>{title}<span class="str">」建议人工复核"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">f"📋 合同「</span>{title}<span class="str">」🟢低风险，自动通过 ✅"</span>)</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s5">
+<div class="section-header">
+<div class="section-tag morning">上午 · 实战层</div>
+<h2>课题5: 制造领域招投标文件应用</h2>
+<p>技术方案智能生成 + 合规性检查</p>
+</div>
+
+<div class="topic-card">
+<h3>创建招投标助手 + 生成技术方案</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"招投标文件助手"</span>,
+    description=<span class="str">"招投标技术方案智能生成与合规性检查"</span>,
+    system_prompt=<span class="str">"""你是一个招投标文件助手，帮助企业快速生成技术方案并检查合规性。
+
+功能一：技术方案生成
+输入项目需求，生成包含以下章节的技术方案：
+1. 项目理解与技术路线
+2. 实施方案与进度计划
+3. 项目团队与资质
+4. 质量保障措施
+5. 售后服务承诺
+
+功能二：合规性检查
+检查投标文件是否满足：
+- 资质要求（营业执照、行业资质等）
+- 业绩要求（类似项目案例）
+- 格式要求（页数、字体、盖章等）
+- 响应性要求（是否逐条响应招标文件要求）"""</span>,
+    model=<span class="str">"default"</span>
+)
+
+requirement = <span class="str">"""
+项目名称：XX市智慧水务数据中台建设项目
+预算金额：280万元
+核心需求：
+1. 建设水务数据中台，整合供水、排水、污水三大系统数据
+2. 实现实时数据采集与监控，支持10000+点位并发
+3. 构建水务数据资产目录与数据质量管理体系
+4. 开发3个典型数据分析应用（漏损分析、水质预警、调度优化）
+5. 提供数据API服务，支持第三方系统对接
+
+资质要求：
+- 软件开发CMMI3级及以上
+- 水务行业信息化项目经验不少于3个
+- 项目团队不少于15人"""</span>
+
+result = client.<span class="fn">chat</span>(agent_id, <span class="str">f"请根据以下招标需求生成技术方案：\n</span>{requirement}<span class="str">"</span>)
+<span class="com"># 接着进行合规性检查</span>
+result = client.<span class="fn">chat</span>(agent_id, <span class="str">"请对上面生成的技术方案进行合规性检查，是否满足资质要求。"</span>)</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s6">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 实战层</div>
+<h2>课题6: 建筑/交通领域管理文件生成</h2>
+<p>通知、报告、纪要——三大公文类型自动生成</p>
+</div>
+
+<div class="topic-card">
+<h3>公文生成测试</h3>
+
+<div class="principle-card">
+<div class="pc-title">公文规范要点</div>
+<div class="pc-body">
+- 使用正式公文语体，不使用口语<br>
+- 标题格式：发文机关+事由+文种<br>
+- 正文结构完整：开头（目的/依据）+主体+结尾<br>
+- 涉及时间、数字使用阿拉伯数字<br>
+- 禁止使用「大概」「可能」等模糊表述
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"公文智能生成助手"</span>,
+    description=<span class="str">"住建/交通部门日常管理文件自动生成"</span>,
+    system_prompt=<span class="str">"""你是一个公文写作助手，帮助政府部门工作人员快速生成规范的公文。
+
+支持的公文类型：
+1. 【通知】会议通知、工作通知、检查通知
+2. 【报告】工作汇报、情况报告、调研报告
+3. 【纪要】会议纪要、专题会议纪要
+
+公文规范：
+- 使用正式公文语体，不使用口语
+- 标题格式：发文机关+事由+文种
+- 正文结构完整：开头（目的/依据）+主体+结尾
+- 涉及时间、数字使用阿拉伯数字
+- 禁止使用「大概」「可能」等模糊表述"""</span>,
+    model=<span class="str">"default"</span>
+)
+
+<span class="com"># 生成会议通知</span>
+result = client.<span class="fn">chat</span>(agent_id,
+    <span class="str">"请生成一份会议通知：关于召开2026年第三季度住建系统安全生产工作会议，时间7月15日上午9:00，地点市住建局会议室"</span>)
+
+<span class="com"># 生成工作报告</span>
+result = client.<span class="fn">chat</span>(agent_id,
+    <span class="str">"请生成一份情况报告：关于XX区老旧小区改造进展情况，已完成8个小区改造，惠及居民3200户，投资额1.2亿元"</span>)</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s7">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 实战层</div>
+<h2>课题7: 人力资源领域制度审查（含记忆联动）</h2>
+<p>记忆系统 + 合规审查 = 一致性审查新范式</p>
+</div>
+
+<div class="topic-card" id="s7-1">
+<h3>步骤0: 初始化历史审查记忆</h3>
+<p>在审查新制度之前，先加载历史审查记录和合规基准，建立「审查知识库」：</p>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">mm = <span class="cls">MemoryManager</span>(filepath=<span class="str">"hr_review_memory.json"</span>)
+
+<span class="com"># 历史审查记录</span>
+mm.<span class="fn">add_fact</span>(<span class="str">"审查记录"</span>, <span class="str">"2025-12-加班制度"</span>,
+    <span class="str">"发现3处违规：加班费计算标准低于法定、调休时限过短、强制加班条款"</span>,
+    metadata={<span class="str">"risk_level"</span>: <span class="str">"high"</span>, <span class="str">"status"</span>: <span class="str">"已修改"</span>})
+mm.<span class="fn">add_fact</span>(<span class="str">"审查记录"</span>, <span class="str">"2026-01-请假制度"</span>,
+    <span class="str">"整体合规，建议补充：病假工资计算方式、孕期特殊保护条款"</span>,
+    metadata={<span class="str">"risk_level"</span>: <span class="str">"low"</span>, <span class="str">"status"</span>: <span class="str">"已补充"</span>})
+mm.<span class="fn">add_fact</span>(<span class="str">"审查记录"</span>, <span class="str">"2026-03-薪酬制度"</span>,
+    <span class="str">"发现2处风险：绩效工资占比超50%、未明确发放时间"</span>,
+    metadata={<span class="str">"risk_level"</span>: <span class="str">"medium"</span>, <span class="str">"status"</span>: <span class="str">"修改中"</span>})
+
+<span class="com"># 合规基准（法律底线）</span>
+mm.<span class="fn">add_fact</span>(<span class="str">"合规基准"</span>, <span class="str">"加班费标准"</span>,
+    <span class="str">"工作日150%/休息日200%/法定节假日300%，不得以调休替代法定节假日加班费"</span>)
+mm.<span class="fn">add_fact</span>(<span class="str">"合规基准"</span>, <span class="str">"试用期上限"</span>,
+    <span class="str">"合同期<1年≤1个月，1-3年≤2个月，≥3年≤6个月，同一用人单位只能约定一次"</span>)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s7-2">
+<h3>步骤1-2: 创建记忆联动审查智能体 + 审查测试</h3>
+
+<div class="principle-card">
+<div class="pc-title">记忆联动的价值：一致性审查</div>
+<div class="pc-body">
+传统审查：每次审查都是独立的，无法发现新制度与旧制度的冲突。<br>
+记忆联动审查：自动关联历史审查结论——<br>
+- 加班费审查过3次了，每次都发现不同问题，这次要重点检查<br>
+- 上次加班制度的加班费标准低于法定，这次新制度是否修复了这个问题？<br>
+- 新制度的试用期条款是否与合规基准一致？<br><br>
+这就是「<strong>一致性审查</strong>」——不仅检查单份制度的合规性，还检查多份制度之间的一致性。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 待审查的考勤制度</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">policy_text = <span class="str">"""
+《XX公司考勤与加班管理制度》
+
+第三条 工作时间
+公司实行标准工时制，每日工作8小时，每周工作6天。      ← ⚠️每周6天违法！
+
+第五条 加班管理
+5.1 公司因生产经营需要安排加班的，员工应服从安排。    ← ⚠️强制加班
+5.2 加班费统一按基本工资的100%计算，不分工作日/休息日/法定节假日。 ← ⚠️低于法定！
+
+第七条 迟到处罚
+迟到15分钟以内扣款50元，15-30分钟扣款100元，30分钟以上按旷工处理。
+
+第九条 试用期
+管理岗位试用期6个月，普通岗位试用期3个月。            ← ⚠️普通岗位3个月超限
+试用期工资为正式工资的70%。                            ← ⚠️低于80%法定下限
+"""</span>
+
+result = client.<span class="fn">chat</span>(agent_id,
+    <span class="str">f"请审查以下公司制度，识别所有不合规条款，并对比历史审查记录检查一致性：\n</span>{policy_text}<span class="str">"</span>)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s7-3">
+<h3>步骤3-4: 更新审查记忆 + 一致性检查</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 更新审查记忆</span>
+mm.<span class="fn">add_fact</span>(<span class="str">"审查记录"</span>, <span class="str">"2026-07-考勤加班制度"</span>,
+    <span class="str">"发现多项违规：每周6天工时违法、加班费仅100%低于法定、试用期工资70%低于80%下限"</span>,
+    metadata={<span class="str">"risk_level"</span>: <span class="str">"high"</span>, <span class="str">"status"</span>: <span class="str">"待修改"</span>})
+
+<span class="com"># 一致性检查：搜索历史加班费审查记录</span>
+old_records = mm.<span class="fn">search</span>(<span class="str">"加班费"</span>)
+<span class="kw">for</span> r <span class="kw">in</span> old_records:
+    <span class="fn">print</span>(<span class="str">f"📌 [{</span>{r[<span class="str">'category'</span>]}<span class="str">}] {</span>{r[<span class="str">'key'</span>]}<span class="str">}: {</span>{r[<span class="str">'value'</span>]}<span class="str">}"</span>)
+
+<span class="com"># 输出：</span>
+<span class="com"># 📌 [审查记录] 2025-12-加班制度: 发现3处违规：加班费计算标准低于法定...</span>
+<span class="com"># 📌 [合规基准] 加班费标准: 工作日150%/休息日200%/法定节假日300%...</span></div>
+</div>
+
+<div class="principle-card green">
+<div class="pc-title">记忆联动三大价值</div>
+<div class="pc-body">
+1. <strong>自动关联</strong>历史审查结论，避免同类问题遗漏<br>
+2. <strong>建立合规知识库</strong>，审查标准逐步统一<br>
+3. <strong>新旧制度冲突检测</strong>（一致性审查），这是传统审查无法做到的
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s75">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 原理层</div>
+<h2>课题7.5: Prompt消融实验</h2>
+<p>科学评估Prompt各组件的贡献度——用数据说话，而非凭感觉</p>
+</div>
+
+<div class="topic-card">
+<h3>消融实验方法论</h3>
+
+<div class="principle-card">
+<div class="pc-title">消融实验（Ablation Study）原理</div>
+<div class="pc-body">
+消融实验是Prompt工程的核心评估方法：<br>
+<strong>原理</strong>：逐个移除Prompt组件，观察输出质量变化，量化各组件贡献度<br><br>
+典型Prompt组件：<br>
+1. <strong>System Prompt</strong>（系统提示）← 角色定义、行为约束<br>
+2. <strong>Few-shot Examples</strong>（少样本示例）← 输出格式参照<br>
+3. <strong>Tool Descriptions</strong>（工具描述）← 工具选择依据<br>
+4. <strong>Reasoning Chain</strong>（推理链引导）← 复杂推理能力<br>
+5. <strong>Tone/Style</strong>（语气风格）← 输出语气控制<br><br>
+实验步骤：<br>
+1. 建立Baseline（完整Prompt配置）<br>
+2. 逐个移除组件，记录输出变化<br>
+3. 用评估函数量化差异<br>
+4. 排序各组件贡献度
+</div>
+</div>
+
+<h4>合同审核场景消融实践</h4>
+<p>用同一个高风险合同测试4种Prompt配置：</p>
+
+<table class="compare-table">
+<tr><th>配置</th><th>说明</th><th>预期影响</th></tr>
+<tr><td>baseline（完整配置）</td><td>角色+审核维度+输出格式</td><td>基线，得分最高</td></tr>
+<tr><td>no_system_prompt</td><td>仅「请审核以下合同」</td><td>角色和约束全丢，影响最大</td></tr>
+<tr><td>no_tool_description</td><td>无审核维度指引</td><td>审核零散无体系</td></tr>
+<tr><td>informal_tone</td><td>改为非正式语气</td><td>输出不专业但核心信息仍在</td></tr>
+</table>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 消融实验核心代码</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">prompt_configs = {
+    <span class="str">"baseline"</span>: {
+        <span class="str">"system_prompt"</span>: <span class="str">"""你是一个专业的金融合同审核助手。
+审核维度：
+1. 利率条款风险  2. 担保条款风险  3. 违约条款风险  4. 权利平衡性
+输出格式：风险等级 | 风险条款数 | 详细审核意见 | 修改建议"""</span>,
+    },
+    <span class="str">"no_system_prompt"</span>: {
+        <span class="str">"system_prompt"</span>: <span class="str">"请审核以下合同。"</span>,
+    },
+    <span class="str">"no_tool_description"</span>: {
+        <span class="str">"system_prompt"</span>: <span class="str">"""你是一个合同审核助手。
+请审核合同。（无审核维度指引）"""</span>,
+    },
+    <span class="str">"informal_tone"</span>: {
+        <span class="str">"system_prompt"</span>: <span class="str">"""嘿！来帮我看看这个合同有没有坑哈～
+大概看看这几点就行：- 利率有问题不 - 担保靠谱不 - 违约金离谱不
+随便说说就好，不用太正式～"""</span>,
+    },
+}
+
+<span class="com"># 评估函数：量化审核质量</span>
+<span class="kw">def</span> <span class="fn">evaluate_contract_review</span>(question, answer):
+    score = <span class="num">0.0</span>
+    <span class="kw">if</span> <span class="kw">not</span> answer <span class="kw">or</span> <span class="fn">len</span>(answer) < <span class="num">20</span>: <span class="kw">return</span> <span class="num">0.0</span>
+    risk_keywords = [<span class="str">"风险"</span>, <span class="str">"违约"</span>, <span class="str">"担保"</span>, <span class="str">"利率"</span>, <span class="str">"霸王"</span>, <span class="str">"不合规"</span>, <span class="str">"违规"</span>, <span class="str">"建议修改"</span>]
+    found = <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> kw <span class="kw">in</span> risk_keywords <span class="kw">if</span> kw <span class="kw">in</span> answer)
+    score += found / <span class="fn">len</span>(risk_keywords) * <span class="num">0.6</span>
+    structure_keywords = [<span class="str">"|"</span>, <span class="str">"1."</span>, <span class="str">"2."</span>, <span class="str">"报告"</span>, <span class="str">"审核"</span>]
+    found_struct = <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> kw <span class="kw">in</span> structure_keywords <span class="kw">if</span> kw <span class="kw">in</span> answer)
+    score += found_struct / <span class="fn">len</span>(structure_keywords) * <span class="num">0.2</span>
+    score += <span class="fn">min</span>(<span class="num">0.2</span>, <span class="fn">len</span>(answer) / <span class="num">1000</span>)
+    <span class="kw">return</span> <span class="fn">round</span>(<span class="fn">min</span>(<span class="num">1.0</span>, score), <span class="num">3</span>)</div>
+</div>
+
+<div class="principle-card warn">
+<div class="pc-title">消融实验核心洞察</div>
+<div class="pc-body">
+- <strong>系统提示贡献最大</strong> → 定义了角色、审核维度、输出格式，是Prompt的「灵魂」<br>
+- <strong>审核维度指引影响显著</strong> → 没有指引则审核零散无体系，遗漏关键风险<br>
+- <strong>语气风格影响中等</strong> → 非正式语气导致输出不专业，但核心信息通常仍在<br>
+- <strong>Baseline配置综合最优</strong> → 各组件协同效果 > 单组件之和<br><br>
+实践建议：做Prompt优化时，先用消融实验定位最关键组件，系统提示是最值得投入优化时间的部分。
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s8">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 实战层</div>
+<h2>课题8: 社会治理领域治理简报生成</h2>
+<p>综治中心自动生成区域治理简报，汇总事件、工单、数据</p>
+</div>
+
+<div class="topic-card">
+<h3>治理简报生成</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"社会治理简报生成"</span>,
+    description=<span class="str">"综治中心自动生成区域治理简报，汇总事件、工单、数据"</span>,
+    system_prompt=<span class="str">"""你是一个社会治理简报生成助手，帮助综治中心工作人员快速生成治理工作简报。
+
+简报规范：
+1. 标题：XX区XX街道社会治理工作简报（第X期）
+2. 数据概览：事件总数、已办结数、办结率、平均处理时长
+3. 重点工作：按类别分类汇总（矛盾纠纷、安全隐患、民生诉求、城市管理）
+4. 典型案例：选取2-3个代表性事件
+5. 风险预警：本月需关注的重点问题
+6. 下步计划：针对性措施建议
+
+语言要求：简明扼要，数据准确，突出重点。"""</span>,
+)
+
+monthly_data = <span class="str">"""
+2026年6月XX街道社会治理数据：
+- 事件总数：156件（较上月下降8%）
+- 已办结：148件，办结率94.9%
+- 平均处理时长：2.3天
+
+分类统计：
+- 矛盾纠纷：32件（邻里纠纷18件、劳资纠纷9件、其他5件）
+- 安全隐患：45件（消防隐患22件、建筑安全13件、其他10件）
+- 民生诉求：52件（环境投诉28件、市政设施15件、其他9件）
+- 城市管理：27件（违建12件、占道经营9件、其他6件）
+
+典型案例：
+1. XX小区消防通道长期被占用，经协调物业设置隔离桩并加强巡查，已整改
+2. XX路沿线商铺占道经营反复投诉，联合城管开展专项整治，暂有成效
+
+重点关注：劳资纠纷较上月上升50%，主要涉及3家小企业欠薪问题"""</span>
+
+result = client.<span class="fn">chat</span>(agent_id, <span class="str">f"请根据以下数据生成治理简报：\n</span>{monthly_data}<span class="str">"</span>)</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="quiz">
+<div class="section-header">
+<div class="section-tag afternoon">总结</div>
+<h2>课堂测验</h2>
+</div>
+
+<div class="topic-card">
+<div class="quiz-box">
+<div class="quiz-q">Q1: HITL（Human-in-the-Loop）的核心设计原则是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 所有问题都由人工处理</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. Agent给出建议，人做最终决策；低风险自动、高风险审批</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. Agent自动执行所有操作</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 人工审批不需要记录原因</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q2: 记忆联动在制度审查中的核心价值是什么？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 提高审查速度</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">B. 减少人工工作量</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">C. 自动关联历史审查结论，实现新旧制度一致性审查</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 降低存储成本</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q3: Prompt消融实验中，移除系统提示(System Prompt)的影响最大，原因是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">A. 系统提示定义了角色、审核维度、输出格式，是Prompt的「灵魂」</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">B. 系统提示占用最多Token</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 系统提示是唯一的必须组件</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. LLM只能理解系统提示</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="preview">
+<div class="summary-card">
+<h3>Day 3 总结</h3>
+<p>今天我们掌握了记忆系统（从通用工具到专属助手）、HITL审批流程（自动化与安全性的平衡）、文档生成（公文/招投标/治理简报）、Prompt消融实验（科学评估组件贡献度）。</p>
+<p style="font-size:13px;color:var(--accent2)">核心收获：记忆注入让Agent个性化 | HITL = Agent建议+人决策 | 消融实验量化组件价值</p>
+</div>
+
+<div class="summary-card">
+<h3>Day 4 预告：数据分析与多模态场景</h3>
+<p>明天将进入数据分析与多模态领域——BI分析助手（含代码解释器）、精准营销、舆情洞察、CV质检、CV安全检测，以及MCP工具协议演示。</p>
+<p style="font-size:13px;color:var(--accent3)">课题8.5: 多模态三种模式 | 课题9: BI分析 | 课题10: 精准营销 | 课题11: 舆情 | 课题12: CV质检 | 课题13: CV安全 | 课题13.5: MCP协议</p>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+<p>区县AI赋能培训 · Day 3 · 文档生成与审核</p>
+<p>5天22个实战课题 · 从理论到路演 · 2026年7月</p>
+</div>
+</div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function navClick(el){document.getElementById('sidebar').classList.remove('open');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active')}
+function copyCode(btn){const code=btn.closest('.code-block').querySelector('.code-body').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='已复制!';setTimeout(()=>btn.textContent='复制',1500)})}
+function checkQuiz(el,correct){const box=el.closest('.quiz-box');box.querySelectorAll('.quiz-a').forEach(a=>{a.style.pointerEvents='none';if(a===el){a.classList.add(correct?'correct':'wrong')}else if(correct&&a!==el){}});if(!correct){const answers=box.querySelectorAll('.quiz-a');answers.forEach(a=>{if(!a.classList.contains('wrong'))a.style.opacity='0.4'})}}
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;const p=h>0?Math.round(window.scrollY/h*100):0;document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressText').textContent=p+'%';
+const sections=document.querySelectorAll('.section');let active=null;sections.forEach(s=>{if(s.getBoundingClientRect().top<120)active=s});if(active){document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.getAttribute('href')==='#'+active.id)})}});
+</script>
+</body>
+</html>

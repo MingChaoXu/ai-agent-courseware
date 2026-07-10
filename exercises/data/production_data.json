@@ -1,0 +1,2702 @@
+[
+  {
+    "date": "2026-06-01",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1127,
+    "actual_output": 979,
+    "defect_count": 23,
+    "defect_rate": 2.35,
+    "downtime_min": 15
+  },
+  {
+    "date": "2026-06-01",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 914,
+    "actual_output": 798,
+    "defect_count": 6,
+    "defect_rate": 0.75,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-01",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 844,
+    "actual_output": 802,
+    "defect_count": 4,
+    "defect_rate": 0.5,
+    "downtime_min": 5
+  },
+  {
+    "date": "2026-06-01",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 911,
+    "actual_output": 810,
+    "defect_count": 16,
+    "defect_rate": 1.98,
+    "downtime_min": 35
+  },
+  {
+    "date": "2026-06-01",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 901,
+    "actual_output": 875,
+    "defect_count": 19,
+    "defect_rate": 2.17,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-01",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 912,
+    "actual_output": 844,
+    "defect_count": 10,
+    "defect_rate": 1.18,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-01",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1188,
+    "actual_output": 1172,
+    "defect_count": 26,
+    "defect_rate": 2.22,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-01",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 942,
+    "actual_output": 825,
+    "defect_count": 23,
+    "defect_rate": 2.79,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-01",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 852,
+    "actual_output": 737,
+    "defect_count": 5,
+    "defect_rate": 0.68,
+    "downtime_min": 22
+  },
+  {
+    "date": "2026-06-02",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1109,
+    "actual_output": 992,
+    "defect_count": 6,
+    "defect_rate": 0.6,
+    "downtime_min": 29
+  },
+  {
+    "date": "2026-06-02",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1074,
+    "actual_output": 935,
+    "defect_count": 26,
+    "defect_rate": 2.78,
+    "downtime_min": 5
+  },
+  {
+    "date": "2026-06-02",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1082,
+    "actual_output": 973,
+    "defect_count": 20,
+    "defect_rate": 2.06,
+    "downtime_min": 23
+  },
+  {
+    "date": "2026-06-02",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1095,
+    "actual_output": 966,
+    "defect_count": 6,
+    "defect_rate": 0.62,
+    "downtime_min": 42
+  },
+  {
+    "date": "2026-06-02",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 916,
+    "actual_output": 898,
+    "defect_count": 26,
+    "defect_rate": 2.9,
+    "downtime_min": 14
+  },
+  {
+    "date": "2026-06-02",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 851,
+    "actual_output": 778,
+    "defect_count": 12,
+    "defect_rate": 1.54,
+    "downtime_min": 23
+  },
+  {
+    "date": "2026-06-02",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 883,
+    "actual_output": 806,
+    "defect_count": 8,
+    "defect_rate": 0.99,
+    "downtime_min": 17
+  },
+  {
+    "date": "2026-06-02",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1159,
+    "actual_output": 1169,
+    "defect_count": 24,
+    "defect_rate": 2.05,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-02",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1125,
+    "actual_output": 988,
+    "defect_count": 22,
+    "defect_rate": 2.23,
+    "downtime_min": 10
+  },
+  {
+    "date": "2026-06-03",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1036,
+    "actual_output": 947,
+    "defect_count": 28,
+    "defect_rate": 2.96,
+    "downtime_min": 40
+  },
+  {
+    "date": "2026-06-03",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1152,
+    "actual_output": 1088,
+    "defect_count": 24,
+    "defect_rate": 2.21,
+    "downtime_min": 3
+  },
+  {
+    "date": "2026-06-03",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 917,
+    "actual_output": 907,
+    "defect_count": 22,
+    "defect_rate": 2.43,
+    "downtime_min": 25
+  },
+  {
+    "date": "2026-06-03",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 937,
+    "actual_output": 806,
+    "defect_count": 22,
+    "defect_rate": 2.73,
+    "downtime_min": 36
+  },
+  {
+    "date": "2026-06-03",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1167,
+    "actual_output": 1054,
+    "defect_count": 22,
+    "defect_rate": 2.09,
+    "downtime_min": 25
+  },
+  {
+    "date": "2026-06-03",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1129,
+    "actual_output": 1047,
+    "defect_count": 12,
+    "defect_rate": 1.15,
+    "downtime_min": 15
+  },
+  {
+    "date": "2026-06-03",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1181,
+    "actual_output": 1116,
+    "defect_count": 12,
+    "defect_rate": 1.08,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-03",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1019,
+    "actual_output": 1021,
+    "defect_count": 15,
+    "defect_rate": 1.47,
+    "downtime_min": 14
+  },
+  {
+    "date": "2026-06-03",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 870,
+    "actual_output": 814,
+    "defect_count": 5,
+    "defect_rate": 0.61,
+    "downtime_min": 3
+  },
+  {
+    "date": "2026-06-04",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 856,
+    "actual_output": 749,
+    "defect_count": 6,
+    "defect_rate": 0.8,
+    "downtime_min": 43
+  },
+  {
+    "date": "2026-06-04",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1016,
+    "actual_output": 966,
+    "defect_count": 14,
+    "defect_rate": 1.45,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-04",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1039,
+    "actual_output": 976,
+    "defect_count": 28,
+    "defect_rate": 2.87,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-04",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1148,
+    "actual_output": 1116,
+    "defect_count": 24,
+    "defect_rate": 2.15,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-04",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1184,
+    "actual_output": 1060,
+    "defect_count": 22,
+    "defect_rate": 2.08,
+    "downtime_min": 7
+  },
+  {
+    "date": "2026-06-04",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 950,
+    "actual_output": 877,
+    "defect_count": 14,
+    "defect_rate": 1.6,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-04",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1056,
+    "actual_output": 1034,
+    "defect_count": 18,
+    "defect_rate": 1.74,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-04",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1120,
+    "actual_output": 1008,
+    "defect_count": 21,
+    "defect_rate": 2.08,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-04",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 901,
+    "actual_output": 789,
+    "defect_count": 18,
+    "defect_rate": 2.28,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-05",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1198,
+    "actual_output": 1206,
+    "defect_count": 33,
+    "defect_rate": 2.74,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-05",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 965,
+    "actual_output": 900,
+    "defect_count": 7,
+    "defect_rate": 0.78,
+    "downtime_min": 23
+  },
+  {
+    "date": "2026-06-05",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 957,
+    "actual_output": 852,
+    "defect_count": 9,
+    "defect_rate": 1.06,
+    "downtime_min": 36
+  },
+  {
+    "date": "2026-06-05",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 840,
+    "actual_output": 726,
+    "defect_count": 12,
+    "defect_rate": 1.65,
+    "downtime_min": 4
+  },
+  {
+    "date": "2026-06-05",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1189,
+    "actual_output": 1118,
+    "defect_count": 9,
+    "defect_rate": 0.81,
+    "downtime_min": 42
+  },
+  {
+    "date": "2026-06-05",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1043,
+    "actual_output": 1054,
+    "defect_count": 9,
+    "defect_rate": 0.85,
+    "downtime_min": 33
+  },
+  {
+    "date": "2026-06-05",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1110,
+    "actual_output": 1023,
+    "defect_count": 10,
+    "defect_rate": 0.98,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-05",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1186,
+    "actual_output": 1155,
+    "defect_count": 11,
+    "defect_rate": 0.95,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-05",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1004,
+    "actual_output": 1023,
+    "defect_count": 21,
+    "defect_rate": 2.05,
+    "downtime_min": 28
+  },
+  {
+    "date": "2026-06-06",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1064,
+    "actual_output": 986,
+    "defect_count": 11,
+    "defect_rate": 1.12,
+    "downtime_min": 4
+  },
+  {
+    "date": "2026-06-06",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 973,
+    "actual_output": 830,
+    "defect_count": 15,
+    "defect_rate": 1.81,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-06",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 912,
+    "actual_output": 776,
+    "defect_count": 17,
+    "defect_rate": 2.19,
+    "downtime_min": 3
+  },
+  {
+    "date": "2026-06-06",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 917,
+    "actual_output": 789,
+    "defect_count": 4,
+    "defect_rate": 0.51,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-06",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 836,
+    "actual_output": 783,
+    "defect_count": 9,
+    "defect_rate": 1.15,
+    "downtime_min": 31
+  },
+  {
+    "date": "2026-06-06",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 909,
+    "actual_output": 855,
+    "defect_count": 19,
+    "defect_rate": 2.22,
+    "downtime_min": 36
+  },
+  {
+    "date": "2026-06-06",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1095,
+    "actual_output": 1018,
+    "defect_count": 25,
+    "defect_rate": 2.46,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-06",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 897,
+    "actual_output": 776,
+    "defect_count": 16,
+    "defect_rate": 2.06,
+    "downtime_min": 22
+  },
+  {
+    "date": "2026-06-06",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1016,
+    "actual_output": 934,
+    "defect_count": 24,
+    "defect_rate": 2.57,
+    "downtime_min": 3
+  },
+  {
+    "date": "2026-06-07",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1144,
+    "actual_output": 1099,
+    "defect_count": 23,
+    "defect_rate": 2.09,
+    "downtime_min": 3
+  },
+  {
+    "date": "2026-06-07",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1006,
+    "actual_output": 979,
+    "defect_count": 24,
+    "defect_rate": 2.45,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-07",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 927,
+    "actual_output": 818,
+    "defect_count": 15,
+    "defect_rate": 1.83,
+    "downtime_min": 8
+  },
+  {
+    "date": "2026-06-07",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1016,
+    "actual_output": 895,
+    "defect_count": 14,
+    "defect_rate": 1.56,
+    "downtime_min": 4
+  },
+  {
+    "date": "2026-06-07",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1026,
+    "actual_output": 1013,
+    "defect_count": 26,
+    "defect_rate": 2.57,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-07",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 825,
+    "actual_output": 792,
+    "defect_count": 14,
+    "defect_rate": 1.77,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-07",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 847,
+    "actual_output": 853,
+    "defect_count": 22,
+    "defect_rate": 2.58,
+    "downtime_min": 10
+  },
+  {
+    "date": "2026-06-07",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1008,
+    "actual_output": 940,
+    "defect_count": 9,
+    "defect_rate": 0.96,
+    "downtime_min": 25
+  },
+  {
+    "date": "2026-06-07",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 830,
+    "actual_output": 728,
+    "defect_count": 3,
+    "defect_rate": 0.41,
+    "downtime_min": 24
+  },
+  {
+    "date": "2026-06-08",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 935,
+    "actual_output": 942,
+    "defect_count": 23,
+    "defect_rate": 2.44,
+    "downtime_min": 18
+  },
+  {
+    "date": "2026-06-08",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1016,
+    "actual_output": 983,
+    "defect_count": 22,
+    "defect_rate": 2.24,
+    "downtime_min": 35
+  },
+  {
+    "date": "2026-06-08",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1138,
+    "actual_output": 1106,
+    "defect_count": 9,
+    "defect_rate": 0.81,
+    "downtime_min": 18
+  },
+  {
+    "date": "2026-06-08",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 911,
+    "actual_output": 924,
+    "defect_count": 17,
+    "defect_rate": 1.84,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-08",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 831,
+    "actual_output": 812,
+    "defect_count": 5,
+    "defect_rate": 0.62,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-08",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1044,
+    "actual_output": 976,
+    "defect_count": 25,
+    "defect_rate": 2.56,
+    "downtime_min": 10
+  },
+  {
+    "date": "2026-06-08",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 829,
+    "actual_output": 840,
+    "defect_count": 5,
+    "defect_rate": 0.6,
+    "downtime_min": 11
+  },
+  {
+    "date": "2026-06-08",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 835,
+    "actual_output": 794,
+    "defect_count": 17,
+    "defect_rate": 2.14,
+    "downtime_min": 15
+  },
+  {
+    "date": "2026-06-08",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1006,
+    "actual_output": 875,
+    "defect_count": 23,
+    "defect_rate": 2.63,
+    "downtime_min": 15
+  },
+  {
+    "date": "2026-06-09",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1096,
+    "actual_output": 1042,
+    "defect_count": 21,
+    "defect_rate": 2.02,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-09",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1136,
+    "actual_output": 1078,
+    "defect_count": 19,
+    "defect_rate": 1.76,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-09",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 904,
+    "actual_output": 871,
+    "defect_count": 11,
+    "defect_rate": 1.26,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-09",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1002,
+    "actual_output": 873,
+    "defect_count": 18,
+    "defect_rate": 2.06,
+    "downtime_min": 29
+  },
+  {
+    "date": "2026-06-09",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 961,
+    "actual_output": 968,
+    "defect_count": 27,
+    "defect_rate": 2.79,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-09",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1034,
+    "actual_output": 988,
+    "defect_count": 18,
+    "defect_rate": 1.82,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-09",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 837,
+    "actual_output": 787,
+    "defect_count": 13,
+    "defect_rate": 1.65,
+    "downtime_min": 8
+  },
+  {
+    "date": "2026-06-09",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 978,
+    "actual_output": 977,
+    "defect_count": 26,
+    "defect_rate": 2.66,
+    "downtime_min": 23
+  },
+  {
+    "date": "2026-06-09",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 945,
+    "actual_output": 828,
+    "defect_count": 21,
+    "defect_rate": 2.54,
+    "downtime_min": 45
+  },
+  {
+    "date": "2026-06-10",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 954,
+    "actual_output": 910,
+    "defect_count": 27,
+    "defect_rate": 2.97,
+    "downtime_min": 41
+  },
+  {
+    "date": "2026-06-10",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1070,
+    "actual_output": 910,
+    "defect_count": 23,
+    "defect_rate": 2.53,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-10",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1139,
+    "actual_output": 988,
+    "defect_count": 26,
+    "defect_rate": 2.63,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-10",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 859,
+    "actual_output": 860,
+    "defect_count": 20,
+    "defect_rate": 2.33,
+    "downtime_min": 9
+  },
+  {
+    "date": "2026-06-10",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 939,
+    "actual_output": 843,
+    "defect_count": 8,
+    "defect_rate": 0.95,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-10",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 904,
+    "actual_output": 874,
+    "defect_count": 23,
+    "defect_rate": 2.63,
+    "downtime_min": 32
+  },
+  {
+    "date": "2026-06-10",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1050,
+    "actual_output": 937,
+    "defect_count": 25,
+    "defect_rate": 2.67,
+    "downtime_min": 3
+  },
+  {
+    "date": "2026-06-10",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 847,
+    "actual_output": 811,
+    "defect_count": 20,
+    "defect_rate": 2.47,
+    "downtime_min": 2
+  },
+  {
+    "date": "2026-06-10",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 801,
+    "actual_output": 726,
+    "defect_count": 6,
+    "defect_rate": 0.83,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-11",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 882,
+    "actual_output": 860,
+    "defect_count": 16,
+    "defect_rate": 1.86,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-11",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1087,
+    "actual_output": 925,
+    "defect_count": 6,
+    "defect_rate": 0.65,
+    "downtime_min": 44
+  },
+  {
+    "date": "2026-06-11",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 876,
+    "actual_output": 825,
+    "defect_count": 21,
+    "defect_rate": 2.55,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-11",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1082,
+    "actual_output": 946,
+    "defect_count": 7,
+    "defect_rate": 0.74,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-11",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 986,
+    "actual_output": 988,
+    "defect_count": 24,
+    "defect_rate": 2.43,
+    "downtime_min": 2
+  },
+  {
+    "date": "2026-06-11",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 983,
+    "actual_output": 870,
+    "defect_count": 9,
+    "defect_rate": 1.03,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-11",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 981,
+    "actual_output": 963,
+    "defect_count": 26,
+    "defect_rate": 2.7,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-11",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1117,
+    "actual_output": 1091,
+    "defect_count": 30,
+    "defect_rate": 2.75,
+    "downtime_min": 15
+  },
+  {
+    "date": "2026-06-11",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 883,
+    "actual_output": 897,
+    "defect_count": 22,
+    "defect_rate": 2.45,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-12",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 812,
+    "actual_output": 714,
+    "defect_count": 20,
+    "defect_rate": 2.8,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-12",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1142,
+    "actual_output": 1138,
+    "defect_count": 28,
+    "defect_rate": 2.46,
+    "downtime_min": 17
+  },
+  {
+    "date": "2026-06-12",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 881,
+    "actual_output": 866,
+    "defect_count": 6,
+    "defect_rate": 0.69,
+    "downtime_min": 2
+  },
+  {
+    "date": "2026-06-12",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1040,
+    "actual_output": 923,
+    "defect_count": 23,
+    "defect_rate": 2.49,
+    "downtime_min": 29
+  },
+  {
+    "date": "2026-06-12",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 979,
+    "actual_output": 882,
+    "defect_count": 21,
+    "defect_rate": 2.38,
+    "downtime_min": 14
+  },
+  {
+    "date": "2026-06-12",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 914,
+    "actual_output": 780,
+    "defect_count": 7,
+    "defect_rate": 0.9,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-12",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 942,
+    "actual_output": 939,
+    "defect_count": 27,
+    "defect_rate": 2.88,
+    "downtime_min": 17
+  },
+  {
+    "date": "2026-06-12",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 979,
+    "actual_output": 938,
+    "defect_count": 14,
+    "defect_rate": 1.49,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-12",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 969,
+    "actual_output": 978,
+    "defect_count": 7,
+    "defect_rate": 0.72,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-13",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 891,
+    "actual_output": 845,
+    "defect_count": 25,
+    "defect_rate": 2.96,
+    "downtime_min": 2
+  },
+  {
+    "date": "2026-06-13",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 855,
+    "actual_output": 813,
+    "defect_count": 11,
+    "defect_rate": 1.35,
+    "downtime_min": 20
+  },
+  {
+    "date": "2026-06-13",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1023,
+    "actual_output": 974,
+    "defect_count": 17,
+    "defect_rate": 1.75,
+    "downtime_min": 24
+  },
+  {
+    "date": "2026-06-13",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1095,
+    "actual_output": 966,
+    "defect_count": 5,
+    "defect_rate": 0.52,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-13",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 800,
+    "actual_output": 750,
+    "defect_count": 18,
+    "defect_rate": 2.4,
+    "downtime_min": 43
+  },
+  {
+    "date": "2026-06-13",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1168,
+    "actual_output": 1179,
+    "defect_count": 27,
+    "defect_rate": 2.29,
+    "downtime_min": 12
+  },
+  {
+    "date": "2026-06-13",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 986,
+    "actual_output": 910,
+    "defect_count": 26,
+    "defect_rate": 2.86,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-13",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1119,
+    "actual_output": 1010,
+    "defect_count": 26,
+    "defect_rate": 2.57,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-13",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1059,
+    "actual_output": 955,
+    "defect_count": 14,
+    "defect_rate": 1.47,
+    "downtime_min": 25
+  },
+  {
+    "date": "2026-06-14",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1156,
+    "actual_output": 1040,
+    "defect_count": 8,
+    "defect_rate": 0.77,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-14",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1140,
+    "actual_output": 1151,
+    "defect_count": 25,
+    "defect_rate": 2.17,
+    "downtime_min": 11
+  },
+  {
+    "date": "2026-06-14",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1115,
+    "actual_output": 1055,
+    "defect_count": 15,
+    "defect_rate": 1.42,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-14",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 955,
+    "actual_output": 858,
+    "defect_count": 13,
+    "defect_rate": 1.52,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-14",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1110,
+    "actual_output": 1067,
+    "defect_count": 17,
+    "defect_rate": 1.59,
+    "downtime_min": 28
+  },
+  {
+    "date": "2026-06-14",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1145,
+    "actual_output": 1014,
+    "defect_count": 17,
+    "defect_rate": 1.68,
+    "downtime_min": 10
+  },
+  {
+    "date": "2026-06-14",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1137,
+    "actual_output": 982,
+    "defect_count": 17,
+    "defect_rate": 1.73,
+    "downtime_min": 40
+  },
+  {
+    "date": "2026-06-14",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1117,
+    "actual_output": 1013,
+    "defect_count": 25,
+    "defect_rate": 2.47,
+    "downtime_min": 15
+  },
+  {
+    "date": "2026-06-14",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1144,
+    "actual_output": 1032,
+    "defect_count": 25,
+    "defect_rate": 2.42,
+    "downtime_min": 9
+  },
+  {
+    "date": "2026-06-15",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 812,
+    "actual_output": 696,
+    "defect_count": 20,
+    "defect_rate": 2.87,
+    "downtime_min": 39
+  },
+  {
+    "date": "2026-06-15",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1193,
+    "actual_output": 1028,
+    "defect_count": 15,
+    "defect_rate": 1.46,
+    "downtime_min": 40
+  },
+  {
+    "date": "2026-06-15",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1094,
+    "actual_output": 966,
+    "defect_count": 21,
+    "defect_rate": 2.17,
+    "downtime_min": 31
+  },
+  {
+    "date": "2026-06-15",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1004,
+    "actual_output": 895,
+    "defect_count": 19,
+    "defect_rate": 2.12,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-15",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1184,
+    "actual_output": 1179,
+    "defect_count": 31,
+    "defect_rate": 2.63,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-15",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 912,
+    "actual_output": 802,
+    "defect_count": 23,
+    "defect_rate": 2.87,
+    "downtime_min": 33
+  },
+  {
+    "date": "2026-06-15",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1037,
+    "actual_output": 890,
+    "defect_count": 9,
+    "defect_rate": 1.01,
+    "downtime_min": 7
+  },
+  {
+    "date": "2026-06-15",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1033,
+    "actual_output": 901,
+    "defect_count": 14,
+    "defect_rate": 1.55,
+    "downtime_min": 33
+  },
+  {
+    "date": "2026-06-15",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1086,
+    "actual_output": 1033,
+    "defect_count": 29,
+    "defect_rate": 2.81,
+    "downtime_min": 28
+  },
+  {
+    "date": "2026-06-16",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1113,
+    "actual_output": 1100,
+    "defect_count": 30,
+    "defect_rate": 2.73,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-16",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1080,
+    "actual_output": 999,
+    "defect_count": 8,
+    "defect_rate": 0.8,
+    "downtime_min": 30
+  },
+  {
+    "date": "2026-06-16",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1030,
+    "actual_output": 920,
+    "defect_count": 10,
+    "defect_rate": 1.09,
+    "downtime_min": 40
+  },
+  {
+    "date": "2026-06-16",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 941,
+    "actual_output": 922,
+    "defect_count": 16,
+    "defect_rate": 1.74,
+    "downtime_min": 40
+  },
+  {
+    "date": "2026-06-16",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 922,
+    "actual_output": 826,
+    "defect_count": 5,
+    "defect_rate": 0.61,
+    "downtime_min": 18
+  },
+  {
+    "date": "2026-06-16",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 920,
+    "actual_output": 824,
+    "defect_count": 10,
+    "defect_rate": 1.21,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-16",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 841,
+    "actual_output": 734,
+    "defect_count": 7,
+    "defect_rate": 0.95,
+    "downtime_min": 44
+  },
+  {
+    "date": "2026-06-16",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 878,
+    "actual_output": 851,
+    "defect_count": 5,
+    "defect_rate": 0.59,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-16",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 969,
+    "actual_output": 913,
+    "defect_count": 14,
+    "defect_rate": 1.53,
+    "downtime_min": 13
+  },
+  {
+    "date": "2026-06-17",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1015,
+    "actual_output": 929,
+    "defect_count": 22,
+    "defect_rate": 2.37,
+    "downtime_min": 44
+  },
+  {
+    "date": "2026-06-17",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 810,
+    "actual_output": 806,
+    "defect_count": 19,
+    "defect_rate": 2.36,
+    "downtime_min": 24
+  },
+  {
+    "date": "2026-06-17",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1044,
+    "actual_output": 888,
+    "defect_count": 12,
+    "defect_rate": 1.35,
+    "downtime_min": 24
+  },
+  {
+    "date": "2026-06-17",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1014,
+    "actual_output": 954,
+    "defect_count": 22,
+    "defect_rate": 2.31,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-17",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 912,
+    "actual_output": 850,
+    "defect_count": 10,
+    "defect_rate": 1.18,
+    "downtime_min": 31
+  },
+  {
+    "date": "2026-06-17",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 814,
+    "actual_output": 745,
+    "defect_count": 16,
+    "defect_rate": 2.15,
+    "downtime_min": 25
+  },
+  {
+    "date": "2026-06-17",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1170,
+    "actual_output": 1027,
+    "defect_count": 17,
+    "defect_rate": 1.66,
+    "downtime_min": 8
+  },
+  {
+    "date": "2026-06-17",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1118,
+    "actual_output": 1051,
+    "defect_count": 29,
+    "defect_rate": 2.76,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-17",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1088,
+    "actual_output": 1047,
+    "defect_count": 7,
+    "defect_rate": 0.67,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-18",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 869,
+    "actual_output": 866,
+    "defect_count": 8,
+    "defect_rate": 0.92,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-18",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 994,
+    "actual_output": 900,
+    "defect_count": 14,
+    "defect_rate": 1.56,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-18",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1189,
+    "actual_output": 1188,
+    "defect_count": 14,
+    "defect_rate": 1.18,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-18",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 929,
+    "actual_output": 921,
+    "defect_count": 15,
+    "defect_rate": 1.63,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-18",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 826,
+    "actual_output": 842,
+    "defect_count": 11,
+    "defect_rate": 1.31,
+    "downtime_min": 41
+  },
+  {
+    "date": "2026-06-18",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 835,
+    "actual_output": 820,
+    "defect_count": 17,
+    "defect_rate": 2.07,
+    "downtime_min": 1
+  },
+  {
+    "date": "2026-06-18",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 926,
+    "actual_output": 818,
+    "defect_count": 4,
+    "defect_rate": 0.49,
+    "downtime_min": 9
+  },
+  {
+    "date": "2026-06-18",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 922,
+    "actual_output": 803,
+    "defect_count": 17,
+    "defect_rate": 2.12,
+    "downtime_min": 36
+  },
+  {
+    "date": "2026-06-18",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 911,
+    "actual_output": 846,
+    "defect_count": 9,
+    "defect_rate": 1.06,
+    "downtime_min": 23
+  },
+  {
+    "date": "2026-06-19",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 885,
+    "actual_output": 843,
+    "defect_count": 24,
+    "defect_rate": 2.85,
+    "downtime_min": 45
+  },
+  {
+    "date": "2026-06-19",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 858,
+    "actual_output": 842,
+    "defect_count": 7,
+    "defect_rate": 0.83,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-19",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 855,
+    "actual_output": 810,
+    "defect_count": 22,
+    "defect_rate": 2.72,
+    "downtime_min": 36
+  },
+  {
+    "date": "2026-06-19",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1146,
+    "actual_output": 1151,
+    "defect_count": 16,
+    "defect_rate": 1.39,
+    "downtime_min": 45
+  },
+  {
+    "date": "2026-06-19",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 901,
+    "actual_output": 777,
+    "defect_count": 17,
+    "defect_rate": 2.19,
+    "downtime_min": 40
+  },
+  {
+    "date": "2026-06-19",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 924,
+    "actual_output": 801,
+    "defect_count": 19,
+    "defect_rate": 2.37,
+    "downtime_min": 43
+  },
+  {
+    "date": "2026-06-19",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1107,
+    "actual_output": 1092,
+    "defect_count": 27,
+    "defect_rate": 2.47,
+    "downtime_min": 36
+  },
+  {
+    "date": "2026-06-19",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1200,
+    "actual_output": 1028,
+    "defect_count": 18,
+    "defect_rate": 1.75,
+    "downtime_min": 42
+  },
+  {
+    "date": "2026-06-19",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 989,
+    "actual_output": 852,
+    "defect_count": 18,
+    "defect_rate": 2.11,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-20",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1015,
+    "actual_output": 1004,
+    "defect_count": 7,
+    "defect_rate": 0.7,
+    "downtime_min": 23
+  },
+  {
+    "date": "2026-06-20",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1125,
+    "actual_output": 1126,
+    "defect_count": 18,
+    "defect_rate": 1.6,
+    "downtime_min": 9
+  },
+  {
+    "date": "2026-06-20",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1022,
+    "actual_output": 899,
+    "defect_count": 16,
+    "defect_rate": 1.78,
+    "downtime_min": 41
+  },
+  {
+    "date": "2026-06-20",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 938,
+    "actual_output": 895,
+    "defect_count": 25,
+    "defect_rate": 2.79,
+    "downtime_min": 30
+  },
+  {
+    "date": "2026-06-20",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1038,
+    "actual_output": 959,
+    "defect_count": 22,
+    "defect_rate": 2.29,
+    "downtime_min": 17
+  },
+  {
+    "date": "2026-06-20",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 965,
+    "actual_output": 959,
+    "defect_count": 24,
+    "defect_rate": 2.5,
+    "downtime_min": 5
+  },
+  {
+    "date": "2026-06-20",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 942,
+    "actual_output": 941,
+    "defect_count": 10,
+    "defect_rate": 1.06,
+    "downtime_min": 29
+  },
+  {
+    "date": "2026-06-20",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1091,
+    "actual_output": 1040,
+    "defect_count": 15,
+    "defect_rate": 1.44,
+    "downtime_min": 1
+  },
+  {
+    "date": "2026-06-20",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1053,
+    "actual_output": 1047,
+    "defect_count": 9,
+    "defect_rate": 0.86,
+    "downtime_min": 13
+  },
+  {
+    "date": "2026-06-21",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 981,
+    "actual_output": 966,
+    "defect_count": 13,
+    "defect_rate": 1.35,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-21",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1159,
+    "actual_output": 1158,
+    "defect_count": 21,
+    "defect_rate": 1.81,
+    "downtime_min": 33
+  },
+  {
+    "date": "2026-06-21",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 897,
+    "actual_output": 775,
+    "defect_count": 17,
+    "defect_rate": 2.19,
+    "downtime_min": 31
+  },
+  {
+    "date": "2026-06-21",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1084,
+    "actual_output": 1061,
+    "defect_count": 23,
+    "defect_rate": 2.17,
+    "downtime_min": 41
+  },
+  {
+    "date": "2026-06-21",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1164,
+    "actual_output": 1086,
+    "defect_count": 26,
+    "defect_rate": 2.39,
+    "downtime_min": 5
+  },
+  {
+    "date": "2026-06-21",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 950,
+    "actual_output": 843,
+    "defect_count": 18,
+    "defect_rate": 2.14,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-21",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1139,
+    "actual_output": 1080,
+    "defect_count": 18,
+    "defect_rate": 1.67,
+    "downtime_min": 33
+  },
+  {
+    "date": "2026-06-21",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 976,
+    "actual_output": 900,
+    "defect_count": 21,
+    "defect_rate": 2.33,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-21",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 980,
+    "actual_output": 950,
+    "defect_count": 11,
+    "defect_rate": 1.16,
+    "downtime_min": 16
+  },
+  {
+    "date": "2026-06-22",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 918,
+    "actual_output": 799,
+    "defect_count": 7,
+    "defect_rate": 0.88,
+    "downtime_min": 7
+  },
+  {
+    "date": "2026-06-22",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1180,
+    "actual_output": 1110,
+    "defect_count": 26,
+    "defect_rate": 2.34,
+    "downtime_min": 11
+  },
+  {
+    "date": "2026-06-22",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 898,
+    "actual_output": 796,
+    "defect_count": 13,
+    "defect_rate": 1.63,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-22",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1189,
+    "actual_output": 1116,
+    "defect_count": 13,
+    "defect_rate": 1.16,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-22",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 899,
+    "actual_output": 809,
+    "defect_count": 11,
+    "defect_rate": 1.36,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-22",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 807,
+    "actual_output": 783,
+    "defect_count": 6,
+    "defect_rate": 0.77,
+    "downtime_min": 2
+  },
+  {
+    "date": "2026-06-22",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 827,
+    "actual_output": 780,
+    "defect_count": 17,
+    "defect_rate": 2.18,
+    "downtime_min": 8
+  },
+  {
+    "date": "2026-06-22",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1126,
+    "actual_output": 1123,
+    "defect_count": 19,
+    "defect_rate": 1.69,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-22",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1093,
+    "actual_output": 981,
+    "defect_count": 16,
+    "defect_rate": 1.63,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-23",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 894,
+    "actual_output": 906,
+    "defect_count": 10,
+    "defect_rate": 1.1,
+    "downtime_min": 30
+  },
+  {
+    "date": "2026-06-23",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 858,
+    "actual_output": 849,
+    "defect_count": 12,
+    "defect_rate": 1.41,
+    "downtime_min": 4
+  },
+  {
+    "date": "2026-06-23",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1095,
+    "actual_output": 1047,
+    "defect_count": 6,
+    "defect_rate": 0.57,
+    "downtime_min": 9
+  },
+  {
+    "date": "2026-06-23",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1088,
+    "actual_output": 1100,
+    "defect_count": 7,
+    "defect_rate": 0.64,
+    "downtime_min": 15
+  },
+  {
+    "date": "2026-06-23",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 860,
+    "actual_output": 812,
+    "defect_count": 12,
+    "defect_rate": 1.48,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-23",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1116,
+    "actual_output": 991,
+    "defect_count": 17,
+    "defect_rate": 1.72,
+    "downtime_min": 28
+  },
+  {
+    "date": "2026-06-23",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1026,
+    "actual_output": 923,
+    "defect_count": 18,
+    "defect_rate": 1.95,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-23",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 956,
+    "actual_output": 905,
+    "defect_count": 5,
+    "defect_rate": 0.55,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-23",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1190,
+    "actual_output": 1053,
+    "defect_count": 10,
+    "defect_rate": 0.95,
+    "downtime_min": 42
+  },
+  {
+    "date": "2026-06-24",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 841,
+    "actual_output": 737,
+    "defect_count": 6,
+    "defect_rate": 0.81,
+    "downtime_min": 4
+  },
+  {
+    "date": "2026-06-24",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 880,
+    "actual_output": 748,
+    "defect_count": 12,
+    "defect_rate": 1.6,
+    "downtime_min": 38
+  },
+  {
+    "date": "2026-06-24",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1040,
+    "actual_output": 935,
+    "defect_count": 10,
+    "defect_rate": 1.07,
+    "downtime_min": 45
+  },
+  {
+    "date": "2026-06-24",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 944,
+    "actual_output": 915,
+    "defect_count": 14,
+    "defect_rate": 1.53,
+    "downtime_min": 43
+  },
+  {
+    "date": "2026-06-24",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 919,
+    "actual_output": 925,
+    "defect_count": 22,
+    "defect_rate": 2.38,
+    "downtime_min": 40
+  },
+  {
+    "date": "2026-06-24",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1101,
+    "actual_output": 1059,
+    "defect_count": 30,
+    "defect_rate": 2.83,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-24",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 858,
+    "actual_output": 808,
+    "defect_count": 17,
+    "defect_rate": 2.1,
+    "downtime_min": 17
+  },
+  {
+    "date": "2026-06-24",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 872,
+    "actual_output": 751,
+    "defect_count": 6,
+    "defect_rate": 0.8,
+    "downtime_min": 19
+  },
+  {
+    "date": "2026-06-24",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 1104,
+    "actual_output": 1078,
+    "defect_count": 20,
+    "defect_rate": 1.86,
+    "downtime_min": 18
+  },
+  {
+    "date": "2026-06-25",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1024,
+    "actual_output": 892,
+    "defect_count": 19,
+    "defect_rate": 2.13,
+    "downtime_min": 44
+  },
+  {
+    "date": "2026-06-25",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1006,
+    "actual_output": 1016,
+    "defect_count": 17,
+    "defect_rate": 1.67,
+    "downtime_min": 31
+  },
+  {
+    "date": "2026-06-25",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1024,
+    "actual_output": 884,
+    "defect_count": 5,
+    "defect_rate": 0.57,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-25",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1176,
+    "actual_output": 1064,
+    "defect_count": 11,
+    "defect_rate": 1.03,
+    "downtime_min": 5
+  },
+  {
+    "date": "2026-06-25",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 917,
+    "actual_output": 929,
+    "defect_count": 24,
+    "defect_rate": 2.58,
+    "downtime_min": 36
+  },
+  {
+    "date": "2026-06-25",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1100,
+    "actual_output": 1112,
+    "defect_count": 33,
+    "defect_rate": 2.97,
+    "downtime_min": 43
+  },
+  {
+    "date": "2026-06-25",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 937,
+    "actual_output": 888,
+    "defect_count": 21,
+    "defect_rate": 2.36,
+    "downtime_min": 11
+  },
+  {
+    "date": "2026-06-25",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1040,
+    "actual_output": 975,
+    "defect_count": 15,
+    "defect_rate": 1.54,
+    "downtime_min": 17
+  },
+  {
+    "date": "2026-06-25",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 892,
+    "actual_output": 909,
+    "defect_count": 14,
+    "defect_rate": 1.54,
+    "downtime_min": 31
+  },
+  {
+    "date": "2026-06-26",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 846,
+    "actual_output": 786,
+    "defect_count": 11,
+    "defect_rate": 1.4,
+    "downtime_min": 20
+  },
+  {
+    "date": "2026-06-26",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1143,
+    "actual_output": 991,
+    "defect_count": 8,
+    "defect_rate": 0.81,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-26",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1155,
+    "actual_output": 1079,
+    "defect_count": 23,
+    "defect_rate": 2.13,
+    "downtime_min": 25
+  },
+  {
+    "date": "2026-06-26",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1189,
+    "actual_output": 1121,
+    "defect_count": 18,
+    "defect_rate": 1.61,
+    "downtime_min": 20
+  },
+  {
+    "date": "2026-06-26",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 929,
+    "actual_output": 840,
+    "defect_count": 24,
+    "defect_rate": 2.86,
+    "downtime_min": 25
+  },
+  {
+    "date": "2026-06-26",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1063,
+    "actual_output": 1052,
+    "defect_count": 5,
+    "defect_rate": 0.48,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-26",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1036,
+    "actual_output": 953,
+    "defect_count": 9,
+    "defect_rate": 0.94,
+    "downtime_min": 23
+  },
+  {
+    "date": "2026-06-26",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1118,
+    "actual_output": 1094,
+    "defect_count": 22,
+    "defect_rate": 2.01,
+    "downtime_min": 3
+  },
+  {
+    "date": "2026-06-26",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 904,
+    "actual_output": 809,
+    "defect_count": 6,
+    "defect_rate": 0.74,
+    "downtime_min": 18
+  },
+  {
+    "date": "2026-06-27",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1024,
+    "actual_output": 1023,
+    "defect_count": 17,
+    "defect_rate": 1.66,
+    "downtime_min": 1
+  },
+  {
+    "date": "2026-06-27",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1122,
+    "actual_output": 1069,
+    "defect_count": 11,
+    "defect_rate": 1.03,
+    "downtime_min": 10
+  },
+  {
+    "date": "2026-06-27",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 959,
+    "actual_output": 904,
+    "defect_count": 17,
+    "defect_rate": 1.88,
+    "downtime_min": 5
+  },
+  {
+    "date": "2026-06-27",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 915,
+    "actual_output": 932,
+    "defect_count": 25,
+    "defect_rate": 2.68,
+    "downtime_min": 29
+  },
+  {
+    "date": "2026-06-27",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 860,
+    "actual_output": 825,
+    "defect_count": 7,
+    "defect_rate": 0.85,
+    "downtime_min": 45
+  },
+  {
+    "date": "2026-06-27",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 949,
+    "actual_output": 888,
+    "defect_count": 10,
+    "defect_rate": 1.13,
+    "downtime_min": 30
+  },
+  {
+    "date": "2026-06-27",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1041,
+    "actual_output": 927,
+    "defect_count": 17,
+    "defect_rate": 1.83,
+    "downtime_min": 24
+  },
+  {
+    "date": "2026-06-27",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 897,
+    "actual_output": 903,
+    "defect_count": 15,
+    "defect_rate": 1.66,
+    "downtime_min": 8
+  },
+  {
+    "date": "2026-06-27",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 835,
+    "actual_output": 748,
+    "defect_count": 18,
+    "defect_rate": 2.41,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-28",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 974,
+    "actual_output": 982,
+    "defect_count": 17,
+    "defect_rate": 1.73,
+    "downtime_min": 0
+  },
+  {
+    "date": "2026-06-28",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 944,
+    "actual_output": 918,
+    "defect_count": 23,
+    "defect_rate": 2.51,
+    "downtime_min": 37
+  },
+  {
+    "date": "2026-06-28",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1137,
+    "actual_output": 1061,
+    "defect_count": 9,
+    "defect_rate": 0.85,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-28",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1047,
+    "actual_output": 951,
+    "defect_count": 17,
+    "defect_rate": 1.79,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-28",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 993,
+    "actual_output": 920,
+    "defect_count": 12,
+    "defect_rate": 1.3,
+    "downtime_min": 12
+  },
+  {
+    "date": "2026-06-28",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1157,
+    "actual_output": 1030,
+    "defect_count": 15,
+    "defect_rate": 1.46,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-28",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 822,
+    "actual_output": 743,
+    "defect_count": 12,
+    "defect_rate": 1.62,
+    "downtime_min": 24
+  },
+  {
+    "date": "2026-06-28",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 997,
+    "actual_output": 1014,
+    "defect_count": 25,
+    "defect_rate": 2.47,
+    "downtime_min": 41
+  },
+  {
+    "date": "2026-06-28",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 877,
+    "actual_output": 819,
+    "defect_count": 4,
+    "defect_rate": 0.49,
+    "downtime_min": 32
+  },
+  {
+    "date": "2026-06-29",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 1102,
+    "actual_output": 998,
+    "defect_count": 7,
+    "defect_rate": 0.7,
+    "downtime_min": 28
+  },
+  {
+    "date": "2026-06-29",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 851,
+    "actual_output": 799,
+    "defect_count": 13,
+    "defect_rate": 1.63,
+    "downtime_min": 9
+  },
+  {
+    "date": "2026-06-29",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 1009,
+    "actual_output": 1007,
+    "defect_count": 29,
+    "defect_rate": 2.88,
+    "downtime_min": 4
+  },
+  {
+    "date": "2026-06-29",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 1040,
+    "actual_output": 1022,
+    "defect_count": 11,
+    "defect_rate": 1.08,
+    "downtime_min": 39
+  },
+  {
+    "date": "2026-06-29",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1154,
+    "actual_output": 1058,
+    "defect_count": 7,
+    "defect_rate": 0.66,
+    "downtime_min": 21
+  },
+  {
+    "date": "2026-06-29",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 1145,
+    "actual_output": 1140,
+    "defect_count": 16,
+    "defect_rate": 1.4,
+    "downtime_min": 20
+  },
+  {
+    "date": "2026-06-29",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 1120,
+    "actual_output": 1088,
+    "defect_count": 26,
+    "defect_rate": 2.39,
+    "downtime_min": 34
+  },
+  {
+    "date": "2026-06-29",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 818,
+    "actual_output": 781,
+    "defect_count": 8,
+    "defect_rate": 1.02,
+    "downtime_min": 43
+  },
+  {
+    "date": "2026-06-29",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 947,
+    "actual_output": 965,
+    "defect_count": 22,
+    "defect_rate": 2.28,
+    "downtime_min": 27
+  },
+  {
+    "date": "2026-06-30",
+    "line": "A线",
+    "product": "产品X-100",
+    "planned_output": 850,
+    "actual_output": 832,
+    "defect_count": 18,
+    "defect_rate": 2.16,
+    "downtime_min": 6
+  },
+  {
+    "date": "2026-06-30",
+    "line": "A线",
+    "product": "产品Y-200",
+    "planned_output": 1027,
+    "actual_output": 901,
+    "defect_count": 11,
+    "defect_rate": 1.22,
+    "downtime_min": 1
+  },
+  {
+    "date": "2026-06-30",
+    "line": "A线",
+    "product": "产品Z-300",
+    "planned_output": 823,
+    "actual_output": 744,
+    "defect_count": 4,
+    "defect_rate": 0.54,
+    "downtime_min": 22
+  },
+  {
+    "date": "2026-06-30",
+    "line": "B线",
+    "product": "产品X-100",
+    "planned_output": 991,
+    "actual_output": 914,
+    "defect_count": 10,
+    "defect_rate": 1.09,
+    "downtime_min": 26
+  },
+  {
+    "date": "2026-06-30",
+    "line": "B线",
+    "product": "产品Y-200",
+    "planned_output": 1089,
+    "actual_output": 1051,
+    "defect_count": 9,
+    "defect_rate": 0.86,
+    "downtime_min": 11
+  },
+  {
+    "date": "2026-06-30",
+    "line": "B线",
+    "product": "产品Z-300",
+    "planned_output": 840,
+    "actual_output": 801,
+    "defect_count": 11,
+    "defect_rate": 1.37,
+    "downtime_min": 43
+  },
+  {
+    "date": "2026-06-30",
+    "line": "C线",
+    "product": "产品X-100",
+    "planned_output": 923,
+    "actual_output": 862,
+    "defect_count": 16,
+    "defect_rate": 1.86,
+    "downtime_min": 14
+  },
+  {
+    "date": "2026-06-30",
+    "line": "C线",
+    "product": "产品Y-200",
+    "planned_output": 1036,
+    "actual_output": 992,
+    "defect_count": 16,
+    "defect_rate": 1.61,
+    "downtime_min": 42
+  },
+  {
+    "date": "2026-06-30",
+    "line": "C线",
+    "product": "产品Z-300",
+    "planned_output": 804,
+    "actual_output": 806,
+    "defect_count": 13,
+    "defect_rate": 1.61,
+    "downtime_min": 18
+  }
+]

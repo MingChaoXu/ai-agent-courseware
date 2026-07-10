@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 5 - 复杂智能体评估与综合路演 | 区县AI赋能培训</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f7fa;--bg2:#ffffff;--bg3:#eef2f7;--sidebar:#ffffff;--accent:#2563eb;--accent2:#059669;--accent3:#d97706;--accent4:#dc2626;--accent5:#7c3aed;--text:#1e293b;--text2:#475569;--text3:#94a3b8;--border:#e2e8f0;--card:#dbeafe;--code-bg:#f8fafc;--success:#059669;--warning:#d97706;--danger:#dc2626}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;display:flex;min-height:100vh}
+.sidebar{width:280px;min-width:280px;background:var(--sidebar);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-header .day-badge{display:inline-block;background:linear-gradient(135deg,var(--accent),var(--accent5));color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.sidebar-header h2{font-size:15px;color:var(--text);font-weight:700;margin-bottom:4px}
+.sidebar-header p{font-size:11px;color:var(--text3)}
+.sidebar-nav{padding:12px 0}
+.nav-group{margin-bottom:8px}
+.nav-group-title{padding:8px 20px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.nav-item{display:block;padding:8px 20px 8px 32px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.nav-item:hover{color:var(--text);background:rgba(74,158,255,.08);border-left-color:var(--accent)}
+.nav-item.active{color:var(--accent);background:rgba(74,158,255,.12);border-left-color:var(--accent);font-weight:600}
+.nav-item .time-badge{float:right;font-size:10px;background:var(--bg3);padding:1px 6px;border-radius:8px;color:var(--text3)}
+.main{margin-left:280px;flex:1;min-width:0}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 30px;display:flex;align-items:center;gap:16px}
+.topbar .menu-btn{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
+.topbar h1{font-size:16px;font-weight:700;flex:1}
+.progress-wrap{width:200px;display:flex;align-items:center;gap:8px}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .5s;width:0%}
+.progress-text{font-size:11px;color:var(--text3);min-width:32px;text-align:right}
+.content{padding:30px;max-width:1100px}
+.section{margin-bottom:50px;scroll-margin-top:70px}
+.section-header{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.section-header .section-tag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.section-header .section-tag.morning{background:rgba(245,158,11,.15);color:var(--accent3)}
+.section-header .section-tag.afternoon{background:rgba(99,102,241,.15);color:#818cf8}
+.section-header h2{font-size:26px;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-header p{color:var(--text2);font-size:14px}
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+.topic-card h3{font-size:18px;font-weight:700;margin-bottom:12px;color:var(--accent)}
+.topic-card h4{font-size:15px;font-weight:700;margin:16px 0 8px;color:var(--text)}
+.topic-card p{color:var(--text2);font-size:14px;margin-bottom:10px}
+.topic-card ul,.topic-card ol{margin:8px 0 12px 20px;color:var(--text2);font-size:14px}
+.topic-card li{margin-bottom:5px}
+.principle-card{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:18px 20px;margin:16px 0;position:relative;overflow:hidden}
+.principle-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)}
+.principle-card .pc-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.principle-card .pc-body{font-size:13px;color:var(--text2);line-height:1.8}
+.principle-card .pc-body code{background:rgba(74,158,255,.12);color:var(--accent);padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Fira Code',monospace}
+.step-block{margin:16px 0;padding:16px 20px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent2)}
+.step-block .step-num{display:inline-block;background:var(--accent2);color:var(--bg);width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:8px}
+.step-block h4{display:inline;font-size:14px;font-weight:700;color:var(--accent2)}
+.step-block p{margin-top:8px;font-size:13px;color:var(--text2)}
+.code-block{position:relative;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--code-bg);border-bottom:1px solid var(--border)}
+.code-header .lang-badge{font-size:11px;color:var(--accent);font-weight:600;background:rgba(74,158,255,.1);padding:2px 8px;border-radius:4px}
+.code-header .copy-btn{background:none;border:1px solid var(--border);color:var(--text3);padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .2s}
+.code-header .copy-btn:hover{color:var(--accent);border-color:var(--accent)}
+.code-body{padding:16px;background:var(--code-bg);overflow-x:auto;font-family:'Fira Code','Consolas',monospace;font-size:12.5px;line-height:1.65;tab-size:4;white-space:pre;color:#334155}
+.code-body .kw{color:#cf222e}
+.code-body .fn{color:#8250df}
+.code-body .str{color:#0a3069}
+.code-body .com{color:#6e7781;font-style:italic}
+.code-body .num{color:#0550ae}
+.code-body .cls{color:#953800}
+.code-body .dec{color:#116329}
+.code-body .op{color:#cf222e}
+.code-body .param{color:#953800}
+.code-body .fstr{color:#0a3069}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:16px 0}
+.agent-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;transition:all .2s}
+.agent-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.agent-card .ac-icon{font-size:24px;margin-bottom:6px}
+.agent-card .ac-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.agent-card .ac-desc{font-size:11px;color:var(--text3)}
+.compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.compare-table th{background:var(--card);color:var(--accent);padding:10px 14px;text-align:left;font-weight:600;border-bottom:2px solid var(--accent);font-size:12px}
+.compare-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+.compare-table tr:hover td{background:rgba(74,158,255,.05)}
+.compare-table td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+.flow-diagram{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;font-family:'Fira Code',monospace;font-size:12px;color:var(--accent2);white-space:pre;overflow-x:auto;line-height:1.5}
+.metric-bar{display:flex;align-items:center;gap:10px;margin:6px 0}
+.metric-bar .label{min-width:140px;font-size:12px;color:var(--text2)}
+.metric-bar .bar{flex:1;height:18px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.metric-bar .fill{height:100%;border-radius:4px;transition:width .8s}
+.metric-bar .val{min-width:60px;font-size:12px;color:var(--text);font-weight:600;text-align:right}
+.impact-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700}
+.impact-critical{background:rgba(239,68,68,.15);color:var(--danger)}
+.impact-significant{background:rgba(245,158,11,.15);color:var(--warning)}
+.impact-minor{background:rgba(16,185,129,.15);color:var(--success)}
+.checklist{margin:12px 0}
+.checklist li{padding:6px 0;font-size:13px;color:var(--text2);display:flex;align-items:flex-start;gap:8px}
+.checklist li::before{content:'☐';color:var(--accent);font-size:14px;flex-shrink:0;margin-top:1px}
+.tips-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:16px 20px;margin:16px 0}
+.tips-box .tips-title{font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:8px}
+.tips-box p{font-size:13px;color:var(--text2);margin-bottom:4px}
+.summary-card{background:linear-gradient(135deg,var(--card),var(--bg2));border:1px solid var(--accent);border-radius:14px;padding:30px;margin:30px 0;text-align:center}
+.summary-card h3{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:12px}
+.summary-card p{font-size:14px;color:var(--text2);max-width:600px;margin:0 auto 16px}
+.path-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:16px 0}
+.path-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center;transition:all .2s}
+.path-item:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.path-item .pi-icon{font-size:28px;margin-bottom:6px}
+.path-item .pi-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.path-item .pi-desc{font-size:11px;color:var(--text3)}
+.score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.score-col{background:var(--bg3);border-radius:8px;padding:14px;text-align:center}
+.score-col .sc-title{font-size:12px;font-weight:700;margin-bottom:4px}
+.score-col .sc-weight{font-size:11px;color:var(--text3);margin-bottom:8px}
+.score-col .sc-item{font-size:11px;color:var(--text2);margin-bottom:3px;padding:2px 0}
+.score-col .sc-pts{color:var(--accent);font-weight:600}
+.workflow-visual{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;margin:16px 0;padding:16px;background:var(--code-bg);border-radius:10px;border:1px solid var(--border)}
+.wf-node{background:var(--card);border:1px solid var(--accent);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--text);text-align:center;min-width:80px}
+.wf-node .wn-step{font-size:10px;color:var(--accent);font-weight:700}
+.wf-node .wn-name{font-size:11px;font-weight:600;margin-top:2px}
+.wf-arrow{color:var(--accent);font-size:16px;font-weight:700}
+.wf-branch{font-size:10px;color:var(--accent3);text-align:center;width:100%;margin:4px 0}
+.footer{margin-top:50px;padding:30px 0;border-top:1px solid var(--border);text-align:center}
+.footer p{font-size:12px;color:var(--text3)}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.topbar .menu-btn{display:block}
+.score-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+.content{padding:16px}
+.score-grid{grid-template-columns:1fr}
+.agent-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="day-badge">DAY 5 / 5</div>
+<h2>复杂智能体评估与综合路演</h2>
+<p>上午：多Agent协同 | 下午：评估与路演</p>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-group">
+<div class="nav-group-title">上午 · 多Agent协同</div>
+<a class="nav-item" href="#s1" onclick="navClick(this)">课题14：政务服务全链路<span class="time-badge">50min</span></a>
+<a class="nav-item" href="#s1-1" onclick="navClick(this)">├ 5个专用Agent协同</a>
+<a class="nav-item" href="#s1-2" onclick="navClick(this)">├ System Hint机制</a>
+<a class="nav-item" href="#s1-3" onclick="navClick(this)">├ 事件触发与工作流</a>
+<a class="nav-item" href="#s1-4" onclick="navClick(this)">└ 完整代码</a>
+<a class="nav-item" href="#s2" onclick="navClick(this)">课题15：社会治理智能体<span class="time-badge">40min</span></a>
+<a class="nav-item" href="#s2-1" onclick="navClick(this)">├ 4个Agent + 异步处理</a>
+<a class="nav-item" href="#s2-2" onclick="navClick(this)">├ 条件分支编排</a>
+<a class="nav-item" href="#s2-3" onclick="navClick(this)">└ 完整代码</a>
+<a class="nav-item" href="#s3" onclick="navClick(this)">课题15.5：事件驱动Agent<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s3-1" onclick="navClick(this)">├ 三种触发模式</a>
+<a class="nav-item" href="#s3-2" onclick="navClick(this)">├ System Hint集成</a>
+<a class="nav-item" href="#s3-3" onclick="navClick(this)">├ 模式对比</a>
+<a class="nav-item" href="#s3-4" onclick="navClick(this)">└ 完整代码</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">下午 · 评估与路演</div>
+<a class="nav-item" href="#s4" onclick="navClick(this)">课题16：消融评估实战<span class="time-badge">50min</span></a>
+<a class="nav-item" href="#s4-1" onclick="navClick(this)">├ 评估基准与维度</a>
+<a class="nav-item" href="#s4-2" onclick="navClick(this)">├ 消融实验4配置</a>
+<a class="nav-item" href="#s4-3" onclick="navClick(this)">├ 量化分析</a>
+<a class="nav-item" href="#s4-4" onclick="navClick(this)">└ 完整代码</a>
+<a class="nav-item" href="#s5" onclick="navClick(this)">课题17：综合路演准备<span class="time-badge">70min</span></a>
+<a class="nav-item" href="#s5-1" onclick="navClick(this)">├ 路演四大板块</a>
+<a class="nav-item" href="#s5-2" onclick="navClick(this)">├ TeleAgent Demo搭建</a>
+<a class="nav-item" href="#s5-3" onclick="navClick(this)">├ 评分维度体系</a>
+<a class="nav-item" href="#s5-4" onclick="navClick(this)">└ 完整代码</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">总结</div>
+<a class="nav-item" href="#summary" onclick="navClick(this)">5天课程总结</a>
+<a class="nav-item" href="#path" onclick="navClick(this)">后续学习路径</a>
+<a class="nav-item" href="#cert" onclick="navClick(this)">证书颁发说明</a>
+</div>
+</nav>
+</aside>
+
+<div class="main">
+<div class="topbar">
+<button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
+<h1>Day 5 · 复杂智能体评估与综合路演</h1>
+<div class="progress-wrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-text" id="progressText">0%</div>
+</div>
+</div>
+
+<div class="content">
+
+<!-- ============================================================ -->
+<!-- SECTION 1: 课题14 - 政务服务全链路智能服务 -->
+<!-- ============================================================ -->
+<div class="section" id="s1">
+<div class="section-header">
+<span class="section-tag morning">上午 · 课题14</span>
+<h2>政务服务全链路智能服务</h2>
+<p>5个专用Agent协同 + System Hint机制 + 事件触发 · 50分钟</p>
+</div>
+
+<div class="topic-card">
+<h3>核心目标</h3>
+<p>构建一个覆盖「问答→推荐→办理→校验→审核」全链路的政务服务智能体系统，掌握<strong>多Agent协同编排</strong>、<strong>System Hint动态注入</strong>、<strong>事件触发自动启动工作流</strong>三大核心能力。</p>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 核心架构原理：多Agent协同 = 专业化分工 + 结构化协作</div>
+<div class="pc-body">
+单Agent处理复杂业务时，<code>system_prompt</code>会膨胀到难以维护，且不同职责相互干扰。多Agent协同的核心思想：<strong>每个Agent只做一件事，做到极致</strong>，再通过工作流串联。这就像政务大厅的窗口分工——咨询台、导办台、受理窗口、审核窗口各司其职。<br><br>
+关键技术点：<br>
+1. <code>system_prompt</code>精炼化：每个Agent的职责描述控制在5-8行，包含<strong>角色定义 + 职责范围 + 输出格式</strong>三元组<br>
+2. <code>System Hint</code>注入：运行时动态插入时间戳、工具调用计数、TODO列表等上下文，让Agent"感知"业务状态<br>
+3. 事件驱动触发：用户提交申请→事件总线→自动启动全链路工作流，无需人工调度
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s1-1">
+<h3>1.1 五个专用Agent设计</h3>
+<p>政务全链路服务需要5个专职Agent，形成完整的业务闭环：</p>
+
+<div class="agent-grid">
+<div class="agent-card">
+<div class="ac-icon">&#128172;</div>
+<div class="ac-name">政务问答Agent</div>
+<div class="ac-desc">意图理解+业务分类<br>判断6类业务类型<br>提取关键词+紧急度</div>
+</div>
+<div class="agent-card">
+<div class="ac-icon">&#128218;</div>
+<div class="ac-name">政务推荐Agent</div>
+<div class="ac-desc">个性化办事指南<br>材料清单+办理渠道<br>预计时长+费用</div>
+</div>
+<div class="agent-card">
+<div class="ac-icon">&#128221;</div>
+<div class="ac-name">政务办理Agent</div>
+<div class="ac-desc">表单自动填充<br>口语→规范字段<br>格式校验</div>
+</div>
+<div class="agent-card">
+<div class="ac-icon">&#9989;</div>
+<div class="ac-name">政务校验Agent</div>
+<div class="ac-desc">材料完整性检查<br>4维度校验<br>一致性+合规性</div>
+</div>
+<div class="agent-card">
+<div class="ac-icon">&#128203;</div>
+<div class="ac-name">政务审核Agent</div>
+<div class="ac-desc">审核判定+反馈<br>通过/待补正/不通过<br>受理编号+指引</div>
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; Agent设计原则：单职责 + 输出标准化</div>
+<div class="pc-body">
+每个Agent的<code>system_prompt</code>遵循固定结构：<br>
+1. <strong>角色声明</strong>：「你是XXAgent」——明确身份<br>
+2. <strong>职责定义</strong>：「职责：XXX」——划清边界<br>
+3. <strong>处理规则</strong>：列出3-5条具体规则<br>
+4. <strong>输出格式</strong>：指定JSON/结构化输出，确保下游Agent可解析<br><br>
+为什么要标准化输出？因为工作流中Agent的输出是下一个Agent的输入。如果问答Agent输出的是自然语言，推荐Agent就无法精准提取业务类型。因此，问答Agent输出<code>{"intent":"公积金业务","keywords":["提取","购房"],"urgency":"普通"}</code>，下游Agent直接消费。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s1-2">
+<h3>1.2 System Hint机制</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; 核心洞察：System Hint = 连接Agent与业务状态的桥梁</div>
+<div class="pc-body">
+传统Agent不知道"现在几点"、"还有什么没做"、"刚才调用了几次工具"。System Hint通过在<code>system_prompt</code>末尾动态注入上下文块，让Agent获得<strong>业务感知能力</strong>。<br><br>
+<code>[System Hint]</code><br>
+<code>当前时间: 2026-07-08 14:30:00</code><br>
+<code>当前智能体: 政务问答Agent</code><br>
+<code>已调用工具次数: 0</code><br>
+<code>待办事项: 无</code><br>
+<code>额外信息: 需判断6类业务类型</code><br><br>
+这个机制的精妙之处：<strong>每次事件触发后，System Hint自动更新</strong>。当用户提交申请时，TODO列表自动增加"校验材料完整性"等条目，Agent就能在后续对话中主动提醒，而非被动等待。
+</div>
+</div>
+
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>构建System Hint函数</h4>
+<p><code>_build_system_hint(agent_name, extra)</code>：接受Agent名称和额外信息，生成包含时间戳、工具计数、TODO列表的Hint块。每次Agent被调用前动态注入，确保信息时效性。</p>
+</div>
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>注入到system_prompt末尾</h4>
+<p>将Hint块拼接到<code>system_prompt</code>字符串末尾：<code>基础Prompt + qa_hint</code>。LLM在推理时会优先关注Prompt末尾的内容，因此Hint放在末尾效果最佳。</p>
+</div>
+<div class="step-block">
+<span class="step-num">3</span>
+<h4>事件触发后自动更新</h4>
+<p>通过<code>EventDrivenAgent.update_system_hints()</code>方法，在每次事件处理后自动刷新时间戳和TODO状态，确保下一次Agent调用获取最新上下文。</p>
+</div>
+</div>
+
+<div class="topic-card" id="s1-3">
+<h3>1.3 事件触发机制与5步工作流</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 架构演进：从"手动调用"到"事件驱动"</div>
+<div class="pc-body">
+传统方式：人工触发每个Agent——手动调问答、手动传结果给推荐、手动填表单...<br>
+事件驱动方式：用户提交申请→<code>application_submitted</code>事件→自动启动全链路工作流→5步顺序执行→输出最终审核结果<br><br>
+关键组件：<br>
+1. <code>EventDrivenAgent</code>：事件网关，注册处理器、发射事件<br>
+2. <code>register_handler(event_type, handler)</code>：注册事件处理器<br>
+3. <code>emit_event(event)</code>：触发事件，自动调用已注册的处理器<br>
+4. <code>create_workflow(steps)</code>：编排5步顺序工作流
+</div>
+</div>
+
+<div class="workflow-visual">
+<div class="wf-node"><div class="wn-step">Step 1</div><div class="wn-name">意图理解</div></div>
+<div class="wf-arrow">&rarr;</div>
+<div class="wf-node"><div class="wn-step">Step 2</div><div class="wn-name">办事推荐</div></div>
+<div class="wf-arrow">&rarr;</div>
+<div class="wf-node"><div class="wn-step">Step 3</div><div class="wn-name">表单填写</div></div>
+<div class="wf-arrow">&rarr;</div>
+<div class="wf-node"><div class="wn-step">Step 4</div><div class="wn-name">材料校验</div></div>
+<div class="wf-arrow">&rarr;</div>
+<div class="wf-node"><div class="wn-step">Step 5</div><div class="wn-name">业务审核</div></div>
+</div>
+
+<p><strong>加急事件处理</strong>：注册独立的<code>urgent_detected</code>事件处理器，当检测到加急标记（如军属优先），自动插入优先队列，跳过排队流程。</p>
+
+<div class="flow-diagram">
+事件触发全链路流程：
+
+用户提交申请 ──► [application_submitted] 事件
+                         │
+                         ▼
+               ┌─── EventDrivenAgent ───┐
+               │  事件网关               │
+               │  handler: on_application_submit()
+               │  handler: on_urgent_detect()    ◄── 加急事件
+               └─────────┬──────────────┘
+                         │ 自动启动
+                         ▼
+        ┌──── Workflow: 政务全链路 ────┐
+        │ Step1: 问答Agent → intent_result  │
+        │ Step2: 推荐Agent → guide_result   │
+        │ Step3: 办理Agent → form_result    │
+        │ Step4: 校验Agent → verify_result  │
+        │ Step5: 审核Agent → review_result  │
+        └───────────┬─────────────────┘
+                    │
+                    ▼
+            最终审核结果 + 受理编号</div>
+</div>
+
+<div class="topic-card" id="s1-4">
+<h3>1.4 完整代码：课题14</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com">"""
+课题14: 政务服务全链路智能服务
+5Agent协同 + System Hint机制 + 事件触发
+"""</span>
+
+<span class="kw">import</span> sys, os, json, time
+
+sys.path.insert(<span class="num">0</span>, os.path.join(os.path.dirname(__file__), <span class="str">".."</span>, <span class="str">"common"</span>))
+<span class="kw">from</span> teleagent_client <span class="kw">import</span> TeleAgentClient, get_client
+<span class="kw">from</span> training_utils <span class="kw">import</span> EventDrivenAgent
+
+<span class="kw">def</span> <span class="fn">exercise14_run</span>():
+    client = get_client()
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤1: 创建5个专用Agent（含System Hint注入）</span>
+    <span class="com"># ==========================================</span>
+
+    <span class="kw">def</span> <span class="fn">_build_system_hint</span>(agent_name: <span class="cls">str</span>, extra: <span class="cls">str</span> = <span class="str">""</span>) -> <span class="cls">str</span>:
+        <span class="str">"""构建System Hint：时间戳 + 工具计数 + TODO列表"""</span>
+        current_time = time.strftime(<span class="str">"%Y-%m-%d %H:%M:%S"</span>)
+        hint_block = (
+            <span class="fstr">f"\n\n[System Hint]\n"</span>
+            <span class="fstr">f"当前时间: {current_time}\n"</span>
+            <span class="fstr">f"当前智能体: {agent_name}\n"</span>
+            <span class="fstr">f"已调用工具次数: 0\n"</span>
+            <span class="fstr">f"待办事项: 无\n"</span>
+        )
+        <span class="kw">if</span> extra:
+            hint_block += <span class="fstr">f"额外信息: {extra}\n"</span>
+        <span class="kw">return</span> hint_block
+
+    <span class="com"># Agent 1: 问答理解</span>
+    qa_hint = _build_system_hint(<span class="str">"政务问答Agent"</span>, <span class="str">"需判断6类业务类型"</span>)
+    qa_agent = client.create_agent(
+        name=<span class="str">"政务问答Agent"</span>,
+        description=<span class="str">"理解用户意图，判断业务类型"</span>,
+        system_prompt=(
+            <span class="str">"你是政务大厅前台问答Agent。\n\n"</span>
+            <span class="str">"职责：理解市民诉求，判断业务类型并提取关键信息。\n"</span>
+            <span class="str">"业务类型：户籍办理 | 社保业务 | 公积金业务 | 不动产登记 | 婚姻登记 | 其他\n"</span>
+            <span class="str">"输出格式：JSON {\"intent\": \"业务类型\", \"keywords\": [\"关键词\"], \"urgency\": \"普通/加急\"}\n\n"</span>
+            <span class="str">"示例：\n"</span>
+            <span class="str">"用户：\"我想把户口从老家迁过来\"\n"</span>
+            <span class="str">"输出：{\"intent\": \"户籍办理\", \"keywords\": [\"户口迁移\", \"迁入\"], \"urgency\": \"普通\"}"</span>
+            + qa_hint
+        ),
+        model=<span class="str">"default"</span>
+    )
+    <span class="fn">print</span>(<span class="fstr">f"  ✅ 问答Agent创建: {qa_agent.get('id')}"</span>)
+
+    <span class="com"># Agent 2: 推荐</span>
+    rec_hint = _build_system_hint(<span class="str">"政务推荐Agent"</span>, <span class="str">"需推荐材料清单+办理渠道"</span>)
+    recommend_agent = client.create_agent(
+        name=<span class="str">"政务推荐Agent"</span>,
+        description=<span class="str">"个性化办事指南推荐"</span>,
+        system_prompt=(
+            <span class="str">"你是政务办事指南推荐Agent。\n\n"</span>
+            <span class="str">"职责：根据用户业务类型，推荐办理指南、所需材料、办理渠道。\n"</span>
+            <span class="str">"推荐内容：\n"</span>
+            <span class="str">"1. 所需材料清单（原件/复印件标注）\n"</span>
+            <span class="str">"2. 办理地点（线上/线下）\n"</span>
+            <span class="str">"3. 预计时长\n"</span>
+            <span class="str">"4. 费用\n"</span>
+            <span class="str">"5. 注意事项"</span>
+            + rec_hint
+        ),
+        model=<span class="str">"default"</span>
+    )
+    <span class="fn">print</span>(<span class="fstr">f"  ✅ 推荐Agent创建: {recommend_agent.get('id')}"</span>)
+
+    <span class="com"># Agent 3: 办理</span>
+    proc_hint = _build_system_hint(<span class="str">"政务办理Agent"</span>, <span class="str">"需自动填充表单+格式校验"</span>)
+    process_agent = client.create_agent(
+        name=<span class="str">"政务办理Agent"</span>,
+        description=<span class="str">"表单字段自动填充"</span>,
+        system_prompt=(
+            <span class="str">"你是政务表单填写Agent。\n\n"</span>
+            <span class="str">"职责：根据用户提供的信息，自动填充业务表单。\n"</span>
+            <span class="str">"处理规则：\n"</span>
+            <span class="str">"1. 将口语化信息转为规范表单字段\n"</span>
+            <span class="str">"2. 缺失字段明确列出，请用户补充\n"</span>
+            <span class="str">"3. 格式校验（身份证18位、手机号11位等）\n"</span>
+            <span class="str">"4. 输出标准化的表单数据JSON"</span>
+            + proc_hint
+        ),
+        model=<span class="str">"default"</span>
+    )
+    <span class="fn">print</span>(<span class="fstr">f"  ✅ 办理Agent创建: {process_agent.get('id')}"</span>)
+
+    <span class="com"># Agent 4: 校验</span>
+    ver_hint = _build_system_hint(<span class="str">"政务校验Agent"</span>, <span class="str">"需检查4个维度"</span>)
+    verify_agent = client.create_agent(
+        name=<span class="str">"政务校验Agent"</span>,
+        description=<span class="str">"材料完整性与合规性检查"</span>,
+        system_prompt=(
+            <span class="str">"你是政务材料校验Agent。\n\n"</span>
+            <span class="str">"职责：检查提交材料是否完整、合规。\n"</span>
+            <span class="str">"校验维度：\n"</span>
+            <span class="str">"1. 材料完整性：必收材料是否齐全\n"</span>
+            <span class="str">"2. 格式合规性：证件是否在有效期、复印件是否清晰\n"</span>
+            <span class="str">"3. 逻辑一致性：各材料信息是否一致（姓名、身份证号等）\n"</span>
+            <span class="str">"4. 政策符合性：是否符合当前政策要求"</span>
+            + ver_hint
+        ),
+        model=<span class="str">"default"</span>
+    )
+    <span class="fn">print</span>(<span class="fstr">f"  ✅ 校验Agent创建: {verify_agent.get('id')}"</span>)
+
+    <span class="com"># Agent 5: 审核</span>
+    rev_hint = _build_system_hint(<span class="str">"政务审核Agent"</span>, <span class="str">"需判定通过/待补正/不通过"</span>)
+    review_agent = client.create_agent(
+        name=<span class="str">"政务审核Agent"</span>,
+        description=<span class="str">"自动审核与结果反馈"</span>,
+        system_prompt=(
+            <span class="str">"你是政务业务审核Agent。\n\n"</span>
+            <span class="str">"职责：对校验通过的业务进行审核判定。\n"</span>
+            <span class="str">"审核规则：\n"</span>
+            <span class="str">"1. 材料齐全且合规 → 审核通过，生成受理回执\n"</span>
+            <span class="str">"2. 存在可补正问题 → 审核待补正，列出补正清单\n"</span>
+            <span class="str">"3. 不符合政策 → 审核不通过，说明原因和政策依据\n\n"</span>
+            <span class="str">"输出：审核结论 + 受理编号 + 下一步指引"</span>
+            + rev_hint
+        ),
+        model=<span class="str">"default"</span>
+    )
+    <span class="fn">print</span>(<span class="fstr">f"  ✅ 审核Agent创建: {review_agent.get('id')}"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤2: 事件触发机制</span>
+    <span class="com"># ==========================================</span>
+
+    eda = EventDrivenAgent(name=<span class="str">"政务服务事件网关"</span>, client=client)
+
+    <span class="kw">def</span> <span class="fn">on_application_submit</span>(event):
+        <span class="str">"""用户提交申请事件 → 自动启动全链路工作流"""</span>
+        <span class="fn">print</span>(<span class="fstr">f"  📩 收到申请事件: {event.data.get('applicant', '未知申请人')}"</span>)
+        <span class="fn">print</span>(<span class="str">"  → 自动启动政务全链路工作流"</span>)
+
+    eda.register_handler(<span class="str">"application_submitted"</span>, on_application_submit)
+
+    <span class="kw">def</span> <span class="fn">on_urgent_detect</span>(event):
+        <span class="str">"""加急事件 → 优先处理"""</span>
+        <span class="fn">print</span>(<span class="fstr">f"  🔴 加急事件触发: {event.data}"</span>)
+        <span class="fn">print</span>(<span class="str">"  → 插入优先队列，跳过排队"</span>)
+
+    eda.register_handler(<span class="str">"urgent_detected"</span>, on_urgent_detect)
+
+    <span class="com"># 添加TODO列表</span>
+    eda.add_todo(<span class="str">"处理用户公积金提取申请"</span>, <span class="str">"high"</span>)
+    eda.add_todo(<span class="str">"校验材料完整性"</span>, <span class="str">"medium"</span>)
+    eda.add_todo(<span class="str">"反馈审核结果"</span>, <span class="str">"medium"</span>)
+    eda.update_system_hints()
+
+    <span class="fn">print</span>(<span class="fstr">f"  事件处理器已注册: {list(eda.event_handlers.keys())}"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"  System Hint状态: {json.dumps(eda.system_hints, ensure_ascii=False)}"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤3: 编排5步工作流</span>
+    <span class="com"># ==========================================</span>
+
+    workflow = client.create_workflow(
+        name=<span class="str">"政务全链路服务（事件驱动版）"</span>,
+        description=<span class="str">"问答→推荐→办理→校验→审核 全流程智能服务"</span>,
+        steps=[
+            {
+                <span class="str">"step"</span>: <span class="num">1</span>, <span class="str">"name"</span>: <span class="str">"意图理解"</span>,
+                <span class="str">"agent_id"</span>: qa_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: <span class="str">"${user_message}"</span>,
+                <span class="str">"output"</span>: <span class="str">"intent_result"</span>
+            },
+            {
+                <span class="str">"step"</span>: <span class="num">2</span>, <span class="str">"name"</span>: <span class="str">"办事推荐"</span>,
+                <span class="str">"agent_id"</span>: recommend_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: <span class="str">"${intent_result}"</span>,
+                <span class="str">"output"</span>: <span class="str">"guide_result"</span>
+            },
+            {
+                <span class="str">"step"</span>: <span class="num">3</span>, <span class="str">"name"</span>: <span class="str">"表单填写"</span>,
+                <span class="str">"agent_id"</span>: process_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: {<span class="str">"intent"</span>: <span class="str">"${intent_result}"</span>, <span class="str">"user_info"</span>: <span class="str">"${user_info}"</span>},
+                <span class="str">"output"</span>: <span class="str">"form_result"</span>
+            },
+            {
+                <span class="str">"step"</span>: <span class="num">4</span>, <span class="str">"name"</span>: <span class="str">"材料校验"</span>,
+                <span class="str">"agent_id"</span>: verify_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: <span class="str">"${form_result}"</span>,
+                <span class="str">"output"</span>: <span class="str">"verify_result"</span>
+            },
+            {
+                <span class="str">"step"</span>: <span class="num">5</span>, <span class="str">"name"</span>: <span class="str">"业务审核"</span>,
+                <span class="str">"agent_id"</span>: review_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: {<span class="str">"form"</span>: <span class="str">"${form_result}"</span>, <span class="str">"verify"</span>: <span class="str">"${verify_result}"</span>},
+                <span class="str">"output"</span>: <span class="str">"review_result"</span>
+            }
+        ]
+    )
+    workflow_id = workflow.get(<span class="str">"id"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"工作流创建成功！ID: {workflow_id}"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤4: 事件触发 + 全链路测试</span>
+    <span class="com"># ==========================================</span>
+
+    <span class="com"># 模拟用户提交申请事件</span>
+    submit_event = EventDrivenAgent.Event(
+        event_type=<span class="str">"application_submitted"</span>,
+        source=<span class="str">"政务大厅自助终端"</span>,
+        data={<span class="str">"applicant"</span>: <span class="str">"王明"</span>, <span class="str">"business_type"</span>: <span class="str">"公积金提取"</span>, <span class="str">"urgency"</span>: <span class="str">"普通"</span>}
+    )
+    eda.emit_event(submit_event)
+
+    test_input = {
+        <span class="str">"user_message"</span>: <span class="str">"我想办理公积金提取，准备买房"</span>,
+        <span class="str">"user_info"</span>: {
+            <span class="str">"name"</span>: <span class="str">"王明"</span>,
+            <span class="str">"id_card"</span>: <span class="str">"320506199001011234"</span>,
+            <span class="str">"phone"</span>: <span class="str">"13812345678"</span>,
+            <span class="str">"purpose"</span>: <span class="str">"购房提取"</span>,
+            <span class="str">"house_address"</span>: <span class="str">"XX区XX路XX号"</span>
+        }
+    }
+    result = client.run_workflow(workflow_id, test_input)
+    <span class="fn">print</span>(<span class="fstr">f"\n🤖 全链路结果:\n{json.dumps(result, ensure_ascii=False, indent=2)}"</span>)
+
+    <span class="com"># 模拟加急事件</span>
+    urgent_event = EventDrivenAgent.Event(
+        event_type=<span class="str">"urgent_detected"</span>,
+        source=<span class="str">"系统自动检测"</span>,
+        data={<span class="str">"reason"</span>: <span class="str">"军属优先"</span>, <span class="str">"applicant"</span>: <span class="str">"李军"</span>}
+    )
+    eda.emit_event(urgent_event)
+
+    <span class="fn">print</span>(<span class="str">"\n✅ 课题14完成！"</span>)</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: 课题15 - 社会治理综合智能体 -->
+<!-- ============================================================ -->
+<div class="section" id="s2">
+<div class="section-header">
+<span class="section-tag morning">上午 · 课题15</span>
+<h2>社会治理综合智能体</h2>
+<p>4个Agent协同 + 异步处理(threading) + 条件分支 · 40分钟</p>
+</div>
+
+<div class="topic-card">
+<h3>核心目标</h3>
+<p>构建综治中心的多Agent协同系统，掌握<strong>异步并行处理</strong>（事件录入和态势预警同时执行）和<strong>条件分支</strong>（仅"矛盾纠纷"类型触发法律Agent）两个高级工作流模式。</p>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 核心架构原理：异步+条件 = 高效+精准</div>
+<div class="pc-body">
+<strong>异步处理</strong>：当两个Agent之间没有数据依赖时，可以并行执行。例如"事件录入"和"态势预警"——录入是处理当前事件，预警是分析月度趋势，两者互不依赖，并行可节省50%时间。<br><br>
+<strong>条件分支</strong>：不是每个事件都需要走所有Agent。矛盾纠纷类事件才需要法律咨询Agent，安全隐患类事件则直接进入简报生成。这通过工作流step中的<code>condition</code>字段实现：<code>"condition": "${standard_event.type} == '矛盾纠纷'"</code>
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s2-1">
+<h3>2.1 四个专用Agent</h3>
+
+<div class="agent-grid">
+<div class="agent-card">
+<div class="ac-icon">&#128203;</div>
+<div class="ac-name">事件信息Agent</div>
+<div class="ac-desc">口语化→标准化录入<br>5类事件分类<br>地址格式化+人名脱敏</div>
+</div>
+<div class="agent-card">
+<div class="ac-icon">&#9878;</div>
+<div class="ac-name">法律咨询Agent</div>
+<div class="ac-desc">纠纷法律条款检索<br>适用法条+解读<br>维权建议+调解优先</div>
+</div>
+<div class="agent-card">
+<div class="ac-icon">&#128196;</div>
+<div class="ac-name">简报生成Agent</div>
+<div class="ac-desc">数据汇总<br>分类统计+典型案例<br>风险预警+工作建议</div>
+</div>
+<div class="agent-card">
+<div class="ac-icon">&#9888;</div>
+<div class="ac-name">态势预警Agent</div>
+<div class="ac-desc">区域风险趋势分析<br>4维预警<br>🔴红🟡黄🟢绿三级</div>
+</div>
+</div>
+
+<h4>异步处理架构</h4>
+
+<div class="flow-diagram">
+社会治理工作流（异步+条件分支）：
+
+事件报告 ──► [Step1] 事件信息Agent（标准化录入）
+                    │
+          ┌─────────┴──────────┐
+          │                    │
+    [Step2]法律咨询Agent    [Step3]态势预警Agent
+    条件: type=="矛盾纠纷"   与Step2并行执行
+          │                    │
+          └─────────┬──────────┘
+                    │
+          [Step4] 简报生成Agent（汇总所有结果）</div>
+
+<p><strong>Python threading实现</strong>：使用<code>threading.Thread</code>和<code>threading.Barrier</code>协调两个并行线程。Barrier确保两个线程都完成后再进入简报汇总阶段。</p>
+</div>
+
+<div class="topic-card" id="s2-2">
+<h3>2.2 条件分支详解</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; 条件分支实现：工作流Step的condition字段</div>
+<div class="pc-body">
+在工作流定义中，每个step可以添加<code>condition</code>字段，值为一个表达式。运行时，引擎会评估该表达式，仅当结果为True时执行该步骤。<br><br>
+示例：<code>"condition": "${standard_event.type} == '矛盾纠纷'"</code><br><br>
+这意味着：<br>
+- 上报漏水纠纷 → 事件Agent输出type="矛盾纠纷" → 法律Agent<strong>执行</strong> → 简报包含法律建议<br>
+- 上报安全隐患 → 事件Agent输出type="安全隐患" → 法律Agent<strong>跳过</strong> → 简报不含法律建议<br><br>
+条件分支让工作流"智能路由"，不同类型的事件走不同处理路径，避免无关Agent的无效调用。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s2-3">
+<h3>2.3 完整代码：课题15</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com">"""
+课题15: 社会治理综合智能体
+4Agent协同 + 异步处理 + 条件分支
+"""</span>
+
+<span class="kw">import</span> sys, os, json, time, threading
+
+sys.path.insert(<span class="num">0</span>, os.path.join(os.path.dirname(__file__), <span class="str">".."</span>, <span class="str">"common"</span>))
+<span class="kw">from</span> teleagent_client <span class="kw">import</span> TeleAgentClient, get_client
+
+<span class="kw">def</span> <span class="fn">exercise15_run</span>():
+    client = get_client()
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤1: 创建4个专用Agent</span>
+    <span class="com"># ==========================================</span>
+
+    event_agent = client.create_agent(
+        name=<span class="str">"事件信息Agent"</span>,
+        description=<span class="str">"事件信息提取与标准化录入"</span>,
+        system_prompt=(
+            <span class="str">"你是综治中心事件录入Agent。\n\n"</span>
+            <span class="str">"职责：将网格员上报的口语化事件信息转为标准化记录。\n"</span>
+            <span class="str">"提取字段：事件类型、发生时间、地点、当事人、事件描述、紧急程度\n"</span>
+            <span class="str">"事件类型分类：矛盾纠纷 | 安全隐患 | 民生诉求 | 城市管理 | 治安事件\n"</span>
+            <span class="str">"标准化要求：地址统一格式、时间24h制、人名脱敏处理"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    law_agent = client.create_agent(
+        name=<span class="str">"法律咨询Agent"</span>,
+        description=<span class="str">"纠纷法律条款检索与建议"</span>,
+        system_prompt=(
+            <span class="str">"你是纠纷法律咨询Agent。\n\n"</span>
+            <span class="str">"职责：根据纠纷类型检索适用法律条款，给出法律建议。\n"</span>
+            <span class="str">"常见纠纷类型及适用法律：\n"</span>
+            <span class="str">"- 劳资纠纷：《劳动合同法》第30/46/85条\n"</span>
+            <span class="str">"- 邻里纠纷：《民法典》第288/289条（相邻关系）\n"</span>
+            <span class="str">"- 租赁纠纷：《民法典》第703-734条\n"</span>
+            <span class="str">"- 消费纠纷：《消费者权益保护法》第55条\n\n"</span>
+            <span class="str">"输出：适用法条 + 简要解读 + 维权建议 + 调解优先提示"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    brief_agent = client.create_agent(
+        name=<span class="str">"简报生成Agent"</span>,
+        description=<span class="str">"数据汇总与治理简报生成"</span>,
+        system_prompt=(
+            <span class="str">"你是治理简报Agent。负责汇总数据并生成治理简报。\n"</span>
+            <span class="str">"包含：数据概览、分类统计、典型案例、风险预警、工作建议。"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    alert_agent = client.create_agent(
+        name=<span class="str">"态势预警Agent"</span>,
+        description=<span class="str">"区域治理态势分析与风险预警"</span>,
+        system_prompt=(
+            <span class="str">"你是治理态势预警Agent。\n\n"</span>
+            <span class="str">"职责：分析区域治理数据，识别风险趋势并发出预警。\n"</span>
+            <span class="str">"预警维度：\n"</span>
+            <span class="str">"1. 事件趋势：某类事件是否持续上升\n"</span>
+            <span class="str">"2. 区域热点：哪些社区/网格事件集中\n"</span>
+            <span class="str">"3. 处理时效：超时未办结事件\n"</span>
+            <span class="str">"4. 重复事件：同一问题反复投诉\n\n"</span>
+            <span class="str">"预警等级：\n"</span>
+            <span class="str">"🔴红色：群体性事件征兆、重大安全隐患\n"</span>
+            <span class="str">"🟡黄色：某类事件上升>30%、处理时效超标\n"</span>
+            <span class="str">"🟢正常：各项指标正常"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤2: 编排异步处理 + 条件分支工作流</span>
+    <span class="com"># ==========================================</span>
+
+    workflow = client.create_workflow(
+        name=<span class="str">"社会治理智能体（异步版）"</span>,
+        description=<span class="str">"事件录入→[并行]法律咨询+态势预警→简报生成"</span>,
+        steps=[
+            {
+                <span class="str">"step"</span>: <span class="num">1</span>,
+                <span class="str">"name"</span>: <span class="str">"事件标准化录入"</span>,
+                <span class="str">"agent_id"</span>: event_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: <span class="str">"${event_report}"</span>,
+                <span class="str">"output"</span>: <span class="str">"standard_event"</span>
+            },
+            {
+                <span class="str">"step"</span>: <span class="num">2</span>,
+                <span class="str">"name"</span>: <span class="str">"法律咨询（条件分支：仅纠纷类触发）"</span>,
+                <span class="str">"agent_id"</span>: law_agent.get(<span class="str">"id"</span>),
+                <span class="str">"condition"</span>: <span class="str">"${standard_event.type} == '矛盾纠纷'"</span>,
+                <span class="str">"input"</span>: <span class="str">"${standard_event}"</span>,
+                <span class="str">"output"</span>: <span class="str">"law_advice"</span>
+            },
+            {
+                <span class="str">"step"</span>: <span class="num">3</span>,
+                <span class="str">"name"</span>: <span class="str">"态势预警（与法律咨询并行）"</span>,
+                <span class="str">"agent_id"</span>: alert_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: <span class="str">"${monthly_data}"</span>,
+                <span class="str">"output"</span>: <span class="str">"alert_result"</span>,
+                <span class="str">"parallel_with"</span>: <span class="num">2</span>
+            },
+            {
+                <span class="str">"step"</span>: <span class="num">4</span>,
+                <span class="str">"name"</span>: <span class="str">"简报生成（汇总所有结果）"</span>,
+                <span class="str">"agent_id"</span>: brief_agent.get(<span class="str">"id"</span>),
+                <span class="str">"input"</span>: {
+                    <span class="str">"event"</span>: <span class="str">"${standard_event}"</span>,
+                    <span class="str">"law"</span>: <span class="str">"${law_advice}"</span>,
+                    <span class="str">"alert"</span>: <span class="str">"${alert_result}"</span>,
+                    <span class="str">"monthly"</span>: <span class="str">"${monthly_data}"</span>
+                },
+                <span class="str">"output"</span>: <span class="str">"brief_report"</span>
+            }
+        ]
+    )
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤3: 异步处理模式演示（threading）</span>
+    <span class="com"># ==========================================</span>
+
+    <span class="kw">def</span> <span class="fn">_run_event_entry</span>(report_text):
+        <span class="str">"""异步：事件录入"""</span>
+        <span class="fn">print</span>(<span class="str">"  [线程1] 事件录入开始..."</span>)
+        result = client.chat(event_agent.get(<span class="str">"id"</span>),
+                             <span class="fstr">f"请将以下事件标准化录入：\n{report_text}"</span>)
+        <span class="fn">print</span>(<span class="str">"  [线程1] 事件录入完成"</span>)
+        <span class="kw">return</span> result
+
+    <span class="kw">def</span> <span class="fn">_run_alert_check</span>(monthly_data_text):
+        <span class="str">"""异步：态势预警（与事件录入并行执行）"""</span>
+        <span class="fn">print</span>(<span class="str">"  [线程2] 态势预警开始..."</span>)
+        result = client.chat(alert_agent.get(<span class="str">"id"</span>),
+                             <span class="fstr">f"请分析以下月度数据并给出预警：\n{monthly_data_text}"</span>)
+        <span class="fn">print</span>(<span class="str">"  [线程2] 态势预警完成"</span>)
+        <span class="kw">return</span> result
+
+    event_report = (
+        <span class="str">"网格员张XX上报：\n"</span>
+        <span class="str">"时间：今天下午3点左右\n"</span>
+        <span class="str">"地点：XX小区3栋2单元\n"</span>
+        <span class="str">"情况：楼上502住户装修漏水，把楼下402的新装天花板泡了，"</span>
+        <span class="str">"402业主找502协商，502说装修队负责，装修队说建筑质量问题不归他们管，"</span>
+        <span class="str">"三方吵起来了。402业主情绪比较激动。"</span>
+    )
+
+    monthly_data = (
+        <span class="str">"6月治理数据：\n"</span>
+        <span class="str">"- 总事件：156件（环比+12%）\n"</span>
+        <span class="str">"- 矛盾纠纷：42件（环比+25%）⚠️\n"</span>
+        <span class="str">"- 安全隐患：28件\n"</span>
+        <span class="str">"- 民生诉求：56件\n"</span>
+        <span class="str">"- 城市管理：30件\n"</span>
+        <span class="str">"- 超时未办结：8件\n"</span>
+        <span class="str">"- 重复投诉：3件（均为XX小区物业问题）"</span>
+    )
+
+    <span class="com"># 并行执行事件录入和态势预警</span>
+    results = {}
+    barrier = threading.Barrier(<span class="num">2</span>, timeout=<span class="num">120</span>)
+
+    <span class="kw">def</span> <span class="fn">_thread_event</span>():
+        results[<span class="str">"event"</span>] = _run_event_entry(event_report)
+        barrier.wait()
+
+    <span class="kw">def</span> <span class="fn">_thread_alert</span>():
+        results[<span class="str">"alert"</span>] = _run_alert_check(monthly_data)
+        barrier.wait()
+
+    t1 = threading.Thread(target=_thread_event)
+    t2 = threading.Thread(target=_thread_alert)
+    start_time = time.time()
+    t1.start()
+    t2.start()
+    t1.join(timeout=<span class="num">120</span>)
+    t2.join(timeout=<span class="num">120</span>)
+
+    elapsed = time.time() - start_time
+    <span class="fn">print</span>(<span class="fstr">f"\n  并行执行耗时: {elapsed:.1f}s"</span>)
+    <span class="fn">print</span>(<span class="str">"  （串行预估耗时: 2x 以上）"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤4: 条件分支测试</span>
+    <span class="com"># ==========================================</span>
+
+    <span class="com"># 测试1: 矛盾纠纷类 → 触发法律Agent</span>
+    result_law = client.chat(law_agent.get(<span class="str">"id"</span>),
+        <span class="str">"这是一起邻里漏水纠纷：楼上装修导致楼下天花板损坏，"</span>
+        <span class="str">"三方（楼上业主、装修队、楼下业主）责任推诿。请提供法律建议。"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"🤖 法律咨询:\n{result_law.get('content', '')}"</span>)
+
+    <span class="com"># 测试2: 安全隐患类 → 不触发法律Agent</span>
+    safety_report = <span class="str">"网格员上报：XX路施工现场围栏破损，行人可直接进入危险区域。"</span>
+    result_safety = client.chat(event_agent.get(<span class="str">"id"</span>),
+        <span class="fstr">f"请将以下事件标准化录入：\n{safety_report}"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"🤖 事件录入（无法律分支）:\n{result_safety.get('content', '')}"</span>)
+
+    <span class="com"># 简报汇总</span>
+    result_brief = client.chat(brief_agent.get(<span class="str">"id"</span>),
+        <span class="fstr">f"请根据以下信息生成治理简报：\n"</span>
+        <span class="fstr">f"月度数据：{monthly_data}\n"</span>
+        <span class="fstr">f"新增纠纷事件：邻里漏水纠纷"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"🤖 治理简报:\n{result_brief.get('content', '')}"</span>)
+
+    <span class="fn">print</span>(<span class="str">"\n✅ 课题15完成！"</span>)</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: 课题15.5 - 事件驱动Agent实战 -->
+<!-- ============================================================ -->
+<div class="section" id="s3">
+<div class="section-header">
+<span class="section-tag morning">上午 · 课题15.5</span>
+<h2>事件驱动Agent实战</h2>
+<p>三种触发模式 + System Hint集成 + 被动vs事件驱动对比 · 30分钟</p>
+</div>
+
+<div class="topic-card">
+<h3>核心目标</h3>
+<p>掌握<code>EventDrivenAgent</code>架构的搭建与三种触发模式的实现，理解<strong>事件驱动如何让Agent从"工具"升级为"协作伙伴"</strong>。</p>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 核心架构原理：EventDrivenAgent = 事件源 + 事件总线 + 处理器 + 智能体推理</div>
+<div class="pc-body">
+传统Agent架构：<code>用户提问 → Agent回答</code>（被动模式）<br>
+事件驱动架构：<code>事件源 → 事件总线 → 处理器 → 智能体推理 → 响应</code>（主动模式）<br><br>
+三种触发模式覆盖90%的运营自动化场景：<br>
+1. <strong>定时触发</strong>：cron调度器 → 每天9:00商机跟进提醒<br>
+2. <strong>数据触发</strong>：监控阈值 → 缺陷率超3%自动告警<br>
+3. <strong>外部触发</strong>：API回调 → 客户提交申请启动审核<br><br>
+核心代码模式：<code>eda.register_handler(event_type, handler)</code> + <code>eda.emit_event(event)</code>
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3-1">
+<h3>3.1 三种触发模式详解</h3>
+
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>定时触发：每天9:00商机跟进提醒</h4>
+<p>场景：客户经理每天早上需要跟进待办商机，但容易遗漏。通过<code>timer</code>事件类型，cron调度器在9:00自动发射事件，Agent生成跟进提醒并推送给对应客户经理。</p>
+<p>事件数据：<code>{"task": "商机跟进提醒", "target": "苏州XX电子有限公司", "scheduled_time": "09:00", "last_follow_up": "3天前"}</code></p>
+</div>
+
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>数据触发：缺陷率超阈值告警</h4>
+<p>场景：制造业生产线缺陷率超过3%时需要立即响应。监控系统实时检测，当<code>PCB板缺陷率 = 5.2%</code>超过阈值，自动发射<code>data_alert</code>事件，触发根因分析和告警通知。</p>
+<p>事件数据：<code>{"metric": "PCB板缺陷率", "value": "5.2%", "threshold": "3.0%", "production_line": "A3线", "trend": "连续3天上升"}</code></p>
+</div>
+
+<div class="step-block">
+<span class="step-num">3</span>
+<h4>外部触发：客户提交申请→启动审核</h4>
+<p>场景：客户在自助平台提交专线扩容申请，系统通过API回调发射<code>external_application</code>事件，自动启动审核工作流，无需人工转交。</p>
+<p>事件数据：<code>{"applicant": "苏州XX科技有限公司", "business_type": "专线扩容", "amount": "50万"}</code></p>
+</div>
+</div>
+
+<div class="topic-card" id="s3-2">
+<h3>3.2 System Hint集成</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; System Hint的三层信息注入</div>
+<div class="pc-body">
+事件驱动Agent的System Hint包含三层信息：<br><br>
+<strong>第一层：时间感知</strong><br>
+<code>当前时间: 2026-07-08 14:30</code><br>
+让Agent知道"现在几点"，可以判断"3天前的跟进需要催办了"<br><br>
+<strong>第二层：TODO感知</strong><br>
+<code>待办事项数: 3</code><br>
+<code>待办清单: [high] 跟进苏州XX公司商机, [high] 处理缺陷率告警, [medium] 审核专线扩容申请</code><br>
+让Agent知道"还有什么没做"，可以主动提醒<br><br>
+<strong>第三层：状态感知</strong><br>
+<code>已注册事件处理器: 3</code><br>
+让Agent知道"当前系统能处理哪些事件"<br><br>
+这三层信息通过<code>eda.update_system_hints()</code>自动更新，然后拼接到Agent的<code>system_prompt</code>末尾，实现<strong>业务状态与Agent推理的无缝连接</strong>。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3-3">
+<h3>3.3 被动模式 vs 事件驱动模式 全面对比</h3>
+
+<table class="compare-table">
+<thead>
+<tr><th>维度</th><th>被动模式</th><th>事件驱动模式</th></tr>
+</thead>
+<tbody>
+<tr><td>触发方式</td><td>用户主动提问</td><td>事件自动触发</td></tr>
+<tr><td>时间感知</td><td>无，不知道当前时间</td><td>有，System Hint注入时间戳</td></tr>
+<tr><td>任务感知</td><td>无，不知道待办事项</td><td>有，TODO列表自动注入</td></tr>
+<tr><td>主动性</td><td>被动等待</td><td>主动提醒+自动执行</td></tr>
+<tr><td>适用场景</td><td>简单问答</td><td>运营巡检+商机跟进+风险告警</td></tr>
+<tr><td>开发复杂度</td><td>低</td><td>中（需事件总线+处理器注册）</td></tr>
+<tr><td>典型代码量</td><td>~20行</td><td>~80行（含事件注册+处理器）</td></tr>
+<tr><td>Agent角色</td><td>工具（被动回答）</td><td>协作伙伴（主动服务）</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; 核心洞察：事件驱动让Agent从「工具」升级为「协作伙伴」</div>
+<div class="pc-body">
+1. <strong>被动模式</strong>的Agent只是一个"高级搜索引擎"——你问它答，不问不动。<br>
+2. <strong>事件驱动模式</strong>的Agent是一个"智能助手"——它会主动提醒你跟进商机、自动检测风险、在客户提交申请时立即启动流程。<br>
+3. System Hint是连接Agent与业务状态的桥梁——让Agent"感知"时间、TODO、系统状态。<br>
+4. 三种触发模式（定时/数据/外部）覆盖了90%的运营自动化场景。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3-4">
+<h3>3.4 完整代码：课题15.5</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com">"""
+课题15.5: 事件驱动Agent实战
+三种触发模式 + System Hint + 模式对比
+"""</span>
+
+<span class="kw">import</span> sys, os, json, time
+
+sys.path.insert(<span class="num">0</span>, os.path.join(os.path.dirname(__file__), <span class="str">".."</span>, <span class="str">"common"</span>))
+<span class="kw">from</span> teleagent_client <span class="kw">import</span> TeleAgentClient, get_client
+<span class="kw">from</span> training_utils <span class="kw">import</span> EventDrivenAgent
+
+<span class="kw">def</span> <span class="fn">exercise15_5_run</span>():
+    client = get_client()
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤1: 用EventDrivenAgent搭建事件驱动架构</span>
+    <span class="com"># ==========================================</span>
+
+    eda = EventDrivenAgent(name=<span class="str">"区县运营智能体"</span>, client=client)
+    <span class="fn">print</span>(<span class="str">"  架构: 事件源 → 事件总线 → 处理器 → 智能体推理 → 响应"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤2: 实现三种触发模式</span>
+    <span class="com"># ==========================================</span>
+
+    <span class="com"># 触发模式1: 定时触发 - 每天9:00商机跟进提醒</span>
+    <span class="kw">def</span> <span class="fn">handle_timer</span>(event):
+        <span class="str">"""定时触发处理器"""</span>
+        task = event.data.get(<span class="str">"task"</span>, <span class="str">"未指定任务"</span>)
+        target = event.data.get(<span class="str">"target"</span>, <span class="str">"未指定目标"</span>)
+        <span class="fn">print</span>(<span class="fstr">f"  ⏰ 定时任务执行: {task}"</span>)
+        <span class="fn">print</span>(<span class="fstr">f"  → 目标: {target}"</span>)
+        <span class="fn">print</span>(<span class="str">"  → 动作: 调用智能体生成跟进提醒并推送给客户经理"</span>)
+        eda.add_todo(<span class="fstr">f"跟进 {target} 的商机"</span>, <span class="str">"high"</span>)
+
+    eda.register_handler(<span class="str">"timer"</span>, handle_timer)
+
+    timer_event = EventDrivenAgent.Event(
+        event_type=<span class="str">"timer"</span>,
+        source=<span class="str">"cron-scheduler"</span>,
+        data={
+            <span class="str">"task"</span>: <span class="str">"商机跟进提醒"</span>,
+            <span class="str">"target"</span>: <span class="str">"苏州XX电子有限公司"</span>,
+            <span class="str">"scheduled_time"</span>: <span class="str">"09:00"</span>,
+            <span class="str">"last_follow_up"</span>: <span class="str">"3天前"</span>
+        }
+    )
+    eda.emit_event(timer_event)
+
+    <span class="com"># 触发模式2: 数据触发 - 缺陷率超阈值告警</span>
+    <span class="kw">def</span> <span class="fn">handle_data_alert</span>(event):
+        <span class="str">"""数据阈值告警处理器"""</span>
+        metric = event.data.get(<span class="str">"metric"</span>, <span class="str">"未知指标"</span>)
+        value = event.data.get(<span class="str">"value"</span>, <span class="str">"0"</span>)
+        threshold = event.data.get(<span class="str">"threshold"</span>, <span class="str">"0"</span>)
+        <span class="fn">print</span>(<span class="fstr">f"  📊 数据异常检测: {metric} = {value}（阈值: {threshold}）"</span>)
+        <span class="fn">print</span>(<span class="str">"  → 动作: 自动触发根因分析 + 告警通知"</span>)
+        eda.add_todo(<span class="fstr">f"处理{metric}超阈值告警"</span>, <span class="str">"high"</span>)
+
+    eda.register_handler(<span class="str">"data_alert"</span>, handle_data_alert)
+
+    data_event = EventDrivenAgent.Event(
+        event_type=<span class="str">"data_alert"</span>,
+        source=<span class="str">"生产监控系统"</span>,
+        data={
+            <span class="str">"metric"</span>: <span class="str">"PCB板缺陷率"</span>,
+            <span class="str">"value"</span>: <span class="str">"5.2%"</span>,
+            <span class="str">"threshold"</span>: <span class="str">"3.0%"</span>,
+            <span class="str">"production_line"</span>: <span class="str">"A3线"</span>,
+            <span class="str">"trend"</span>: <span class="str">"连续3天上升"</span>,
+            <span class="str">"affected_products"</span>: [<span class="str">"PCB-2401"</span>, <span class="str">"PCB-2402"</span>]
+        }
+    )
+    eda.emit_event(data_event)
+
+    <span class="com"># 触发模式3: 外部触发 - 客户提交申请→启动审核</span>
+    <span class="kw">def</span> <span class="fn">handle_application</span>(event):
+        <span class="str">"""外部事件：客户申请触发审核流程"""</span>
+        applicant = event.data.get(<span class="str">"applicant"</span>, <span class="str">"未知客户"</span>)
+        biz_type = event.data.get(<span class="str">"business_type"</span>, <span class="str">"未知业务"</span>)
+        <span class="fn">print</span>(<span class="fstr">f"  🔔 客户申请事件: {applicant} 申请 {biz_type}"</span>)
+        <span class="fn">print</span>(<span class="str">"  → 动作: 自动启动审核工作流"</span>)
+        eda.add_todo(<span class="fstr">f"审核 {applicant} 的{biz_type}申请"</span>, <span class="str">"medium"</span>)
+
+    eda.register_handler(<span class="str">"external_application"</span>, handle_application)
+
+    external_event = EventDrivenAgent.Event(
+        event_type=<span class="str">"external_application"</span>,
+        source=<span class="str">"客户自助平台"</span>,
+        data={
+            <span class="str">"applicant"</span>: <span class="str">"苏州XX科技有限公司"</span>,
+            <span class="str">"business_type"</span>: <span class="str">"专线扩容"</span>,
+            <span class="str">"amount"</span>: <span class="str">"50万"</span>,
+            <span class="str">"submit_time"</span>: time.strftime(<span class="str">"%Y-%m-%d %H:%M"</span>)
+        }
+    )
+    eda.emit_event(external_event)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤3: 集成System Hint（时间/TODO/状态）</span>
+    <span class="com"># ==========================================</span>
+
+    eda.update_system_hints()
+    <span class="fn">print</span>(<span class="str">"  System Hint当前状态:"</span>)
+    <span class="kw">for</span> k, v <span class="kw">in</span> eda.system_hints.items():
+        <span class="fn">print</span>(<span class="fstr">f"    {k}: {v}"</span>)
+
+    <span class="fn">print</span>(<span class="fstr">f"\n  当前TODO列表 ({len(eda.todo_list)} 项):"</span>)
+    <span class="kw">for</span> i, todo <span class="kw">in</span> enumerate(eda.todo_list):
+        status = <span class="str">"✅"</span> <span class="kw">if</span> todo[<span class="str">"done"</span>] <span class="kw">else</span> <span class="str">"⬜"</span>
+        <span class="fn">print</span>(<span class="fstr">f"    {status} [{todo['priority']}] {todo['task']}"</span>)
+
+    <span class="com"># 构建注入Agent的System Hint</span>
+    todo_lines = [<span class="fstr">f"  - [{t['priority']}] {t['task']}"</span>
+                   <span class="kw">for</span> t <span class="kw">in</span> eda.todo_list <span class="kw">if not</span> t[<span class="str">"done"</span>]]
+    hint_text = (
+        <span class="fstr">f"[System Hint]\n"</span>
+        <span class="fstr">f"当前时间: {eda.system_hints.get('current_time', 'N/A')}\n"</span>
+        <span class="fstr">f"待办事项数: {eda.system_hints.get('todo_count', 0)}\n"</span>
+        <span class="fstr">f"待办清单:\n"</span> + <span class="str">"\n"</span>.join(todo_lines)
+    )
+
+    <span class="com"># 创建带System Hint的Agent</span>
+    smart_agent = client.create_agent(
+        name=<span class="str">"区县运营助手（事件驱动版）"</span>,
+        description=<span class="str">"集成System Hint的运营智能体"</span>,
+        system_prompt=(
+            <span class="str">"你是区县电信运营助手。\n"</span>
+            <span class="str">"你会收到System Hint信息，包含当前时间和待办清单。\n"</span>
+            <span class="str">"请根据System Hint主动提醒用户待办事项，而不是被动等待提问。"</span>
+            + hint_text
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    <span class="com"># 测试带Hint的Agent</span>
+    result = client.chat(smart_agent.get(<span class="str">"id"</span>),
+                         <span class="str">"今天有什么需要我处理的事项吗？"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"\n🤖 智能体回复（主动提醒模式）:\n{result.get('content', '')}"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤4: 对比被动模式 vs 事件驱动模式</span>
+    <span class="com"># ==========================================</span>
+
+    passive_agent = client.create_agent(
+        name=<span class="str">"区县运营助手（被动版）"</span>,
+        description=<span class="str">"传统被动问答智能体"</span>,
+        system_prompt=<span class="str">"你是区县电信运营助手，回答用户关于运营的问题。"</span>,
+        model=<span class="str">"default"</span>
+    )
+
+    result_passive = client.chat(passive_agent.get(<span class="str">"id"</span>),
+                                  <span class="str">"今天有什么需要我处理的事项吗？"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"🤖 被动模式回复:\n{result_passive.get('content', '')}"</span>)
+
+    <span class="fn">print</span>(<span class="str">"\n💡 关键洞察："</span>)
+    <span class="fn">print</span>(<span class="str">"  1. 事件驱动模式让Agent从「工具」升级为「协作伙伴」"</span>)
+    <span class="fn">print</span>(<span class="str">"  2. System Hint是连接Agent与业务状态的桥梁"</span>)
+    <span class="fn">print</span>(<span class="str">"  3. 三种触发模式覆盖了90%的运营自动化场景"</span>)
+
+    <span class="fn">print</span>(<span class="str">"\n✅ 课题15.5完成！"</span>)</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: 课题16 - 智能体消融评估实战 -->
+<!-- ============================================================ -->
+<div class="section" id="s4">
+<div class="section-header">
+<span class="section-tag afternoon">下午 · 课题16</span>
+<h2>智能体消融评估实战</h2>
+<p>消融实验 + 量化分析 + 评估报告 · 50分钟</p>
+</div>
+
+<div class="topic-card">
+<h3>核心目标</h3>
+<p>掌握<strong>消融评估</strong>方法——通过系统化移除Agent组件来量化各部分贡献度，回答"到底哪个组件最重要"这个关键问题。</p>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 核心架构原理：消融实验 = 科学验证组件价值</div>
+<div class="pc-body">
+消融实验（Ablation Study）源自神经科学研究：移除大脑某区域，观察功能变化，从而推断该区域的功能。<br><br>
+在Agent评估中，消融实验的方法：<br>
+1. 建立基线（baseline）：完整配置的Agent<br>
+2. 逐个移除组件：移除system_prompt、移除工具描述、改非正式语气...<br>
+3. 在相同测试集上评估每个变体<br>
+4. 计算各组件的<strong>贡献度</strong> = |变体得分 - 基线得分| / 基线得分 × 100%<br><br>
+关键公式：<code>contribution_pct = |delta| / baseline_score * 100%</code><br>
+影响等级：<span class="impact-badge impact-critical">🔴 重大 >30%</span> <span class="impact-badge impact-significant">🟡 显著 >15%</span> <span class="impact-badge impact-minor">🟢 轻微 ≤15%</span>
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s4-1">
+<h3>4.1 建立评估基准</h3>
+
+<h4>5个测试问题</h4>
+<ol>
+<li>公积金购房提取需要哪些材料？</li>
+<li>户口从外地迁入苏州怎么办理？</li>
+<li>社保断缴3个月会有什么影响？</li>
+<li>不动产登记需要多长时间？</li>
+<li>婚姻登记可以跨区办理吗？</li>
+</ol>
+
+<h4>4维度评估函数</h4>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; evaluate_answer(question, answer) → 0.0~1.0</div>
+<div class="pc-body">
+<strong>维度1：完整性（0.3分）</strong><br>
+回答长度 > 50字 → +0.2，> 150字 → +0.1<br>
+衡量Agent是否给出了充分的信息<br><br>
+<strong>维度2：准确性（0.3分）</strong><br>
+根据问题关键词匹配答案中的专业术语。例如"公积金"问题检查["提取","账户","余额","购房"]的命中率<br>
+命中率 = 匹配词数 / 总关键词数 × 0.3<br><br>
+<strong>维度3：结构性（0.2分）</strong><br>
+检查回答中是否有结构化标记：编号(1. 2.)、步骤(① ②)、列表(- )<br>
+有任意一个 → +0.2<br><br>
+<strong>维度4：政策引用（0.2分）</strong><br>
+检查回答中是否有政策引用标记：规定、政策、条例、办法、通知<br>
+有任意一个 → +0.2
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s4-2">
+<h3>4.2 消融实验4种配置</h3>
+
+<table class="compare-table">
+<thead>
+<tr><th>配置名称</th><th>描述</th><th>移除/修改的组件</th></tr>
+</thead>
+<tbody>
+<tr><td>baseline</td><td>完整配置</td><td>无（基准线）</td></tr>
+<tr><td>no_system_prompt</td><td>移除System Prompt</td><td>清空system_prompt，Agent不知道自己是谁</td></tr>
+<tr><td>no_tool_description</td><td>移除工具描述</td><td>简化职责描述和输出格式要求</td></tr>
+<tr><td>informal_tone</td><td>改为非正式语气</td><td>将专业提示词替换为随意口吻</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; 预期实验结果</div>
+<div class="pc-body">
+<strong>no_system_prompt</strong> → 影响最大 🔴<br>
+移除后Agent不知道自己是政务助手，可能回答生活常识而非政务指南，准确率可能下降30%以上<br><br>
+<strong>no_tool_description</strong> → 影响显著 🟡<br>
+简化职责描述后，Agent可能遗漏关键信息（如不引用政策依据），结构性评分下降<br><br>
+<strong>informal_tone</strong> → 影响轻微 🟢<br>
+语气变化不影响信息准确性，但可能影响用户信任度和专业感知
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s4-3">
+<h3>4.3 量化分析与影响等级</h3>
+
+<p>消融实验的量化分析核心是<strong>贡献度排序</strong>：</p>
+
+<div class="metric-bar">
+<span class="label">System Prompt</span>
+<div class="bar"><div class="fill" style="width:85%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
+<span class="val">~35% <span class="impact-badge impact-critical">🔴 重大</span></span>
+</div>
+<div class="metric-bar">
+<span class="label">工具描述</span>
+<div class="bar"><div class="fill" style="width:55%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
+<span class="val">~22% <span class="impact-badge impact-significant">🟡 显著</span></span>
+</div>
+<div class="metric-bar">
+<span class="label">语气风格</span>
+<div class="bar"><div class="fill" style="width:25%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+<span class="val">~10% <span class="impact-badge impact-minor">🟢 轻微</span></span>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; 量化洞察</div>
+<div class="pc-body">
+1. <strong>System Prompt是影响最大的组件</strong> → 移除后准确率可能下降30%+，是Agent的"灵魂"<br>
+2. <strong>工具描述决定了LLM能否正确选工具</strong> → 移除后工具调用失败率飙升<br>
+3. <strong>语气风格影响专业性感知</strong> → 评分下降但功能不受损，可按场景灵活调整<br>
+4. <strong>建议每次迭代都跑消融实验</strong> → 验证新改动确实带来了正向效果
+</div>
+</div>
+
+<h4>评估报告4章节</h4>
+<ol>
+<li><strong>消融实验结果</strong>：各配置的平均分和变化量</li>
+<li><strong>各问题详细得分</strong>：每个问题在各配置下的得分</li>
+<li><strong>核心结论</strong>：按影响程度排序的组件贡献度</li>
+<li><strong>优化建议</strong>：优先保障System Prompt质量、工具描述需精准、语气可灵活调整</li>
+</ol>
+</div>
+
+<div class="topic-card" id="s4-4">
+<h3>4.4 完整代码：课题16</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com">"""
+课题16: 智能体消融评估实战
+消融实验 + 量化分析 + 评估报告
+"""</span>
+
+<span class="kw">import</span> sys, os, json, time
+
+sys.path.insert(<span class="num">0</span>, os.path.join(os.path.dirname(__file__), <span class="str">".."</span>, <span class="str">"common"</span>))
+<span class="kw">from</span> teleagent_client <span class="kw">import</span> TeleAgentClient, get_client
+<span class="kw">from</span> training_utils <span class="kw">import</span> AblationFramework
+
+<span class="kw">def</span> <span class="fn">exercise16_run</span>():
+    client = get_client()
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤1: 用AblationFramework建立评估基准</span>
+    <span class="com"># ==========================================</span>
+
+    baseline_agent = client.create_agent(
+        name=<span class="str">"评估基准Agent"</span>,
+        description=<span class="str">"消融实验基准智能体"</span>,
+        system_prompt=(
+            <span class="str">"你是政务问答助手。\n"</span>
+            <span class="str">"职责：回答户籍、社保、公积金、不动产等政务咨询。\n"</span>
+            <span class="str">"要求：回答准确、条理清晰、引用政策依据。\n"</span>
+            <span class="str">"输出格式：结论 + 政策依据 + 办理指引"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+    agent_id = baseline_agent.get(<span class="str">"id"</span>)
+
+    <span class="com"># 定义测试问题集</span>
+    test_questions = [
+        <span class="str">"公积金购房提取需要哪些材料？"</span>,
+        <span class="str">"户口从外地迁入苏州怎么办理？"</span>,
+        <span class="str">"社保断缴3个月会有什么影响？"</span>,
+        <span class="str">"不动产登记需要多长时间？"</span>,
+        <span class="str">"婚姻登记可以跨区办理吗？"</span>,
+    ]
+
+    <span class="com"># 定义评估函数（4维度）</span>
+    <span class="kw">def</span> <span class="fn">evaluate_answer</span>(question: <span class="cls">str</span>, answer: <span class="cls">str</span>) -> <span class="cls">float</span>:
+        <span class="str">"""基于多维度评分的评估函数"""</span>
+        <span class="kw">if not</span> answer <span class="kw">or</span> len(answer) < <span class="num">10</span>:
+            <span class="kw">return</span> <span class="num">0.0</span>
+        score = <span class="num">0.0</span>
+        <span class="com"># 维度1: 完整性</span>
+        <span class="kw">if</span> len(answer) > <span class="num">50</span>: score += <span class="num">0.2</span>
+        <span class="kw">if</span> len(answer) > <span class="num">150</span>: score += <span class="num">0.1</span>
+        <span class="com"># 维度2: 准确性</span>
+        accuracy_keywords = {
+            <span class="str">"公积金"</span>: [<span class="str">"提取"</span>, <span class="str">"账户"</span>, <span class="str">"余额"</span>, <span class="str">"购房"</span>],
+            <span class="str">"户口"</span>: [<span class="str">"迁入"</span>, <span class="str">"迁出"</span>, <span class="str">"派出所"</span>, <span class="str">"户籍"</span>],
+            <span class="str">"社保"</span>: [<span class="str">"断缴"</span>, <span class="str">"补缴"</span>, <span class="str">"缴费"</span>, <span class="str">"养老"</span>],
+            <span class="str">"不动产"</span>: [<span class="str">"登记"</span>, <span class="str">"房产"</span>, <span class="str">"证书"</span>, <span class="str">"办理"</span>],
+            <span class="str">"婚姻"</span>: [<span class="str">"登记"</span>, <span class="str">"民政局"</span>, <span class="str">"跨区"</span>, <span class="str">"预约"</span>],
+        }
+        <span class="kw">for</span> q_key, keywords <span class="kw">in</span> accuracy_keywords.items():
+            <span class="kw">if</span> q_key <span class="kw">in</span> question:
+                matched = sum(<span class="num">1</span> <span class="kw">for</span> kw <span class="kw">in</span> keywords <span class="kw">if</span> kw <span class="kw">in</span> answer)
+                score += <span class="num">0.3</span> * (matched / len(keywords))
+                <span class="kw">break</span>
+        <span class="com"># 维度3: 结构性</span>
+        structural_markers = [<span class="str">"1."</span>, <span class="str">"2."</span>, <span class="str">"①"</span>, <span class="str">"②"</span>, <span class="str">"第一步"</span>, <span class="str">"- "</span>]
+        <span class="kw">if</span> any(m <span class="kw">in</span> answer <span class="kw">for</span> m <span class="kw">in</span> structural_markers):
+            score += <span class="num">0.2</span>
+        <span class="com"># 维度4: 政策引用</span>
+        policy_markers = [<span class="str">"规定"</span>, <span class="str">"政策"</span>, <span class="str">"条例"</span>, <span class="str">"办法"</span>, <span class="str">"通知"</span>]
+        <span class="kw">if</span> any(m <span class="kw">in</span> answer <span class="kw">for</span> m <span class="kw">in</span> policy_markers):
+            score += <span class="num">0.2</span>
+        <span class="kw">return</span> min(<span class="num">1.0</span>, score)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤2: 消融实验 - 4种配置</span>
+    <span class="com"># ==========================================</span>
+
+    ablation_variants = {
+        <span class="str">"baseline"</span>: {
+            <span class="str">"description"</span>: <span class="str">"完整配置（system_prompt + 工具描述 + 专业语气）"</span>,
+            <span class="str">"system_prompt"</span>: (
+                <span class="str">"你是政务问答助手。\n"</span>
+                <span class="str">"职责：回答户籍、社保、公积金、不动产等政务咨询。\n"</span>
+                <span class="str">"要求：回答准确、条理清晰、引用政策依据。\n"</span>
+                <span class="str">"输出格式：结论 + 政策依据 + 办理指引"</span>
+            )
+        },
+        <span class="str">"no_system_prompt"</span>: {
+            <span class="str">"description"</span>: <span class="str">"移除System Prompt"</span>,
+            <span class="str">"system_prompt"</span>: <span class="str">""</span>
+        },
+        <span class="str">"no_tool_description"</span>: {
+            <span class="str">"description"</span>: <span class="str">"移除工具描述"</span>,
+            <span class="str">"system_prompt"</span>: (
+                <span class="str">"你是政务问答助手。\n"</span>
+                <span class="str">"职责：回答政务咨询。\n"</span>
+                <span class="str">"输出格式：结论 + 办理指引"</span>
+            )
+        },
+        <span class="str">"informal_tone"</span>: {
+            <span class="str">"description"</span>: <span class="str">"改为非正式语气"</span>,
+            <span class="str">"system_prompt"</span>: (
+                <span class="str">"你是个热心的政务咨询小伙伴~\n"</span>
+                <span class="str">"帮大家回答政务问题，随意一点就好，不用太正式。\n"</span>
+                <span class="str">"知道啥说啥就行~"</span>
+            )
+        },
+    }
+
+    <span class="kw">def</span> <span class="fn">agent_fn_baseline</span>(question: <span class="cls">str</span>) -> <span class="cls">str</span>:
+        result = client.chat(agent_id, question)
+        <span class="kw">return</span> result.get(<span class="str">"content"</span>, <span class="str">""</span>)
+
+    framework = AblationFramework(
+        agent_fn=agent_fn_baseline,
+        evaluator_fn=evaluate_answer
+    )
+
+    <span class="com"># 运行消融实验</span>
+    all_results = []
+    mode_labels = {
+        <span class="str">"baseline"</span>: <span class="str">"完整配置"</span>,
+        <span class="str">"no_system_prompt"</span>: <span class="str">"移除System Prompt"</span>,
+        <span class="str">"no_tool_description"</span>: <span class="str">"移除工具描述"</span>,
+        <span class="str">"informal_tone"</span>: <span class="str">"非正式语气"</span>
+    }
+
+    <span class="kw">for</span> mode, config <span class="kw">in</span> ablation_variants.items():
+        <span class="fn">print</span>(<span class="fstr">f"\n🔬 消融模式: {mode} - {config['description']}"</span>)
+        mode_scores = []
+
+        <span class="kw">if</span> mode == <span class="str">"baseline"</span>:
+            <span class="kw">for</span> q <span class="kw">in</span> test_questions:
+                answer = agent_fn_baseline(q)
+                score = evaluate_answer(q, answer)
+                mode_scores.append(score)
+        <span class="kw">else</span>:
+            variant_agent = client.create_agent(
+                name=<span class="fstr">f"消融变体-{mode}"</span>,
+                description=config[<span class="str">"description"</span>],
+                system_prompt=config[<span class="str">"system_prompt"</span>],
+                model=<span class="str">"default"</span>
+            )
+            <span class="kw">for</span> q <span class="kw">in</span> test_questions:
+                result = client.chat(variant_agent.get(<span class="str">"id"</span>), q)
+                score = evaluate_answer(q, result.get(<span class="str">"content"</span>, <span class="str">""</span>))
+                mode_scores.append(score)
+
+        avg_score = sum(mode_scores) / len(mode_scores) <span class="kw">if</span> mode_scores <span class="kw">else</span> <span class="num">0</span>
+        all_results.append({
+            <span class="str">"mode"</span>: mode,
+            <span class="str">"label"</span>: mode_labels[mode],
+            <span class="str">"avg_score"</span>: round(avg_score, <span class="num">3</span>),
+            <span class="str">"scores"</span>: [round(s, <span class="num">3</span>) <span class="kw">for</span> s <span class="kw">in</span> mode_scores]
+        })
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤3: 量化分析各组件贡献度</span>
+    <span class="com"># ==========================================</span>
+
+    baseline_score = all_results[<span class="num">0</span>][<span class="str">"avg_score"</span>]
+    <span class="kw">for</span> r <span class="kw">in</span> all_results:
+        r[<span class="str">"delta"</span>] = round(r[<span class="str">"avg_score"</span>] - baseline_score, <span class="num">3</span>)
+        r[<span class="str">"contribution_pct"</span>] = round(
+            abs(r[<span class="str">"delta"</span>]) / baseline_score * <span class="num">100</span>, <span class="num">1</span>
+        ) <span class="kw">if</span> baseline_score > <span class="num">0</span> <span class="kw">else</span> <span class="num">0</span>
+
+    <span class="fn">print</span>(<span class="fstr">f"{'消融模式':<22} {'平均分':>8} {'变化量':>8} {'贡献占比':>8} {'影响等级':>10}"</span>)
+    <span class="fn">print</span>(<span class="str">"-"</span> * <span class="num">62</span>)
+    <span class="kw">for</span> r <span class="kw">in</span> all_results:
+        delta_str = <span class="fstr">f"{'+' if r['delta'] >= 0 else ''}{r['delta']}"</span>
+        <span class="kw">if</span> r[<span class="str">"mode"</span>] == <span class="str">"baseline"</span>:
+            impact = <span class="str">"— (基准)"</span>
+        <span class="kw">elif</span> abs(r[<span class="str">"contribution_pct"</span>]) > <span class="num">30</span>:
+            impact = <span class="str">"🔴 重大"</span>
+        <span class="kw">elif</span> abs(r[<span class="str">"contribution_pct"</span>]) > <span class="num">15</span>:
+            impact = <span class="str">"🟡 显著"</span>
+        <span class="kw">else</span>:
+            impact = <span class="str">"🟢 轻微"</span>
+        <span class="fn">print</span>(<span class="fstr">f"{r['label']:<22} {r['avg_score']:>8.3f} {delta_str:>8} "</span>
+              <span class="fstr">f"{r['contribution_pct']:>7.1f}% {impact:>10}"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤4: 生成评估报告（4章节）</span>
+    <span class="com"># ==========================================</span>
+
+    report_lines = []
+    report_lines.append(<span class="str">"=" * 60</span>)
+    report_lines.append(<span class="str">"智能体消融评估报告"</span>)
+    report_lines.append(<span class="str">"=" * 60</span>)
+    report_lines.append(<span class="fstr">f"评估时间: {time.strftime('%Y-%m-%d %H:%M:%S')}"</span>)
+    report_lines.append(<span class="str">"被测智能体: 政务问答助手"</span>)
+    report_lines.append(<span class="fstr">f"测试问题数: {len(test_questions)}"</span>)
+    report_lines.append(<span class="str">"评估维度: 完整性 + 准确性 + 结构性 + 政策引用"</span>)
+    report_lines.append(<span class="str">""</span>)
+
+    report_lines.append(<span class="str">"一、消融实验结果"</span>)
+    report_lines.append(<span class="str">"-"</span> * <span class="num">40</span>)
+    <span class="kw">for</span> r <span class="kw">in</span> all_results:
+        delta_str = <span class="fstr">f"{'+' if r['delta'] >= 0 else ''}{r['delta']}"</span>
+        report_lines.append(<span class="fstr">f"  {r['label']}: {r['avg_score']:.3f} (变化: {delta_str})"</span>)
+
+    report_lines.append(<span class="str">""</span>)
+    report_lines.append(<span class="str">"二、各问题详细得分"</span>)
+    report_lines.append(<span class="str">"-"</span> * <span class="num">40</span>)
+    <span class="kw">for</span> i, q <span class="kw">in</span> enumerate(test_questions):
+        report_lines.append(<span class="fstr">f"  Q{i+1}: {q[:30]}..."</span>)
+        <span class="kw">for</span> r <span class="kw">in</span> all_results:
+            report_lines.append(<span class="fstr">f"    {r['label']}: {r['scores'][i]:.3f}"</span>)
+
+    report_lines.append(<span class="str">""</span>)
+    report_lines.append(<span class="str">"三、核心结论"</span>)
+    report_lines.append(<span class="str">"-"</span> * <span class="num">40</span>)
+    sorted_results = sorted(all_results[<span class="num">1</span>:], key=<span class="kw">lambda</span> x: abs(x[<span class="str">"delta"</span>]), reverse=<span class="kw">True</span>)
+    <span class="kw">for</span> i, r <span class="kw">in</span> enumerate(sorted_results):
+        report_lines.append(<span class="fstr">f"  {i+1}. {r['label']}影响最大，贡献占比{r['contribution_pct']}%"</span>)
+
+    report_lines.append(<span class="str">""</span>)
+    report_lines.append(<span class="str">"四、优化建议"</span>)
+    report_lines.append(<span class="str">"-"</span> * <span class="num">40</span>)
+    report_lines.append(<span class="str">"  1. 优先保障System Prompt的质量和完整性"</span>)
+    report_lines.append(<span class="str">"  2. 工具描述需精准，避免LLM选错工具"</span>)
+    report_lines.append(<span class="str">"  3. 语气风格可按业务场景灵活调整"</span>)
+    report_lines.append(<span class="str">"  4. 建议每次迭代都跑消融实验验证效果"</span>)
+
+    report_text = <span class="str">"\n"</span>.join(report_lines)
+    <span class="fn">print</span>(report_text)
+
+    <span class="com"># 保存报告</span>
+    report_path = os.path.join(os.path.dirname(__file__), <span class="str">"ablation_report.txt"</span>)
+    <span class="kw">with</span> open(report_path, <span class="str">"w"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+        f.write(report_text)
+
+    <span class="fn">print</span>(<span class="fstr">f"\n📄 评估报告已保存: {report_path}"</span>)
+    <span class="fn">print</span>(<span class="str">"\n✅ 课题16完成！"</span>)</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: 课题17 - 综合方案路演准备 -->
+<!-- ============================================================ -->
+<div class="section" id="s5">
+<div class="section-header">
+<span class="section-tag afternoon">下午 · 课题17</span>
+<h2>综合方案路演准备</h2>
+<p>路演四大板块框架 + TeleAgent完整Demo搭建 + 评分体系 + Checklist · 70分钟</p>
+</div>
+
+<div class="topic-card">
+<h3>核心目标</h3>
+<p>将5天所学整合为一次<strong>完整路演</strong>——从场景分析到技术方案到Demo演示到商业价值，形成端到端的方案展示能力。</p>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 路演核心公式：场景 × 技术 × Demo × 价值 = 说服力</div>
+<div class="pc-body">
+路演不是技术报告，而是<strong>说服决策者投资</strong>的过程。四大板块各有侧重：<br><br>
+1. <strong>场景分析（20%）</strong>：让听众感受到"这个问题确实需要解决"<br>
+2. <strong>技术方案（30%）</strong>：让听众相信"这个方案能解决问题"<br>
+3. <strong>Demo演示（30%）</strong>：让听众看到"方案已经在跑了"<br>
+4. <strong>商业价值（20%）</strong>：让听众确信"投入产出比值得"<br><br>
+注意权重分配：技术+Demo占60%，因为决策者最关心"能不能做"和"做出来长什么样"。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s5-1">
+<h3>5.1 路演四大板块框架</h3>
+
+<div class="score-grid">
+<div class="score-col">
+<div class="sc-title" style="color:var(--accent3)">场景分析</div>
+<div class="sc-weight">权重 20%</div>
+<div class="sc-item">· 业务痛点描述 <span class="sc-pts">(5分)</span></div>
+<div class="sc-item">· 目标用户画像 <span class="sc-pts">(5分)</span></div>
+<div class="sc-item">· ROI预期 <span class="sc-pts">(5分)</span></div>
+<div class="sc-item">· 竞品对比 <span class="sc-pts">(5分)</span></div>
+</div>
+<div class="score-col">
+<div class="sc-title" style="color:var(--accent)">技术方案</div>
+<div class="sc-weight">权重 30%</div>
+<div class="sc-item">· 架构图清晰完整 <span class="sc-pts">(8分)</span></div>
+<div class="sc-item">· 技术选型有依据 <span class="sc-pts">(7分)</span></div>
+<div class="sc-item">· 创新点说明 <span class="sc-pts">(8分)</span></div>
+<div class="sc-item">· 安全合规周全 <span class="sc-pts">(7分)</span></div>
+</div>
+<div class="score-col">
+<div class="sc-title" style="color:var(--accent2)">Demo演示</div>
+<div class="sc-weight">权重 30%</div>
+<div class="sc-item">· 端到端流程跑通 <span class="sc-pts">(8分)</span></div>
+<div class="sc-item">· 事件触发演示 <span class="sc-pts">(7分)</span></div>
+<div class="sc-item">· 异常处理预案 <span class="sc-pts">(8分)</span></div>
+<div class="sc-item">· 效果对比直观 <span class="sc-pts">(7分)</span></div>
+</div>
+<div class="score-col">
+<div class="sc-title" style="color:var(--accent5)">商业价值</div>
+<div class="sc-weight">权重 20%</div>
+<div class="sc-item">· 量化收益可信 <span class="sc-pts">(6分)</span></div>
+<div class="sc-item">· 推广路径可行 <span class="sc-pts">(5分)</span></div>
+<div class="sc-item">· 商业模式清晰 <span class="sc-pts">(5分)</span></div>
+<div class="sc-item">· 二期规划远见 <span class="sc-pts">(4分)</span></div>
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; 每个板块的关键策略</div>
+<div class="pc-body">
+<strong>场景分析关键</strong>：用量化数据支撑痛点。不要说"效率低"，要说"平均每个工单处理耗时45分钟，其中60%是重复性填表操作"。<br><br>
+<strong>技术方案关键</strong>：架构图要清晰展示Agent拓扑+数据流+事件总线。创新点要与通用方案区分——"我们用了事件驱动+System Hint"比"我们用了AI"更有说服力。<br><br>
+<strong>Demo演示关键</strong>：端到端流程必须跑通，提前录制备份视频。展示事件触发（不是手动调API），展示异常处理（不是只演示Happy Path）。<br><br>
+<strong>商业价值关键</strong>：ROI要可信——"人效提升40%"比"大幅提升"有说服力。推广路径分3阶段：试点→区县→全市。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s5-2">
+<h3>5.2 TeleAgent完整Demo搭建</h3>
+
+<h4>Demo模块1：政务全链路Agent（3个Agent）</h4>
+<p>精简版政务全链路，包含3个核心Agent：问答、办理、审核。用于路演演示端到端流程。</p>
+
+<div class="workflow-visual">
+<div class="wf-node"><div class="wn-step">Step 1</div><div class="wn-name">问答理解</div></div>
+<div class="wf-arrow">&rarr;</div>
+<div class="wf-node"><div class="wn-step">Step 2</div><div class="wn-name">表单填写</div></div>
+<div class="wf-arrow">&rarr;</div>
+<div class="wf-node"><div class="wn-step">Step 3</div><div class="wn-name">业务审核</div></div>
+</div>
+
+<h4>Demo模块2：事件驱动运营Agent（3种事件类型）</h4>
+<p>展示定时触发、数据告警、外部申请三种事件驱动的运营场景。</p>
+
+<h4>Demo模块3：Demo工作流</h4>
+<p>将模块1和模块2串联，形成完整的演示流程。</p>
+
+<h4>Demo运行：2个场景演示</h4>
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>场景1：市民公积金提取</h4>
+<p>输入"我想办理公积金提取，准备买房"→ 问答Agent识别意图 → 办理Agent填充表单 → 审核Agent判定通过 → 输出受理编号</p>
+</div>
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>场景2：事件触发演示</h4>
+<p>定时触发（商机跟进）→ 数据告警（缺陷率超阈值）→ 外部申请（专线扩容）→ 展示Agent主动提醒能力</p>
+</div>
+</div>
+
+<div class="topic-card" id="s5-3">
+<h3>5.3 评分维度体系</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128202; 4大板块 × 4项标准 = 100分</div>
+<div class="pc-body">
+总分计算：场景分析20分 + 技术方案30分 + Demo演示30分 + 商业价值20分 = <strong>100分</strong><br><br>
+评级标准：<br>
+<span style="font-size:16px">&#129351;</span> <strong>优秀</strong>：≥ 85分<br>
+<span style="font-size:16px">&#129352;</span> <strong>良好</strong>：≥ 70分<br>
+<span style="font-size:16px">&#129353;</span> <strong>及格</strong>：≥ 60分
+</div>
+</div>
+
+<h4>路演准备Checklist</h4>
+
+<div class="checklist" style="columns:2;column-gap:24px">
+<ul style="break-inside:avoid">
+<strong style="color:var(--accent3)">场景分析</strong>
+<li>收集3个以上真实业务痛点案例</li>
+<li>量化传统方式的时间和成本</li>
+<li>明确AI方案的效率提升比例</li>
+<li>准备竞品对比表格</li>
+</ul>
+<ul style="break-inside:avoid">
+<strong style="color:var(--accent)">技术方案</strong>
+<li>绘制系统架构图（含Agent拓扑）</li>
+<li>列出核心技术选型及理由</li>
+<li>提炼2-3个创新点</li>
+<li>准备安全合规说明</li>
+</ul>
+<ul style="break-inside:avoid">
+<strong style="color:var(--accent2)">Demo演示</strong>
+<li>端到端流程可正常运行</li>
+<li>事件触发功能已测试</li>
+<li>异常场景有兜底方案</li>
+<li>准备传统vs AI效果对比数据</li>
+<li>Demo数据已准备（避免现场用真实数据）</li>
+</ul>
+<ul style="break-inside:avoid">
+<strong style="color:var(--accent5)">商业价值</strong>
+<li>ROI计算模型已验证</li>
+<li>推广计划分3阶段</li>
+<li>商业模式已与业务方对齐</li>
+<li>二期规划有明确里程碑</li>
+</ul>
+</div>
+
+<div class="tips-box">
+<div class="tips-title">&#128161; 路演Tips</div>
+<p>1. <strong>开场</strong>：用一个痛点故事开场，30秒抓住注意力</p>
+<p>2. <strong>Demo</strong>：提前录制备份视频，防止现场网络问题</p>
+<p>3. <strong>互动</strong>：准备2-3个互动问题让观众参与</p>
+<p>4. <strong>收尾</strong>：用一句话总结核心价值主张</p>
+</div>
+</div>
+
+<div class="topic-card" id="s5-4">
+<h3>5.4 完整代码：课题17</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com">"""
+课题17: 综合方案路演准备
+路演框架 + Demo搭建 + 评分体系
+"""</span>
+
+<span class="kw">import</span> sys, os, json, time
+
+sys.path.insert(<span class="num">0</span>, os.path.join(os.path.dirname(__file__), <span class="str">".."</span>, <span class="str">"common"</span>))
+<span class="kw">from</span> teleagent_client <span class="kw">import</span> TeleAgentClient, get_client
+<span class="kw">from</span> training_utils <span class="kw">import</span> EventDrivenAgent
+
+<span class="kw">def</span> <span class="fn">exercise17_run</span>():
+    client = get_client()
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤1: 路演四大板块框架</span>
+    <span class="com"># ==========================================</span>
+
+    roadshow_framework = {
+        <span class="str">"1_场景分析"</span>: {
+            <span class="str">"weight"</span>: <span class="str">"20%"</span>,
+            <span class="str">"points"</span>: [
+                <span class="str">"业务痛点描述（量化数据支撑）"</span>,
+                <span class="str">"目标用户画像（客户经理/市民/网格员）"</span>,
+                <span class="str">"ROI预期（效率提升/成本节约/收入增长）"</span>,
+                <span class="str">"竞品对比（为什么AI方案优于传统方案）"</span>,
+            ]
+        },
+        <span class="str">"2_技术方案"</span>: {
+            <span class="str">"weight"</span>: <span class="str">"30%"</span>,
+            <span class="str">"points"</span>: [
+                <span class="str">"系统架构图（Agent拓扑 + 数据流 + 事件总线）"</span>,
+                <span class="str">"核心技术选型（LLM/RAG/多Agent/事件驱动）"</span>,
+                <span class="str">"创新点说明（与通用方案的区别）"</span>,
+                <span class="str">"安全与合规（数据脱敏/权限控制/审计日志）"</span>,
+            ]
+        },
+        <span class="str">"3_Demo演示"</span>: {
+            <span class="str">"weight"</span>: <span class="str">"30%"</span>,
+            <span class="str">"points"</span>: [
+                <span class="str">"端到端业务流程演示（2-3个核心场景）"</span>,
+                <span class="str">"事件触发演示（定时/数据/外部触发）"</span>,
+                <span class="str">"异常处理演示（容错/降级/人工接管）"</span>,
+                <span class="str">"效果对比（传统方式 vs AI方式）"</span>,
+            ]
+        },
+        <span class="str">"4_商业价值"</span>: {
+            <span class="str">"weight"</span>: <span class="str">"20%"</span>,
+            <span class="str">"points"</span>: [
+                <span class="str">"量化收益（人效提升XX%/响应时间降低XX%）"</span>,
+                <span class="str">"推广路径（试点→区县→全市）"</span>,
+                <span class="str">"商业模式（SaaS订阅/项目制/混合）"</span>,
+                <span class="str">"二期规划（扩展场景/模型微调/生态接入）"</span>,
+            ]
+        }
+    }
+
+    <span class="fn">print</span>(<span class="str">"  路演四大板块:"</span>)
+    <span class="kw">for</span> section, detail <span class="kw">in</span> roadshow_framework.items():
+        <span class="fn">print</span>(<span class="fstr">f"\n  📋 {section}（权重: {detail['weight']}）"</span>)
+        <span class="kw">for</span> p <span class="kw">in</span> detail[<span class="str">"points"</span>]:
+            <span class="fn">print</span>(<span class="fstr">f"    - {p}"</span>)
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤2: 接入TeleAgent搭建完整Demo</span>
+    <span class="com"># ==========================================</span>
+
+    <span class="com"># Demo模块1: 政务全链路Agent</span>
+    demo_qa = client.create_agent(
+        name=<span class="str">"Demo-政务问答"</span>,
+        description=<span class="str">"路演Demo: 政务问答理解"</span>,
+        system_prompt=(
+            <span class="str">"你是政务大厅问答Agent。\n"</span>
+            <span class="str">"职责：理解市民诉求，判断业务类型并提取关键信息。\n"</span>
+            <span class="str">"业务类型：户籍办理 | 社保业务 | 公积金业务 | 不动产登记 | 婚姻登记 | 其他\n"</span>
+            <span class="str">"输出格式：JSON {\"intent\": \"业务类型\", \"keywords\": [\"关键词\"], \"urgency\": \"普通/加急\"}"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    demo_process = client.create_agent(
+        name=<span class="str">"Demo-政务办理"</span>,
+        description=<span class="str">"路演Demo: 表单自动填写"</span>,
+        system_prompt=(
+            <span class="str">"你是政务表单填写Agent。\n"</span>
+            <span class="str">"职责：根据用户提供的信息，自动填充业务表单。\n"</span>
+            <span class="str">"输出标准化JSON表单数据。"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    demo_review = client.create_agent(
+        name=<span class="str">"Demo-政务审核"</span>,
+        description=<span class="str">"路演Demo: 业务审核判定"</span>,
+        system_prompt=(
+            <span class="str">"你是政务业务审核Agent。\n"</span>
+            <span class="str">"审核规则：材料齐全→通过 | 存在问题→待补正 | 不符合政策→不通过\n"</span>
+            <span class="str">"输出：审核结论 + 受理编号 + 下一步指引"</span>
+        ),
+        model=<span class="str">"default"</span>
+    )
+
+    <span class="com"># Demo模块2: 事件驱动运营Agent</span>
+    demo_eda = EventDrivenAgent(name=<span class="str">"Demo-运营智能体"</span>, client=client)
+
+    <span class="kw">def</span> <span class="fn">demo_on_timer</span>(event):
+        <span class="fn">print</span>(<span class="fstr">f"    ⏰ Demo演示: 定时触发 - {event.data.get('task', '')}"</span>)
+
+    <span class="kw">def</span> <span class="fn">demo_on_alert</span>(event):
+        <span class="fn">print</span>(<span class="fstr">f"    📊 Demo演示: 数据告警 - {event.data.get('metric', '')}超阈值"</span>)
+
+    <span class="kw">def</span> <span class="fn">demo_on_apply</span>(event):
+        <span class="fn">print</span>(<span class="fstr">f"    🔔 Demo演示: 外部申请 - {event.data.get('applicant', '')}提交申请"</span>)
+
+    demo_eda.register_handler(<span class="str">"timer"</span>, demo_on_timer)
+    demo_eda.register_handler(<span class="str">"data_alert"</span>, demo_on_alert)
+    demo_eda.register_handler(<span class="str">"external_application"</span>, demo_on_apply)
+
+    <span class="com"># Demo模块3: 创建Demo工作流</span>
+    demo_workflow = client.create_workflow(
+        name=<span class="str">"路演Demo-政务全链路"</span>,
+        description=<span class="str">"路演演示用完整工作流"</span>,
+        steps=[
+            {<span class="str">"step"</span>: <span class="num">1</span>, <span class="str">"name"</span>: <span class="str">"意图理解"</span>,
+             <span class="str">"agent_id"</span>: demo_qa.get(<span class="str">"id"</span>),
+             <span class="str">"input"</span>: <span class="str">"${user_message}"</span>, <span class="str">"output"</span>: <span class="str">"intent"</span>},
+            {<span class="str">"step"</span>: <span class="num">2</span>, <span class="str">"name"</span>: <span class="str">"表单填写"</span>,
+             <span class="str">"agent_id"</span>: demo_process.get(<span class="str">"id"</span>),
+             <span class="str">"input"</span>: {<span class="str">"intent"</span>: <span class="str">"${intent}"</span>, <span class="str">"user_info"</span>: <span class="str">"${user_info}"</span>},
+             <span class="str">"output"</span>: <span class="str">"form"</span>},
+            {<span class="str">"step"</span>: <span class="num">3</span>, <span class="str">"name"</span>: <span class="str">"业务审核"</span>,
+             <span class="str">"agent_id"</span>: demo_review.get(<span class="str">"id"</span>),
+             <span class="str">"input"</span>: <span class="str">"${form}"</span>, <span class="str">"output"</span>: <span class="str">"review"</span>},
+        ]
+    )
+
+    <span class="com"># Demo运行: 2个场景演示</span>
+    <span class="fn">print</span>(<span class="str">"\n  [Demo运行] 模拟路演现场演示"</span>)
+
+    <span class="com"># 场景1: 政务办理</span>
+    <span class="fn">print</span>(<span class="str">"\n  场景1: 市民公积金提取"</span>)
+    demo_result = client.run_workflow(demo_workflow.get(<span class="str">"id"</span>), {
+        <span class="str">"user_message"</span>: <span class="str">"我想办理公积金提取，准备买房"</span>,
+        <span class="str">"user_info"</span>: {<span class="str">"name"</span>: <span class="str">"王明"</span>, <span class="str">"id_card"</span>: <span class="str">"320506199001011234"</span>,
+                      <span class="str">"phone"</span>: <span class="str">"13812345678"</span>}
+    })
+
+    <span class="com"># 场景2: 事件触发</span>
+    <span class="fn">print</span>(<span class="str">"\n  场景2: 事件触发演示"</span>)
+    demo_eda.add_todo(<span class="str">"跟进苏州XX公司商机"</span>, <span class="str">"high"</span>)
+    demo_eda.update_system_hints()
+
+    demo_eda.emit_event(EventDrivenAgent.Event(
+        <span class="str">"timer"</span>, <span class="str">"cron"</span>,
+        {<span class="str">"task"</span>: <span class="str">"商机跟进提醒"</span>, <span class="str">"target"</span>: <span class="str">"苏州XX公司"</span>}
+    ))
+    demo_eda.emit_event(EventDrivenAgent.Event(
+        <span class="str">"data_alert"</span>, <span class="str">"监控系统"</span>,
+        {<span class="str">"metric"</span>: <span class="str">"缺陷率"</span>, <span class="str">"value"</span>: <span class="str">"5.2%"</span>, <span class="str">"threshold"</span>: <span class="str">"3%"</span>}
+    ))
+    demo_eda.emit_event(EventDrivenAgent.Event(
+        <span class="str">"external_application"</span>, <span class="str">"客户平台"</span>,
+        {<span class="str">"applicant"</span>: <span class="str">"苏州XX科技"</span>, <span class="str">"business_type"</span>: <span class="str">"专线扩容"</span>}
+    ))
+
+    <span class="com"># ==========================================</span>
+    <span class="com"># 步骤3: 评分维度体系</span>
+    <span class="com"># ==========================================</span>
+
+    scoring_rubric = {
+        <span class="str">"场景分析"</span>: {
+            <span class="str">"weight"</span>: <span class="num">20</span>,
+            <span class="str">"criteria"</span>: [
+                (<span class="str">"业务痛点清晰，有量化数据"</span>, <span class="num">5</span>),
+                (<span class="str">"目标用户画像准确"</span>, <span class="num">5</span>),
+                (<span class="str">"ROI预期合理"</span>, <span class="num">5</span>),
+                (<span class="str">"与竞品的差异化明确"</span>, <span class="num">5</span>),
+            ]
+        },
+        <span class="str">"技术方案"</span>: {
+            <span class="str">"weight"</span>: <span class="num">30</span>,
+            <span class="str">"criteria"</span>: [
+                (<span class="str">"架构图清晰完整"</span>, <span class="num">8</span>),
+                (<span class="str">"技术选型有依据"</span>, <span class="num">7</span>),
+                (<span class="str">"有创新点说明"</span>, <span class="num">8</span>),
+                (<span class="str">"安全合规考虑周全"</span>, <span class="num">7</span>),
+            ]
+        },
+        <span class="str">"Demo演示"</span>: {
+            <span class="str">"weight"</span>: <span class="num">30</span>,
+            <span class="str">"criteria"</span>: [
+                (<span class="str">"端到端流程跑通"</span>, <span class="num">8</span>),
+                (<span class="str">"事件触发功能演示"</span>, <span class="num">7</span>),
+                (<span class="str">"异常处理有预案"</span>, <span class="num">8</span>),
+                (<span class="str">"效果对比直观"</span>, <span class="num">7</span>),
+            ]
+        },
+        <span class="str">"商业价值"</span>: {
+            <span class="str">"weight"</span>: <span class="num">20</span>,
+            <span class="str">"criteria"</span>: [
+                (<span class="str">"量化收益可信"</span>, <span class="num">6</span>),
+                (<span class="str">"推广路径可行"</span>, <span class="num">5</span>),
+                (<span class="str">"商业模式清晰"</span>, <span class="num">5</span>),
+                (<span class="str">"二期规划有远见"</span>, <span class="num">4</span>),
+            ]
+        }
+    }
+
+    total_max = <span class="num">0</span>
+    <span class="kw">for</span> section, detail <span class="kw">in</span> scoring_rubric.items():
+        section_max = sum(c[<span class="num">1</span>] <span class="kw">for</span> c <span class="kw">in</span> detail[<span class="str">"criteria"</span>])
+        total_max += section_max
+        <span class="fn">print</span>(<span class="fstr">f"\n  📊 {section}（权重{detail['weight']}%，满分{section_max}分）"</span>)
+        <span class="kw">for</span> criterion, max_score <span class="kw">in</span> detail[<span class="str">"criteria"</span>]:
+            <span class="fn">print</span>(<span class="fstr">f"    - {criterion}（满分{max_score}分）"</span>)
+
+    <span class="fn">print</span>(<span class="fstr">f"\n  总分: 满分{total_max}分"</span>)
+    <span class="fn">print</span>(<span class="str">"  评级标准："</span>)
+    <span class="fn">print</span>(<span class="fstr">f"    🥇 优秀: ≥{int(total_max * 0.85)}分"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"    🥈 良好: ≥{int(total_max * 0.70)}分"</span>)
+    <span class="fn">print</span>(<span class="fstr">f"    🥉 及格: ≥{int(total_max * 0.60)}分"</span>)
+
+    <span class="fn">print</span>(<span class="str">"\n💡 路演Tips:"</span>)
+    <span class="fn">print</span>(<span class="str">"  1. 开场: 用一个痛点故事开场，30秒抓住注意力"</span>)
+    <span class="fn">print</span>(<span class="str">"  2. Demo: 提前录制备份视频，防止现场网络问题"</span>)
+    <span class="fn">print</span>(<span class="str">"  3. 互动: 准备2-3个互动问题让观众参与"</span>)
+    <span class="fn">print</span>(<span class="str">"  4. 收尾: 用一句话总结核心价值主张"</span>)
+
+    <span class="fn">print</span>(<span class="str">"\n✅ 课题17完成！"</span>)</div>
+</div>
+</div>
+</div>
+
+<!-- ============================================================ -->
+<!-- 5天课程总结 -->
+<!-- ============================================================ -->
+<div class="section" id="summary">
+<div class="summary-card">
+<h3>5天课程总结</h3>
+<p>从AI理论到复杂智能体，从被动问答到事件驱动，5天完成AI Agent能力跃迁</p>
+
+<table class="compare-table" style="margin:16px auto;max-width:800px">
+<thead>
+<tr><th>Day</th><th>主题</th><th>核心能力</th><th>课题数</th></tr>
+</thead>
+<tbody>
+<tr><td>Day 1</td><td>AI理论与实践基础</td><td>LLM原理、Prompt工程、ReAct循环</td><td>原理工具×7</td></tr>
+<tr><td>Day 2</td><td>TeleAgent实战入门</td><td>智能问答、知识库RAG、MCP工具</td><td>4个</td></tr>
+<tr><td>Day 3</td><td>文档生成与审核</td><td>文档Agent、审核Agent、记忆管理</td><td>4个</td></tr>
+<tr><td>Day 4</td><td>数据分析与多模态</td><td>数据Agent、多模态、上下文压缩</td><td>5个</td></tr>
+<tr><td>Day 5</td><td>复杂智能体与路演</td><td>多Agent协同、事件驱动、消融评估</td><td>5个</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section" id="path">
+<h3 style="text-align:center;margin-bottom:20px">后续学习路径</h3>
+<div class="path-grid">
+<div class="path-item">
+<div class="pi-icon">&#128218;</div>
+<div class="pi-title">深化Prompt工程</div>
+<div class="pi-desc">Chain-of-Thought、Few-shot优化、Self-Consistency</div>
+</div>
+<div class="path-item">
+<div class="pi-icon">&#128736;</div>
+<div class="pi-title">模型微调实战</div>
+<div class="pi-desc">LoRA微调、领域数据集构建、效果评估</div>
+</div>
+<div class="path-item">
+<div class="pi-icon">&#127760;</div>
+<div class="pi-title">MCP生态接入</div>
+<div class="pi-desc">自定义MCP工具服务器、跨平台工具集成</div>
+</div>
+<div class="path-item">
+<div class="pi-icon">&#128640;</div>
+<div class="pi-title">RPA自动化</div>
+<div class="pi-desc">工作流录制、浏览器自动化、端到端RPA</div>
+</div>
+<div class="path-item">
+<div class="pi-icon">&#128176;</div>
+<div class="pi-title">商业化落地</div>
+<div class="pi-desc">SaaS部署、计费模型、客户运营</div>
+</div>
+<div class="path-item">
+<div class="pi-icon">&#129302;</div>
+<div class="pi-title">多Agent框架</div>
+<div class="pi-desc">CrewAI/AutoGen、Agent间通信、群体智能</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="cert">
+<div class="summary-card">
+<h3>证书颁发说明</h3>
+<p>完成5天培训并通过综合路演评审后，将获得<strong>「区县AI智能体应用工程师」</strong>认证证书</p>
+<p style="font-size:13px;margin-top:12px">评审标准：路演评分 ≥ 60分（满分100分）<br>
+评级：&#129351; 优秀 ≥ 85 / &#129352; 良好 ≥ 70 / &#129353; 及格 ≥ 60</p>
+<p style="font-size:12px;color:var(--text3);margin-top:16px">证书由电信培训中心与AI技术团队联合颁发</p>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+<p>区县AI赋能培训 · Day 5 · 复杂智能体评估与综合路演</p>
+<p>5天22个实战课题 · 从理论到路演 · 2026年7月</p>
+</div>
+</div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function navClick(el){document.getElementById('sidebar').classList.remove('open');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active')}
+function copyCode(btn){const code=btn.closest('.code-block').querySelector('.code-body').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='已复制!';setTimeout(()=>btn.textContent='复制',1500)})}
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;const p=h>0?Math.round(window.scrollY/h*100):0;document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressText').textContent=p+'%';
+const sections=document.querySelectorAll('.section');let active=null;sections.forEach(s=>{if(s.getBoundingClientRect().top<120)active=s});if(active){document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.getAttribute('href')==='#'+active.id)})}});
+</script>
+</body>
+</html>

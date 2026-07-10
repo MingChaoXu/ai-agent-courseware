@@ -1,0 +1,34 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Node.js
+node_modules/
+
+# Temporary / agent internals
+.temp/
+skill-examples/
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Old / superseded files
+区县AI赋能培训_课程大纲.docx
+
+# Large files (optional — uncomment if too large for GitHub)
+# AI大模型与智能体_开启智能办公新时代.pdf

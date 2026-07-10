@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 4 - 数据分析与多模态 | 区县AI赋能培训</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f7fa;--bg2:#ffffff;--bg3:#eef2f7;--sidebar:#ffffff;--accent:#2563eb;--accent2:#059669;--accent3:#d97706;--accent4:#dc2626;--accent5:#7c3aed;--text:#1e293b;--text2:#475569;--text3:#94a3b8;--border:#e2e8f0;--card:#dbeafe;--code-bg:#f8fafc;--success:#059669;--warning:#d97706;--danger:#dc2626}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;display:flex;min-height:100vh}
+.sidebar{width:280px;min-width:280px;background:var(--sidebar);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-header .day-badge{display:inline-block;background:linear-gradient(135deg,#36d399,#4a9eff);color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.sidebar-header h2{font-size:15px;color:var(--text);font-weight:700;margin-bottom:4px}
+.sidebar-header p{font-size:11px;color:var(--text3)}
+.sidebar-nav{padding:12px 0}
+.nav-group{margin-bottom:8px}
+.nav-group-title{padding:8px 20px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.nav-item{display:block;padding:8px 20px 8px 32px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.nav-item:hover{color:var(--text);background:rgba(54,211,153,.08);border-left-color:var(--accent2)}
+.nav-item.active{color:var(--accent2);background:rgba(54,211,153,.12);border-left-color:var(--accent2);font-weight:600}
+.nav-item .time-badge{float:right;font-size:10px;background:var(--bg3);padding:1px 6px;border-radius:8px;color:var(--text3)}
+.main{margin-left:280px;flex:1;min-width:0}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 30px;display:flex;align-items:center;gap:16px}
+.topbar .menu-btn{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
+.topbar h1{font-size:16px;font-weight:700;flex:1}
+.progress-wrap{width:200px;display:flex;align-items:center;gap:8px}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:3px;transition:width .5s;width:0%}
+.progress-text{font-size:11px;color:var(--text3);min-width:32px;text-align:right}
+.content{padding:30px;max-width:1100px}
+.section{margin-bottom:50px;scroll-margin-top:70px}
+.section-header{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.section-header .section-tag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.section-header .section-tag.morning{background:rgba(54,211,153,.15);color:var(--accent2)}
+.section-header .section-tag.afternoon{background:rgba(99,102,241,.15);color:#818cf8}
+.section-header h2{font-size:26px;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--text),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-header p{color:var(--text2);font-size:14px}
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+.topic-card h3{font-size:18px;font-weight:700;margin-bottom:12px;color:var(--accent2)}
+.topic-card h4{font-size:15px;font-weight:700;margin:16px 0 8px;color:var(--text)}
+.topic-card p{color:var(--text2);font-size:14px;margin-bottom:10px}
+.topic-card ul,.topic-card ol{margin:8px 0 12px 20px;color:var(--text2);font-size:14px}
+.topic-card li{margin-bottom:5px}
+.principle-card{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:18px 20px;margin:16px 0;position:relative;overflow:hidden}
+.principle-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)}
+.principle-card .pc-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.principle-card .pc-body{font-size:13px;color:var(--text2);line-height:1.8}
+.principle-card .pc-body code{background:rgba(74,158,255,.12);color:var(--accent);padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Fira Code',monospace}
+.principle-card.warn{border-color:var(--accent3);background:rgba(245,158,11,.06)}
+.principle-card.warn::before{background:var(--accent3)}
+.principle-card.warn .pc-title{color:var(--accent3)}
+.principle-card.green{border-color:var(--accent2);background:rgba(54,211,153,.06)}
+.principle-card.green::before{background:var(--accent2)}
+.principle-card.green .pc-title{color:var(--accent2)}
+.step-block{margin:16px 0;padding:16px 20px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent2)}
+.step-block .step-num{display:inline-block;background:var(--accent2);color:var(--bg);width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:8px}
+.step-block h4{display:inline;font-size:14px;font-weight:700;color:var(--accent2)}
+.step-block p{margin-top:8px;font-size:13px;color:var(--text2)}
+.code-block{position:relative;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--code-bg);border-bottom:1px solid var(--border)}
+.code-header .lang-badge{font-size:11px;color:var(--accent2);font-weight:600;background:rgba(54,211,153,.1);padding:2px 8px;border-radius:4px}
+.code-header .copy-btn{background:none;border:1px solid var(--border);color:var(--text3);padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .2s}
+.code-header .copy-btn:hover{color:var(--accent2);border-color:var(--accent2)}
+.code-body{padding:16px;background:var(--code-bg);overflow-x:auto;font-family:'Fira Code','Consolas',monospace;font-size:12.5px;line-height:1.65;tab-size:4;white-space:pre;color:#334155}
+.code-body .kw{color:#cf222e}
+.code-body .fn{color:#8250df}
+.code-body .str{color:#0a3069}
+.code-body .com{color:#6e7781;font-style:italic}
+.code-body .num{color:#0550ae}
+.code-body .cls{color:#953800}
+.code-body .dec{color:#116329}
+.code-body .op{color:#cf222e}
+.code-body .fstr{color:#0a3069}
+.compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.compare-table th{background:var(--card);color:var(--accent2);padding:10px 14px;text-align:left;font-weight:600;border-bottom:2px solid var(--accent2);font-size:12px}
+.compare-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+.compare-table tr:hover td{background:rgba(54,211,153,.05)}
+.compare-table td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+.flow-diagram{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;font-family:'Fira Code',monospace;font-size:12px;color:var(--accent2);white-space:pre;overflow-x:auto;line-height:1.5}
+.tips-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:16px 20px;margin:16px 0}
+.tips-box .tips-title{font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:8px}
+.tips-box p{font-size:13px;color:var(--text2);margin-bottom:4px}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:16px 0}
+.concept-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;transition:all .2s}
+.concept-card:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.concept-card .cc-icon{font-size:24px;margin-bottom:6px}
+.concept-card .cc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.concept-card .cc-desc{font-size:11px;color:var(--text3);line-height:1.6}
+.quiz-box{background:var(--card);border:1px solid var(--accent5);border-radius:10px;padding:18px 20px;margin:16px 0}
+.quiz-box .quiz-q{font-size:14px;font-weight:700;color:var(--accent5);margin-bottom:8px}
+.quiz-box .quiz-a{font-size:13px;color:var(--text2);margin-bottom:6px;cursor:pointer;padding:6px 10px;border-radius:6px;transition:all .2s;border:1px solid transparent}
+.quiz-box .quiz-a:hover{background:rgba(167,139,250,.1);border-color:var(--accent5)}
+.quiz-box .quiz-a.correct{background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success)}
+.quiz-box .quiz-a.wrong{background:rgba(239,68,68,.1);border-color:var(--danger);color:var(--danger)}
+.summary-card{background:linear-gradient(135deg,var(--card),var(--bg2));border:1px solid var(--accent2);border-radius:14px;padding:30px;margin:30px 0;text-align:center}
+.summary-card h3{font-size:22px;font-weight:800;color:var(--accent2);margin-bottom:12px}
+.summary-card p{font-size:14px;color:var(--text2);max-width:600px;margin:0 auto 16px}
+.footer{margin-top:50px;padding:30px 0;border-top:1px solid var(--border);text-align:center}
+.footer p{font-size:12px;color:var(--text3)}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.topbar .menu-btn{display:block}
+}
+@media(max-width:600px){
+.content{padding:16px}
+.concept-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="day-badge">DAY 4 / 5</div>
+<h2>数据分析与多模态</h2>
+<p>上午：多模态原理+BI+营销+舆情 | 下午：CV质检+CV安全+MCP</p>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-group">
+<div class="nav-group-title">上午 · 多模态与数据</div>
+<a class="nav-item" href="#s85" onclick="navClick(this)">课题8.5: 多模态三种模式<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s85-1" onclick="navClick(this)">├ NATIVE/EXTRACT/TOOL</a>
+<a class="nav-item" href="#s85-2" onclick="navClick(this)">├ 同一图片三种处理</a>
+<a class="nav-item" href="#s85-3" onclick="navClick(this)">└ 权衡分析</a>
+<a class="nav-item" href="#s9" onclick="navClick(this)">课题9: BI分析(代码解释器)<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s10" onclick="navClick(this)">课题10: 精准营销<span class="time-badge">15min</span></a>
+<a class="nav-item" href="#s11" onclick="navClick(this)">课题11: 舆情洞察<span class="time-badge">15min</span></a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">下午 · CV与工具生态</div>
+<a class="nav-item" href="#s12" onclick="navClick(this)">课题12: AI质量检测<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s13" onclick="navClick(this)">课题13: CV安全助手<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s135" onclick="navClick(this)">课题13.5: MCP协议<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s135-1" onclick="navClick(this)">├ MCP协议概念</a>
+<a class="nav-item" href="#s135-2" onclick="navClick(this)">├ 三大工具类型</a>
+<a class="nav-item" href="#s135-3" onclick="navClick(this)">└ 事件驱动Agent</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">总结与测验</div>
+<a class="nav-item" href="#quiz" onclick="navClick(this)">课堂测验</a>
+<a class="nav-item" href="#preview" onclick="navClick(this)">Day 5 预告</a>
+</div>
+</nav>
+</aside>
+
+<div class="main">
+<div class="topbar">
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
+<h1>Day 4 · 数据分析与多模态场景 + 工具生态</h1>
+<div class="progress-wrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<span class="progress-text" id="progressText">0%</span>
+</div>
+</div>
+
+<div class="content">
+
+<div class="section" id="s85">
+<div class="section-header">
+<div class="section-tag morning">上午 · 原理层</div>
+<h2>课题8.5: 多模态处理三种模式对比</h2>
+<p>图片/视频/音频等非文本信息如何进入LLM？三种模式各有优劣</p>
+</div>
+
+<div class="topic-card" id="s85-1">
+<h3>三种多模态处理模式</h3>
+
+<div class="flow-diagram">┌─────────┐     NATIVE      ┌──────────┐
+│  图片    │ ──────────────► │ 多模态LLM │ → 直接理解
+│         │                 └──────────┘
+│         │     EXTRACT     ┌──────────┐  ┌──────────┐
+│         │ ──────────────► │ OCR/检测  │→│ 文本LLM  │ → 间接理解
+│         │                 └──────────┘  └──────────┘
+│         │     TOOL        ┌──────────┐  ┌──────────┐
+│         │ ──────────────► │ 视觉工具  │→│ Agent+LLM│ → 结构化理解
+└─────────┘                 └──────────┘  └──────────┘</div>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">👁️</div>
+<div class="cc-name">NATIVE（原生多模态）</div>
+<div class="cc-desc">图片直接送入多模态LLM（如GPT-4o），LLM直接理解视觉内容。保真度最高，但需要多模态模型，成本较高</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">📝</div>
+<div class="cc-name">EXTRACT_TO_TEXT（提取为文本）</div>
+<div class="cc-desc">图片→OCR/目标检测→提取文本/标签→送入纯文本LLM。成本较低，但丢失空间关系和视觉语义</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">🔧</div>
+<div class="cc-name">TOOL（多模态工具）</div>
+<div class="cc-desc">Agent调用视觉分析工具→获取结构化结果→送入LLM。灵活性高，可组合多个专用模型，但延迟较高</div>
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">为什么需要三种模式？不能都用NATIVE吗？</div>
+<div class="pc-body">
+理论上NATIVE模式最好——直接送入多模态LLM，信息无损失。但实际场景中有三个限制：<br>
+1. <strong>成本</strong>：图片按Token计费（一张1024x1024图片约765 tokens），大量图片处理成本极高<br>
+2. <strong>模型限制</strong>：不是所有LLM都支持多模态，纯文本LLM无法直接处理图片<br>
+3. <strong>结构化需求</strong>：产线质检需要结构化输出（缺陷位置、类型、置信度），NATIVE输出是自然语言，需要额外解析<br><br>
+因此三种模式各有适用场景，实际部署中经常<strong>组合使用</strong>。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s85-2">
+<h3>同一张PCB图片的三种模式处理对比</h3>
+<p>测试图片：一张PCB电路板产品照片，上面有多个电子元件、焊点和丝印标签</p>
+
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>NATIVE模式 — 图片直接送入多模态LLM</h4>
+<p>输出包含：元件识别（U1-主控芯片、C1-C8贴片电容等）、缺陷检测（U1焊盘疑似桥接、C3偏移1mm）、空间关系（U1位于板中心，C1-C4环绕）、整体评估</p>
+<p style="color:var(--accent2)">✅ 优势: 保留完整视觉信息，可感知空间关系和外观细节</p>
+<p style="color:var(--accent4)">❌ 劣势: 需要多模态模型，token消耗大</p>
+</div>
+
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>EXTRACT_TO_TEXT模式 — OCR/检测提取后送文本LLM</h4>
+<p>OCR结果: 「PCB-V3.2 SN:2026070801 MADE IN CN」</p>
+<p>检测标签: [芯片x1, 电容x8, 电阻x5, 连接器x1, 疑似桥接x1, 偏移x1]</p>
+<p style="color:var(--accent4)">关键缺失: 空间关系信息——无法从文本推断元件在板上的布局位置</p>
+<p style="color:var(--accent2)">✅ 优势: 成本低，可用纯文本LLM</p>
+<p style="color:var(--accent4)">❌ 劣势: 丢失空间关系、颜色、纹理等视觉信息</p>
+</div>
+
+<div class="step-block">
+<span class="step-num">3</span>
+<h4>TOOL模式 — Agent调度专用视觉工具</h4>
+<p>工具调用链：Tool1: defect_detection(image) → {桥接:1, 偏移:1, 置信度:0.92}</p>
+<p>Tool2: ocr_extract(image) → {丝印: 'PCB-V3.2', 序列号: '2026070801'}</p>
+<p>Tool3: component_count(image) → {芯片:1, 电容:8, 电阻:5}</p>
+<p>结构化输出：缺陷率2/15=13.3%，超出阈值5%，判定❌不合格，建议标记U1/C3区域生成返工工单</p>
+<p style="color:var(--accent2)">✅ 优势: 灵活组合专用模型，输出结构化，可执行后续动作</p>
+<p style="color:var(--accent4)">❌ 劣势: 多次调用延迟高，工具编排复杂度高</p>
+</div>
+</div>
+
+<div class="topic-card" id="s85-3">
+<h3>权衡分析 + 适用场景</h3>
+
+<table class="compare-table">
+<tr><th>维度</th><th>NATIVE</th><th>EXTRACT</th><th>TOOL</th><th>推荐</th></tr>
+<tr><td>信息保真度</td><td>★★★★★</td><td>★★★☆☆</td><td>★★★★☆</td><td>NATIVE</td></tr>
+<tr><td>计算成本</td><td>★★★☆☆</td><td>★★★★★</td><td>★★☆☆☆</td><td>EXTRACT</td></tr>
+<tr><td>灵活性</td><td>★★★☆☆</td><td>★★☆☆☆</td><td>★★★★★</td><td>TOOL</td></tr>
+<tr><td>响应速度</td><td>★★★★☆</td><td>★★★★☆</td><td>★★☆☆☆</td><td>NATIVE</td></tr>
+<tr><td>输出结构化</td><td>★★☆☆☆</td><td>★★★☆☆</td><td>★★★★★</td><td>TOOL</td></tr>
+<tr><td>无多模态模型</td><td>❌不可用</td><td>✅可用</td><td>✅可用</td><td>EXTRACT</td></tr>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">实战建议：组合使用三种模式</div>
+<div class="pc-body">
+- <strong>NATIVE</strong> → 需要理解视觉细节：产品外观审核、设计稿评审、医学影像<br>
+- <strong>EXTRACT</strong> → 以文字信息为主：发票识别、证件录入、表格提取<br>
+- <strong>TOOL</strong> → 需要结构化输出+后续动作：质检流水线、安全巡检、自动告警<br><br>
+优先用<strong>TOOL模式</strong>（结构化+可执行），复杂视觉理解叠加NATIVE，OCR场景用EXTRACT。三种模式可组合使用！
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s9">
+<div class="section-header">
+<div class="section-tag morning">上午 · 实战层</div>
+<h2>课题9: 制造领域BI分析（含代码解释器）</h2>
+<p>从「描述性分析」升级到「推断性分析」——代码解释器让Agent能做统计推断</p>
+</div>
+
+<div class="topic-card">
+<h3>创建BI分析助手 + 绑定代码解释器</h3>
+
+<div class="principle-card">
+<div class="pc-title">代码解释器：BI助手的关键升级</div>
+<div class="pc-body">
+没有代码解释器：Agent只能说「良品率92.3%」——这是<strong>描述性分析</strong>，只是陈述事实<br>
+有了代码解释器：Agent可以说「p=0.003，温度与缺陷率显著正相关」——这是<strong>推断性分析</strong>，可以指导决策<br><br>
+代码解释器让Agent能够：<br>
+- 执行Python代码进行统计计算（标准差、相关系数、p值）<br>
+- 生成数据可视化图表<br>
+- 做假设检验和回归分析<br><br>
+关键配置：沙箱隔离(安全)、超时限制(30秒)、白名单库(pandas/numpy/scipy/matplotlib)
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"生产数据BI分析助手"</span>,
+    description=<span class="str">"工厂生产数据智能分析，支持NL查询、代码解释器、异常预警"</span>,
+    system_prompt=<span class="str">"""你是一个生产数据BI分析助手，帮助生产管理人员通过自然语言查询和分析生产数据。
+
+分析能力：
+1. 【产量分析】按产线/产品/时间段统计产量、达成率
+2. 【质量分析】良品率、缺陷率趋势，缺陷类型分布
+3. 【异常检测】识别产量骤降、缺陷率突增等异常
+4. 【根因分析】对异常情况进行原因推断
+5. 【趋势预测】基于历史数据趋势预测
+6. 【代码解释器】可通过执行Python代码进行统计分析和可视化
+
+当用户输入自然语言查询时，先理解分析意图，再基于数据分析并输出结论。
+对于需要计算的查询，生成Python代码执行统计分析。"""</span>,
+    model=<span class="str">"default"</span>
+)
+
+<span class="com"># 绑定数据分析技能</span>
+skill = client.<span class="fn">create_skill</span>(<span class="str">"生产数据分析"</span>, <span class="str">"data_analysis"</span>, {
+    <span class="str">"data_source"</span>: <span class="str">"production_data"</span>,
+    <span class="str">"enable_text_to_sql"</span>: <span class="kw">True</span>,
+    <span class="str">"enable_chart"</span>: <span class="kw">True</span>
+})
+client.<span class="fn">bind_skill_to_agent</span>(agent_id, skill.<span class="fn">get</span>(<span class="str">"id"</span>))
+
+<span class="com"># 绑定代码解释器技能</span>
+code_skill = client.<span class="fn">create_skill</span>(<span class="str">"Python代码解释器"</span>, <span class="str">"code_interpreter"</span>, {
+    <span class="str">"language"</span>: <span class="str">"python"</span>,
+    <span class="str">"timeout"</span>: <span class="num">30</span>,
+    <span class="str">"allowed_libs"</span>: [<span class="str">"pandas"</span>, <span class="str">"numpy"</span>, <span class="str">"scipy"</span>, <span class="str">"matplotlib"</span>],
+    <span class="str">"sandbox"</span>: <span class="kw">True</span>
+})
+client.<span class="fn">bind_skill_to_agent</span>(agent_id, code_skill.<span class="fn">get</span>(<span class="str">"id"</span>))</div>
+</div>
+
+<h4>自然语言查询 + 统计分析</h4>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 查询测试</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 描述性分析</span>
+queries = [
+    <span class="str">"6月份各产线的平均良品率是多少？"</span>,
+    <span class="str">"哪个产品的缺陷率最高？什么原因？"</span>,
+    <span class="str">"上周有没有产量异常的情况？"</span>,
+    <span class="str">"帮我生成一份6月生产分析摘要"</span>,
+]
+
+<span class="com"># 推断性分析（代码解释器）</span>
+stat_queries = [
+    <span class="str">"请用Python计算6月各周产量的标准差和变异系数，判断产量稳定性"</span>,
+    <span class="str">"请用Python做相关性分析：温度和缺陷率之间是否存在正相关"</span>,
+]</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s10">
+<div class="section-header">
+<div class="section-tag morning">上午 · 实战层</div>
+<h2>课题10: 消费领域精准营销</h2>
+<p>RFM模型客户分群 + 差异化营销策略</p>
+</div>
+
+<div class="topic-card">
+<h3>RFM模型 + 客户画像</h3>
+
+<div class="principle-card">
+<div class="pc-title">RFM模型：客户价值分群经典方法</div>
+<div class="pc-body">
+RFM通过三个维度衡量客户价值：<br>
+- <strong>R(Recency)</strong>：最近消费时间 → 越近越活跃<br>
+- <strong>F(Frequency)</strong>：消费频次 → 越高越忠诚<br>
+- <strong>M(Monetary)</strong>：消费金额 → 越高越有价值<br><br>
+四类客户分群：<br>
+1. <strong>高价值客户</strong>：R近、F高、M高 → VIP维护、专属权益<br>
+2. <strong>成长客户</strong>：R近、F中、M中 → 提升频次、交叉推荐<br>
+3. <strong>流失风险</strong>：R远、F低、M高 → 召回优惠、个性化推荐<br>
+4. <strong>低价值客户</strong>：R远、F低、M低 → 促销引流、降低服务成本
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 两位客户画像对比</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 客户1: 张女士 → 高价值客户 (R近3天, F高23次, M高8560元)</span>
+<span class="com"># 偏好: 美妆35%、服饰28%、食品22%、家居15%</span>
+<span class="com"># 客单价372元, 优惠券使用率68%</span>
+<span class="com"># → 策略: VIP专属权益, 新品优先试用, 会员日专属折扣</span>
+
+<span class="com"># 客户2: 李先生 → 流失风险客户 (R远47天, F低4次, M低1230元)</span>
+<span class="com"># 偏好: 食品60%、日用40%</span>
+<span class="com"># 客单价308元, 优惠券使用率25%</span>
+<span class="com"># → 策略: 召回优惠, 个性化推荐, 限时折扣激活</span>
+
+customer_data = <span class="str">"""
+客户ID: C20260001  张女士 32岁
+总消费8,560元 / 23次 / 最近3天
+美妆35% 服饰28% 食品22% 家居15%
+
+客户ID: C20260045  李先生 55岁
+总消费1,230元 / 4次 / 最近47天
+食品60% 日用40%"""</span>
+
+result = client.<span class="fn">chat</span>(agent_id,
+    <span class="str">f"请对以下两位客户生成画像分析，并分别推荐精准营销策略：\n</span>{customer_data}<span class="str">"</span>)</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s11">
+<div class="section-header">
+<div class="section-tag morning">上午 · 实战层</div>
+<h2>课题11: 金融领域舆情洞察</h2>
+<p>多平台舆情监测 + 情感分析 + 风险研判</p>
+</div>
+
+<div class="topic-card">
+<h3>舆情分级与多平台分析</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"舆情洞察助手"</span>,
+    description=<span class="str">"银行品牌舆情实时监测与分析"</span>,
+    system_prompt=<span class="str">"""你是一个舆情洞察助手，帮助银行监测和分析品牌舆情。
+
+分析能力：
+1. 【情感分析】判断正面/中性/负面，情感得分(-1到+1)
+2. 【热点提取】识别高频关键词和主题
+3. 【风险研判】判断舆情是否可能升级为公关危机
+4. 【报告生成】生成舆情分析周报/月报
+
+舆情分级：
+- 🔴红色预警：负面情感>0.7，涉及监管/诉讼/群体事件
+- 🟡黄色关注：负面情感0.3-0.7，有传播趋势
+- 🟢绿色正常：正面/中性为主"""</span>,
+)
+
+news_items = <span class="str">"""
+舆情数据（2026年6月25日-7月1日）：
+1. [微博] 「XX银行APP又崩了」#XX银行APP故障# 阅读量12万，评论856条
+2. [知乎] 「在XX银行办房贷是什么体验」- 3天批贷顺利经历，获赞320
+3. [抖音] 博主曝光XX银行信用卡隐藏收费项目，播放量45万
+4. [小红书] 「XX银行新出的数字藏品太酷了」正面种草帖，互动800+
+5. [贴吧] 多人反映XX银行网点排队2小时以上
+6. [新闻] XX银行发布半年报，净利润同比增长12%"""</span></div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s12">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 实战层</div>
+<h2>课题12: 制造领域AI质量检测（整合多模态模式）</h2>
+<p>三种多模态模式在产线质检场景的实际对比</p>
+</div>
+
+<div class="topic-card">
+<h3>CV质检助手 + 三种模式质检对比</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"AI质量检测助手"</span>,
+    description=<span class="str">"产线产品外观缺陷自动检测，支持三种多模态处理模式"</span>,
+    system_prompt=<span class="str">"""你是一个AI质量检测助手，帮助工厂对产品外观进行自动缺陷检测。
+
+检测流程：1.接收产品图片 2.识别产品类型和检测区域
+3.逐项检测预设缺陷类型 4.标注缺陷位置和类型
+5.判定合格/不合格 6.生成检测报告
+
+常见缺陷类型（以PCB板为例）：
+- 焊点缺陷：虚焊、桥接、冷焊、漏焊
+- 元件缺陷：偏移、缺件、极性反、损伤
+- 板面缺陷：划伤、污渍、镀层脱落
+
+多模态处理模式说明：
+- NATIVE：图片直接送入多模态LLM理解，适合复杂外观判断
+- EXTRACT：先用OCR/检测提取信息，再由文本LLM分析，适合文字标签场景
+- TOOL：调用专用视觉工具获取结构化结果，适合产线自动化质检"""</span>,
+)
+
+<span class="com"># 绑定CV视觉检测技能</span>
+skill = client.<span class="fn">create_skill</span>(<span class="str">"视觉质检"</span>, <span class="str">"cv_detection"</span>, {
+    <span class="str">"model"</span>: <span class="str">"defect_detection_v1"</span>,
+    <span class="str">"defect_types"</span>: [<span class="str">"虚焊"</span>, <span class="str">"桥接"</span>, <span class="str">"缺件"</span>, <span class="str">"偏移"</span>, <span class="str">"划伤"</span>],
+    <span class="str">"confidence_threshold"</span>: <span class="num">0.85</span>,
+    <span class="str">"output_format"</span>: <span class="str">"json"</span>
+})
+
+<span class="com"># 绑定多模态工具</span>
+mm_tools = [
+    (<span class="str">"NATIVE多模态理解"</span>, <span class="str">"multimodal_native"</span>, {<span class="str">"model"</span>: <span class="str">"gpt-4o"</span>}),
+    (<span class="str">"OCR文本提取"</span>, <span class="str">"ocr_extract"</span>, {<span class="str">"engine"</span>: <span class="str">"paddleocr_v4"</span>}),
+    (<span class="str">"缺陷检测工具"</span>, <span class="str">"defect_detection_tool"</span>, {<span class="str">"model"</span>: <span class="str">"yolov8-defect"</span>}),
+]</div>
+</div>
+
+<h4>三种模式质检对比</h4>
+<p>测试图片：PCB板有3处焊点桥接，1个电容偏移2mm，板面2cm划伤，丝印PCB-V3.2</p>
+
+<div class="principle-card warn">
+<div class="pc-title">产线质检场景结论</div>
+<div class="pc-body">
+- NATIVE：能感知焊点颜色和光泽差异，但Token成本高<br>
+- EXTRACT：准确提取丝印文字，但丢失焊点外观细节<br>
+- TOOL：结构化输出适合自动化流水线，可触发返工工单<br><br>
+<strong>产线推荐：TOOL为主 + NATIVE复核疑难件</strong>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s13">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 实战层</div>
+<h2>课题13: 能源领域CV安全助手（整合多模态模式）</h2>
+<p>电力作业现场安全合规检测——PPE检测、安全距离、环境合规</p>
+</div>
+
+<div class="topic-card">
+<h3>CV安全检测 + 三种模式对比</h3>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"作业安全检测助手"</span>,
+    description=<span class="str">"电力/油气作业现场安全合规检测"</span>,
+    system_prompt=<span class="str">"""你是一个作业现场安全检测助手，帮助能源企业识别现场安全隐患。
+
+检测项目：
+1. 【个人防护装备】安全帽、绝缘手套、护目镜、安全带是否佩戴
+2. 【作业环境】围栏设置、警示标志、安全距离是否合规
+3. 【设备状态】接地线、绝缘工具、验电器是否正确使用
+4. 【违规操作】带电作业防护、高处作业保护
+
+风险分级：
+- 🔴严重：未佩戴安全帽/绝缘手套 → 立即停工
+- 🟡一般：围栏不完整、警示标志缺失 → 限期整改
+- 🟢提示：工具摆放不规范 → 建议改进
+
+电力作业安全规程：
+- 安全距离：10kV≥0.7m，35kV≥1.0m，110kV≥1.5m
+- 高处作业≥2m必须使用安全带
+- 带电作业必须使用绝缘工具并有专人监护"""</span>,
+)
+
+<span class="com"># 绑定CV安全检测技能</span>
+skill = client.<span class="fn">create_skill</span>(<span class="str">"安全合规检测"</span>, <span class="str">"cv_detection"</span>, {
+    <span class="str">"model"</span>: <span class="str">"safety_detection_v1"</span>,
+    <span class="str">"detection_types"</span>: [<span class="str">"安全帽"</span>, <span class="str">"绝缘手套"</span>, <span class="str">"安全带"</span>, <span class="str">"围栏"</span>],
+    <span class="str">"confidence_threshold"</span>: <span class="num">0.80</span>
+})
+
+<span class="com"># 绑定多模态安全工具</span>
+safety_tools = [
+    (<span class="str">"NATIVE现场理解"</span>, <span class="str">"multimodal_native"</span>, {<span class="str">"model"</span>: <span class="str">"gpt-4o"</span>}),
+    (<span class="str">"PPE检测工具"</span>, <span class="str">"ppe_detection"</span>, {
+        <span class="str">"items"</span>: [<span class="str">"安全帽"</span>, <span class="str">"绝缘手套"</span>, <span class="str">"护目镜"</span>, <span class="str">"安全带"</span>],
+        <span class="str">"output"</span>: <span class="str">"checklist_json"</span>
+    }),
+    (<span class="str">"距离估算工具"</span>, <span class="str">"distance_estimation"</span>, {
+        <span class="str">"method"</span>: <span class="str">"depth_estimation"</span>,
+        <span class="str">"thresholds"</span>: {<span class="str">"10kV"</span>: <span class="num">0.7</span>, <span class="str">"35kV"</span>: <span class="num">1.0</span>, <span class="str">"110kV"</span>: <span class="num">1.5</span>}
+    }),
+]</div>
+</div>
+
+<h4>三种模式安全检测对比</h4>
+<p>测试场景：10kV配电室检修现场，2名作业人员，1人未戴绝缘手套，围栏缺少一面，0.5m处有非作业人员</p>
+
+<table class="compare-table">
+<tr><th>模式</th><th>检测能力</th><th>安全场景优势</th></tr>
+<tr><td>NATIVE</td><td>直接理解现场照片</td><td>能发现PPE检测不到的问题（如手套破损、安全带未扣紧）</td></tr>
+<tr><td>EXTRACT</td><td>PPE标签+环境标签</td><td>快速批量检测PPE佩戴，适合人员众多场景</td></tr>
+<tr><td>TOOL</td><td>结构化违规清单</td><td>可直接对接工单系统，触发整改流程</td></tr>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">安全场景推荐：TOOL做初筛 + NATIVE复核高风险场景</div>
+<div class="pc-body">
+安全无小事，但也不能让每个细节都人工复核。最佳实践：<br>
+- <strong>TOOL模式</strong>做日常初筛：自动检测PPE佩戴、安全距离、围栏完整性<br>
+- <strong>NATIVE模式</strong>复核高风险场景：对初筛发现的异常，用多模态LLM仔细确认<br>
+- <strong>EXTRACT模式</strong>辅助：快速提取安全标签和文档信息<br><br>
+拓展：电力设备智能巡检（变压器渗油、油位偏低、呼吸器硅胶变色等）
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s135">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 原理层</div>
+<h2>课题13.5: MCP工具协议演示</h2>
+<p>MCP (Model Context Protocol) — 让Agent以标准化方式连接外部工具和数据源</p>
+</div>
+
+<div class="topic-card" id="s135-1">
+<h3>步骤1: MCP协议概念</h3>
+
+<div class="flow-diagram">┌──────────────┐  MCP协议   ┌──────────────┐
+│  AI应用      │ ◄────────► │  MCP Server  │
+│  (TeleAgent) │  JSON-RPC  │  (工具服务)   │
+└──────────────┘            └──────────────┘
+      │                           │
+      │ 可连接多个Server           │ 可提供多个Tool
+      ├─► 感知服务器              ├─► web_search
+      ├─► 执行服务器              ├─► code_execute
+      └─► 协作服务器              └─► send_notification
+
+核心流程：
+  1. Client → Server: 连接（connect）
+  2. Client → Server: 发现工具（discover_tools）
+  3. Client → Server: 调用工具（call_tool）
+  4. Server → Client: 返回结果</div>
+
+<div class="principle-card">
+<div class="pc-title">MCP的核心价值：标准化、可插拔、安全、生态</div>
+<div class="pc-body">
+- <strong>标准化</strong>：统一工具接口协议，任何Agent都能使用任何MCP工具<br>
+- <strong>可插拔</strong>：工具服务器独立部署，按需组合，新增工具无需修改Agent代码<br>
+- <strong>安全</strong>：工具执行有安全沙箱和审批机制<br>
+- <strong>生态</strong>：社区共享工具服务器，形成工具生态
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s135-2">
+<h3>步骤2: 三大工具类型</h3>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">📡</div>
+<div class="cc-name">感知工具</div>
+<div class="cc-desc">获取外部信息：web_search, image_analyze, file_read, database_query</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">⚙️</div>
+<div class="cc-name">执行工具</div>
+<div class="cc-desc">执行操作和代码：code_execute, file_write, chart_generate</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">🤝</div>
+<div class="cc-name">协作工具</div>
+<div class="cc-desc">通知、审批和人机协同：send_notification, request_approval, schedule_task</div>
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - MCP工具调用演示</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">mcp = <span class="cls">MCPClient</span>()
+mcp.<span class="fn">connect</span>(<span class="str">"mcp://teleagent-perception:3001"</span>)
+tools = mcp.<span class="fn">discover_tools</span>()
+
+<span class="com"># 感知工具调用</span>
+perception_server.<span class="fn">call_tool</span>(<span class="str">"web_search"</span>, {<span class="str">"query"</span>: <span class="str">"2026年电信行业数字化转型政策"</span>})
+perception_server.<span class="fn">call_tool</span>(<span class="str">"image_analyze"</span>, {<span class="str">"image_url"</span>: <span class="str">"https://example.com/pcb.jpg"</span>, <span class="str">"prompt"</span>: <span class="str">"检测缺陷"</span>})
+
+<span class="com"># 执行工具调用</span>
+execution_server.<span class="fn">call_tool</span>(<span class="str">"code_execute"</span>, {<span class="str">"code"</span>: <span class="str">"import pandas as pd\ndf = pd.read_csv('data.csv')\nprint(df.describe())"</span>})
+execution_server.<span class="fn">call_tool</span>(<span class="str">"chart_generate"</span>, {<span class="str">"data"</span>: {...}, <span class="str">"chart_type"</span>: <span class="str">"bar"</span>})
+
+<span class="com"># 协作工具调用</span>
+collaboration_server.<span class="fn">call_tool</span>(<span class="str">"send_notification"</span>, {<span class="str">"channel"</span>: <span class="str">"dingtalk"</span>, <span class="str">"message"</span>: <span class="str">"产线A缺陷率超过阈值"</span>})
+collaboration_server.<span class="fn">call_tool</span>(<span class="str">"request_approval"</span>, {<span class="str">"task"</span>: <span class="str">"批量返工工单审批"</span>, <span class="str">"risk_level"</span>: <span class="str">"medium"</span>})</div>
+</div>
+</div>
+
+<div class="topic-card" id="s135-3">
+<h3>步骤3-4: MCP集成 + 事件驱动Agent</h3>
+
+<div class="flow-diagram">传统模式：人看报表 → 人发现问题 → 人写邮件 → 人等审批 → 人下工单
+MCP模式：  数据异常 → Agent自动检测 → Agent调工具分析 → Agent发告警 → Agent等审批 → Agent下工单
+
+关键变化：
+  - 从「人驱动」变成「事件驱动」
+  - 从「一个一个操作」变成「全自动链路」
+  - 人只做关键决策（审批），其余AI自动完成</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 事件驱动Agent</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">evt_agent = <span class="cls">EventDrivenAgent</span>(name=<span class="str">"生产监控Agent"</span>, client=client)
+
+<span class="com"># 注册事件处理器</span>
+evt_agent.<span class="fn">register_handler</span>(<span class="str">"data_alert"</span>,
+    <span class="kw">lambda</span> e: <span class="fn">print</span>(<span class="str">f"📊 数据告警: </span>{e.data.<span class="fn">get</span>(<span class="str">'metric'</span>)}<span class="str">=</span>{e.data.<span class="fn">get</span>(<span class="str">'value'</span>)}<span class="str">"</span>))
+evt_agent.<span class="fn">register_handler</span>(<span class="str">"approval_result"</span>,
+    <span class="kw">lambda</span> e: <span class="fn">print</span>(<span class="str">f"✅ 审批结果: </span>{e.data.<span class="fn">get</span>(<span class="str">'decision'</span>)}<span class="str">"</span>))
+
+<span class="com"># 模拟事件流</span>
+alert_event = <span class="cls">EventDrivenAgent</span>.<span class="cls">Event</span>(
+    event_type=<span class="str">"data_alert"</span>,
+    source=<span class="str">"生产监控系统"</span>,
+    data={<span class="str">"metric"</span>: <span class="str">"缺陷率"</span>, <span class="str">"value"</span>: <span class="str">"5.2%"</span>, <span class="str">"threshold"</span>: <span class="str">"3%"</span>, <span class="str">"line"</span>: <span class="str">"产线A"</span>}
+)
+evt_agent.<span class="fn">emit_event</span>(alert_event)
+
+<span class="com"># Agent自动推理流程：</span>
+<span class="com"># 1. 检测到缺陷率5.2%超过阈值3%</span>
+evt_agent.<span class="fn">add_todo</span>(<span class="str">"查询缺陷率趋势数据"</span>, <span class="str">"high"</span>)
+<span class="com"># 2. 通过MCP感知工具查询近1小时缺陷率趋势</span>
+evt_agent.<span class="fn">add_todo</span>(<span class="str">"运行异常归因分析"</span>, <span class="str">"high"</span>)
+<span class="com"># 3. 通过MCP执行工具运行Python做异常归因分析</span>
+evt_agent.<span class="fn">add_todo</span>(<span class="str">"发送告警+请求返工审批"</span>, <span class="str">"high"</span>)
+<span class="com"># 4. 通过MCP协作工具发送告警通知+请求审批</span>
+
+<span class="com"># 审批回调</span>
+approval_event = <span class="cls">EventDrivenAgent</span>.<span class="cls">Event</span>(
+    event_type=<span class="str">"approval_result"</span>,
+    source=<span class="str">"审批系统"</span>,
+    data={<span class="str">"decision"</span>: <span class="str">"approved"</span>, <span class="str">"approver"</span>: <span class="str">"产线主管王工"</span>}
+)
+evt_agent.<span class="fn">emit_event</span>(approval_event)
+<span class="com"># → 审批通过，自动触发返工工单创建</span></div>
+</div>
+
+<div class="principle-card green">
+<div class="pc-title">MCP + 事件驱动 = 智能自动化</div>
+<div class="pc-body">
+传统模式：人看报表 → 人发现问题 → 人写邮件 → 人等审批 → 人下工单<br>
+MCP模式：数据异常 → Agent自动检测 → Agent调工具分析 → Agent发告警 → Agent等审批 → Agent下工单<br><br>
+关键变化：<br>
+- 从「人驱动」变成「事件驱动」<br>
+- 从「一个一个操作」变成「全自动链路」<br>
+- 人只做关键决策（审批），其余AI自动完成
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="quiz">
+<div class="section-header">
+<div class="section-tag afternoon">总结</div>
+<h2>课堂测验</h2>
+</div>
+
+<div class="topic-card">
+<div class="quiz-box">
+<div class="quiz-q">Q1: 产线质检场景推荐使用哪种多模态模式组合？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 全部使用NATIVE模式</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. TOOL为主 + NATIVE复核疑难件</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 全部使用EXTRACT模式</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 不需要多模态</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q2: 代码解释器让BI助手从「描述性分析」升级到「推断性分析」，核心区别是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 速度更快</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. 描述性只陈述事实（良品率92.3%），推断性可做统计推断（p=0.003，显著正相关）</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 支持更多数据格式</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 不需要人工确认</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q3: MCP协议的核心价值是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 让LLM更聪明</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">B. 替代所有API</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">C. 标准化工具接口，让任何Agent都能使用任何MCP工具，可插拔、安全、生态</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 减少Token消耗</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="preview">
+<div class="summary-card">
+<h3>Day 4 总结</h3>
+<p>今天我们掌握了三种多模态处理模式（NATIVE/EXTRACT/TOOL）及其适用场景、BI分析+代码解释器、精准营销RFM模型、舆情分析、CV质检和安全检测，以及MCP工具协议和事件驱动Agent。</p>
+<p style="font-size:13px;color:var(--accent2)">核心收获：TOOL为主NATIVE复核 | 代码解释器=推断性分析 | MCP+事件驱动=智能自动化</p>
+</div>
+
+<div class="summary-card">
+<h3>Day 5 预告：复杂智能体评估与路演</h3>
+<p>明天将进入最综合的一天——5智能体政务工作流、4智能体治理工作流、事件驱动Agent实战、消融评估，以及最终的综合路演展示！</p>
+<p style="font-size:13px;color:var(--accent)">课题14: 5-Agent政务工作流 | 课题15: 4-Agent治理 | 课题16: 事件驱动实战 | 课题17: 消融评估 | 课题18: 综合路演</p>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+<p>区县AI赋能培训 · Day 4 · 数据分析与多模态场景</p>
+<p>5天22个实战课题 · 从理论到路演 · 2026年7月</p>
+</div>
+</div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function navClick(el){document.getElementById('sidebar').classList.remove('open');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active')}
+function copyCode(btn){const code=btn.closest('.code-block').querySelector('.code-body').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='已复制!';setTimeout(()=>btn.textContent='复制',1500)})}
+function checkQuiz(el,correct){const box=el.closest('.quiz-box');box.querySelectorAll('.quiz-a').forEach(a=>{a.style.pointerEvents='none';if(a===el){a.classList.add(correct?'correct':'wrong')}else if(correct&&a!==el){}});if(!correct){const answers=box.querySelectorAll('.quiz-a');answers.forEach(a=>{if(!a.classList.contains('wrong'))a.style.opacity='0.4'})}}
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;const p=h>0?Math.round(window.scrollY/h*100):0;document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressText').textContent=p+'%';
+const sections=document.querySelectorAll('.section');let active=null;sections.forEach(s=>{if(s.getBoundingClientRect().top<120)active=s});if(active){document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.getAttribute('href')==='#'+active.id)})}});
+</script>
+</body>
+</html>

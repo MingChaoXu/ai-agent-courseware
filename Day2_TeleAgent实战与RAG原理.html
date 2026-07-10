@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 2 - TeleAgent实战入门 | 区县AI赋能培训</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f7fa;--bg2:#ffffff;--bg3:#eef2f7;--sidebar:#ffffff;--accent:#2563eb;--accent2:#059669;--accent3:#d97706;--accent4:#dc2626;--accent5:#7c3aed;--text:#1e293b;--text2:#475569;--text3:#94a3b8;--border:#e2e8f0;--card:#dbeafe;--code-bg:#f8fafc;--success:#059669;--warning:#d97706;--danger:#dc2626}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;display:flex;min-height:100vh}
+.sidebar{width:280px;min-width:280px;background:var(--sidebar);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar-header{padding:20px;border-bottom:1px solid var(--border)}
+.sidebar-header .day-badge{display:inline-block;background:linear-gradient(135deg,#4a9eff,#36d399);color:#fff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.sidebar-header h2{font-size:15px;color:var(--text);font-weight:700;margin-bottom:4px}
+.sidebar-header p{font-size:11px;color:var(--text3)}
+.sidebar-nav{padding:12px 0}
+.nav-group{margin-bottom:8px}
+.nav-group-title{padding:8px 20px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.nav-item{display:block;padding:8px 20px 8px 32px;color:var(--text2);text-decoration:none;font-size:13px;transition:all .2s;border-left:3px solid transparent;cursor:pointer}
+.nav-item:hover{color:var(--text);background:rgba(74,158,255,.08);border-left-color:var(--accent)}
+.nav-item.active{color:var(--accent);background:rgba(74,158,255,.12);border-left-color:var(--accent);font-weight:600}
+.nav-item .time-badge{float:right;font-size:10px;background:var(--bg3);padding:1px 6px;border-radius:8px;color:var(--text3)}
+.main{margin-left:280px;flex:1;min-width:0}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:12px 30px;display:flex;align-items:center;gap:16px}
+.topbar .menu-btn{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer}
+.topbar h1{font-size:16px;font-weight:700;flex:1}
+.progress-wrap{width:200px;display:flex;align-items:center;gap:8px}
+.progress-bar{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .5s;width:0%}
+.progress-text{font-size:11px;color:var(--text3);min-width:32px;text-align:right}
+.content{padding:30px;max-width:1100px}
+.section{margin-bottom:50px;scroll-margin-top:70px}
+.section-header{margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--border)}
+.section-header .section-tag{display:inline-block;padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+.section-header .section-tag.morning{background:rgba(245,158,11,.15);color:var(--accent3)}
+.section-header .section-tag.afternoon{background:rgba(99,102,241,.15);color:#818cf8}
+.section-header h2{font-size:26px;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-header p{color:var(--text2);font-size:14px}
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:24px}
+.topic-card h3{font-size:18px;font-weight:700;margin-bottom:12px;color:var(--accent)}
+.topic-card h4{font-size:15px;font-weight:700;margin:16px 0 8px;color:var(--text)}
+.topic-card p{color:var(--text2);font-size:14px;margin-bottom:10px}
+.topic-card ul,.topic-card ol{margin:8px 0 12px 20px;color:var(--text2);font-size:14px}
+.topic-card li{margin-bottom:5px}
+.principle-card{background:var(--card);border:1px solid var(--accent);border-radius:10px;padding:18px 20px;margin:16px 0;position:relative;overflow:hidden}
+.principle-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent)}
+.principle-card .pc-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.principle-card .pc-body{font-size:13px;color:var(--text2);line-height:1.8}
+.principle-card .pc-body code{background:rgba(74,158,255,.12);color:var(--accent);padding:1px 5px;border-radius:3px;font-size:12px;font-family:'Fira Code',monospace}
+.principle-card.warn{border-color:var(--accent3);background:rgba(245,158,11,.06)}
+.principle-card.warn::before{background:var(--accent3)}
+.principle-card.warn .pc-title{color:var(--accent3)}
+.principle-card.green{border-color:var(--accent2);background:rgba(54,211,153,.06)}
+.principle-card.green::before{background:var(--accent2)}
+.principle-card.green .pc-title{color:var(--accent2)}
+.step-block{margin:16px 0;padding:16px 20px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent2)}
+.step-block .step-num{display:inline-block;background:var(--accent2);color:var(--bg);width:24px;height:24px;border-radius:50%;text-align:center;line-height:24px;font-size:12px;font-weight:700;margin-right:8px}
+.step-block h4{display:inline;font-size:14px;font-weight:700;color:var(--accent2)}
+.step-block p{margin-top:8px;font-size:13px;color:var(--text2)}
+.code-block{position:relative;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.code-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--code-bg);border-bottom:1px solid var(--border)}
+.code-header .lang-badge{font-size:11px;color:var(--accent);font-weight:600;background:rgba(74,158,255,.1);padding:2px 8px;border-radius:4px}
+.code-header .copy-btn{background:none;border:1px solid var(--border);color:var(--text3);padding:2px 10px;border-radius:4px;font-size:11px;cursor:pointer;transition:all .2s}
+.code-header .copy-btn:hover{color:var(--accent);border-color:var(--accent)}
+.code-body{padding:16px;background:var(--code-bg);overflow-x:auto;font-family:'Fira Code','Consolas',monospace;font-size:12.5px;line-height:1.65;tab-size:4;white-space:pre;color:#334155}
+.code-body .kw{color:#cf222e}
+.code-body .fn{color:#8250df}
+.code-body .str{color:#0a3069}
+.code-body .com{color:#6e7781;font-style:italic}
+.code-body .num{color:#0550ae}
+.code-body .cls{color:#953800}
+.code-body .dec{color:#116329}
+.code-body .op{color:#cf222e}
+.code-body .fstr{color:#0a3069}
+.compare-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px}
+.compare-table th{background:var(--card);color:var(--accent);padding:10px 14px;text-align:left;font-weight:600;border-bottom:2px solid var(--accent);font-size:12px}
+.compare-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text2)}
+.compare-table tr:hover td{background:rgba(74,158,255,.05)}
+.compare-table td:first-child{color:var(--text);font-weight:600;white-space:nowrap}
+.flow-diagram{background:var(--code-bg);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;font-family:'Fira Code',monospace;font-size:12px;color:var(--accent2);white-space:pre;overflow-x:auto;line-height:1.5}
+.tips-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:16px 20px;margin:16px 0}
+.tips-box .tips-title{font-size:13px;font-weight:700;color:var(--accent3);margin-bottom:8px}
+.tips-box p{font-size:13px;color:var(--text2);margin-bottom:4px}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin:16px 0}
+.concept-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;transition:all .2s}
+.concept-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.concept-card .cc-icon{font-size:24px;margin-bottom:6px}
+.concept-card .cc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.concept-card .cc-desc{font-size:11px;color:var(--text3);line-height:1.6}
+.metric-bar{display:flex;align-items:center;gap:10px;margin:6px 0}
+.metric-bar .label{min-width:140px;font-size:12px;color:var(--text2)}
+.metric-bar .bar{flex:1;height:18px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.metric-bar .fill{height:100%;border-radius:4px;transition:width .8s}
+.metric-bar .val{min-width:60px;font-size:12px;color:var(--text);font-weight:600;text-align:right}
+.quiz-box{background:var(--card);border:1px solid var(--accent5);border-radius:10px;padding:18px 20px;margin:16px 0}
+.quiz-box .quiz-q{font-size:14px;font-weight:700;color:var(--accent5);margin-bottom:8px}
+.quiz-box .quiz-a{font-size:13px;color:var(--text2);margin-bottom:6px;cursor:pointer;padding:6px 10px;border-radius:6px;transition:all .2s;border:1px solid transparent}
+.quiz-box .quiz-a:hover{background:rgba(167,139,250,.1);border-color:var(--accent5)}
+.quiz-box .quiz-a.correct{background:rgba(16,185,129,.15);border-color:var(--success);color:var(--success)}
+.quiz-box .quiz-a.wrong{background:rgba(239,68,68,.1);border-color:var(--danger);color:var(--danger)}
+.summary-card{background:linear-gradient(135deg,var(--card),var(--bg2));border:1px solid var(--accent);border-radius:14px;padding:30px;margin:30px 0;text-align:center}
+.summary-card h3{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:12px}
+.summary-card p{font-size:14px;color:var(--text2);max-width:600px;margin:0 auto 16px}
+.footer{margin-top:50px;padding:30px 0;border-top:1px solid var(--border);text-align:center}
+.footer p{font-size:12px;color:var(--text3)}
+@media(max-width:900px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0}
+.topbar .menu-btn{display:block}
+}
+@media(max-width:600px){
+.content{padding:16px}
+.concept-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="day-badge">DAY 2 / 5</div>
+<h2>TeleAgent实战入门</h2>
+<p>上午：ReAct原理+政务+工业 | 下午：RAG深入+医疗+压缩</p>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-group">
+<div class="nav-group-title">上午 · 实战入门</div>
+<a class="nav-item" href="#s0" onclick="navClick(this)">课题0: ReAct循环原理实验<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s0-1" onclick="navClick(this)">├ Agent核心框架</a>
+<a class="nav-item" href="#s0-2" onclick="navClick(this)">├ 运行ReAct循环</a>
+<a class="nav-item" href="#s0-3" onclick="navClick(this)">└ 上下文消融实验</a>
+<a class="nav-item" href="#s1" onclick="navClick(this)">课题1: 政务服务智能问答<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s1-1" onclick="navClick(this)">├ 初始化客户端</a>
+<a class="nav-item" href="#s1-2" onclick="navClick(this)">├ 创建智能体+知识库</a>
+<a class="nav-item" href="#s1-3" onclick="navClick(this)">└ RAG技能+多轮测试</a>
+<a class="nav-item" href="#s2" onclick="navClick(this)">课题2: 工业知识库<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s2-1" onclick="navClick(this)">├ 创建工业智能体</a>
+<a class="nav-item" href="#s2-2" onclick="navClick(this)">└ 知识问答测试</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">下午 · RAG原理深入</div>
+<a class="nav-item" href="#s2_5" onclick="navClick(this)">课题2.5: RAG原理深入<span class="time-badge">30min</span></a>
+<a class="nav-item" href="#s2_5-1" onclick="navClick(this)">├ 稠密嵌入原理</a>
+<a class="nav-item" href="#s2_5-2" onclick="navClick(this)">├ 三种检索策略对比</a>
+<a class="nav-item" href="#s2_5-3" onclick="navClick(this)">└ 被动RAG vs Agentic RAG</a>
+<a class="nav-item" href="#s3" onclick="navClick(this)">课题3: 病历生成<span class="time-badge">20min</span></a>
+<a class="nav-item" href="#s3-1" onclick="navClick(this)">├ 创建病历智能体</a>
+<a class="nav-item" href="#s3-2" onclick="navClick(this)">└ 病历生成测试</a>
+<a class="nav-item" href="#s3_5" onclick="navClick(this)">课题3.5: 上下文压缩<span class="time-badge">25min</span></a>
+<a class="nav-item" href="#s3_5-1" onclick="navClick(this)">├ 6种压缩策略演示</a>
+<a class="nav-item" href="#s3_5-2" onclick="navClick(this)">├ 压缩率vs信息保留</a>
+<a class="nav-item" href="#s3_5-3" onclick="navClick(this)">└ 政务场景实战</a>
+</div>
+<div class="nav-group">
+<div class="nav-group-title">总结与测验</div>
+<a class="nav-item" href="#quiz" onclick="navClick(this)">课堂测验</a>
+<a class="nav-item" href="#preview" onclick="navClick(this)">Day 3 预告</a>
+</div>
+</nav>
+</aside>
+
+<div class="main">
+<div class="topbar">
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
+<h1>Day 2 · TeleAgent实战入门 + 知识库与RAG原理</h1>
+<div class="progress-wrap">
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<span class="progress-text" id="progressText">0%</span>
+</div>
+</div>
+
+<div class="content">
+
+<div class="section" id="s0">
+<div class="section-header">
+<div class="section-tag morning">上午 · 原理层</div>
+<h2>课题0: ReAct循环原理实验</h2>
+<p>深入理解 Agent = LLM + Context + Tools 的核心运行机制，通过模拟器观察推理-行动-观察循环</p>
+</div>
+
+<div class="topic-card" id="s0-1">
+<h3>步骤1: 理解Agent核心框架</h3>
+<p>Agent的核心公式非常简洁，却蕴含了智能体的全部奥秘：</p>
+
+<div class="principle-card">
+<div class="pc-title">核心公式：Agent = LLM + Context + Tools</div>
+<div class="pc-body">
+三大组件缺一不可：<br>
+<strong>1) LLM（大语言模型）</strong>：Agent的「大脑」，负责推理和决策。没有LLM，Agent无法理解问题、无法规划行动、无法生成回答。<br>
+<strong>2) Context（上下文）</strong>：Agent的「工作记忆」，包括对话历史、系统提示、工具返回结果。没有Context，Agent每轮都是「失忆」状态，无法维持多轮对话。<br>
+<strong>3) Tools（工具）</strong>：Agent的「双手」，可调用的外部工具集（搜索、计算、数据库查询等）。没有Tools，Agent只能纯文本对话，无法与外部世界交互。<br><br>
+<code>Agent = LLM + Context + Tools</code> 不是一个简单的加法，而是一个<strong>涌现系统</strong>——三者协同产生的智能远大于各自之和。这就像人 = 大脑 + 记忆 + 双手，缺了任何一项都无法独立行动。
+</div>
+</div>
+
+<div class="flow-diagram">
+┌─────────────────────────────────────────────────┐
+│                Agent 运行循环                     │
+│                                                  │
+│  ┌─────────┐     ┌──────────┐     ┌──────────┐  │
+│  │   LLM   │ ◄── │ Context  │ ◄── │  Tools   │  │
+│  │  (推理)  │ ──► │ (上下文)  │ ──► │  (工具)  │  │
+│  └─────────┘     └──────────┘     └──────────┘  │
+│       │               ▲                │         │
+│       │               │                │         │
+│       ▼               │                ▼         │
+│   Thought ──► Action ──► Observation             │
+│       │                                    │      │
+│       └──────► 更新Context ◄───────────────┘      │
+│                                                  │
+│  ReAct循环：每轮 = Thought → Action → Observation  │
+│  循环直到得到最终答案或达到最大迭代次数             │
+└─────────────────────────────────────────────────┘</div>
+
+<p>ReAct (Reasoning + Acting) 是目前最主流的Agent运行模式。它的核心思想是：Agent在每一步都先「思考(Thought)」再「行动(Action)」，然后「观察(Observation)」结果，再基于观察继续思考。这种「思考→行动→观察→再思考」的循环，让Agent能够处理复杂的多步推理问题。</p>
+
+<div class="principle-card green">
+<div class="pc-title">关键洞察：为什么ReAct比纯推理更好？</div>
+<div class="pc-body">
+纯推理（Chain-of-Thought）只靠LLM内部知识，遇到需要外部信息的问题就会产生<strong>幻觉</strong>（编造事实）。ReAct通过「行动」步骤让Agent可以查询外部知识、调用工具计算，从而获得<strong>真实的外部信息</strong>，大幅减少幻觉。<br><br>
+举例：用户问「2026年苏州公积金最新政策是什么？」<br>
+❌ 纯推理：LLM只能基于训练数据猜测，很可能编造过期政策<br>
+✅ ReAct：Agent搜索官方政策文档 → 获取真实信息 → 基于事实回答
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">def</span> <span class="fn">exercise0_step1_demo_agent_framework</span>():
+    <span class="str">"""步骤1: 演示 Agent = 模型 + 上下文 + 工具 框架"""</span>
+    <span class="fn">print</span>(<span class="str">"=" * 60</span>)
+    <span class="fn">print</span>(<span class="str">"课题0: ReAct循环原理实验"</span>)
+    <span class="fn">print</span>(<span class="str">"步骤1: 理解Agent核心框架"</span>)
+    <span class="fn">print</span>(<span class="str">"=" * 60</span>)
+
+    <span class="com"># Agent核心公式</span>
+    <span class="fn">print</span>(<span class="str">"""
+    Agent 核心公式：
+
+        Agent = LLM + Context + Tools
+
+    三大组件：
+    1) LLM：大语言模型，负责推理和决策
+    2) Context：对话历史+系统提示+工具结果
+    3) Tools：可调用的外部工具集
+
+    ReAct (Reasoning + Acting) 循环：
+    每轮迭代 = Thought → Action → Observation
+    循环直到得到最终答案或达到最大迭代次数
+    """</span>)
+
+    <span class="fn">print</span>(<span class="str">"关键洞察："</span>)
+    <span class="fn">print</span>(<span class="str">"  - 没有LLM：无法推理，Agent无智能"</span>)
+    <span class="fn">print</span>(<span class="str">"  - 没有Context：无法记忆，每轮都是「失忆」状态"</span>)
+    <span class="fn">print</span>(<span class="str">"  - 没有Tools：无法行动，只能纯文本对话"</span>)
+    <span class="fn">print</span>(<span class="str">"  - 三者缺一不可，组合才能产生真正的Agent行为"</span>)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s0-2">
+<h3>步骤2: 运行完整ReAct循环</h3>
+<p>我们用一个政务场景来演示ReAct循环的完整过程。用户问的是「外地户口迁苏州，社保能一起转吗？」——这个问题需要综合查询户口迁移政策和社保转移政策，还要做数值判断（社保年限是否满足），恰好展示了ReAct多轮推理的优势。</p>
+
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>迭代1：识别核心问题</h4>
+<p>Thought: 用户问的是户口迁移的条件，我需要先搜索苏州户口迁移政策<br>
+Action: 搜索("苏州户口迁移")<br>
+Observation: 苏州市户口迁移需满足：1)合法稳定住所；2)参加社保满3年；3)无犯罪记录。办理地点：辖区派出所户籍窗口。</p>
+</div>
+
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>迭代2：发现需要量化判断</h4>
+<p>Thought: 搜索结果提到需要社保满3年，我来算一下用户2018年开始交社保到现在够不够3年<br>
+Action: 计算器("2026 - 2018")<br>
+Observation: 计算结果: 8</p>
+</div>
+
+<div class="step-block">
+<span class="step-num">3</span>
+<h4>迭代3：发现关联问题</h4>
+<p>Thought: 已交社保8年，满足3年条件。再搜索一下社保转移能否同步办理<br>
+Action: 搜索("苏州社保转移")<br>
+Observation: 苏州社保转移流程：1)原参保地开具参保凭证；2)新参保地提交转移申请；3)45个工作日内完成转移。线上可通过国家社会保险公共服务平台办理。</p>
+</div>
+
+<div class="step-block">
+<span class="step-num">4</span>
+<h4>迭代4：信息充分，输出答案</h4>
+<p>Thought: 现在信息足够了，可以综合回答<br>
+Action: 完成("根据查询结果：1)户口迁移需合法稳定住所+社保满3年+无犯罪记录（您已交8年社保，满足条件）；2)社保转移可同步在线办理，通过国家社会保险公共服务平台，45个工作日完成。")</p>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">ReAct循环解析：为什么需要4轮迭代？</div>
+<div class="pc-body">
+- <strong>第1轮</strong>：识别核心问题（户口迁移）→ 调用搜索工具获取政策<br>
+- <strong>第2轮</strong>：发现需要量化判断（社保年限是否满3年）→ 调用计算器工具<br>
+- <strong>第3轮</strong>：发现关联问题（社保转移能否同步办）→ 再次搜索补充信息<br>
+- <strong>第4轮</strong>：信息充分 → 综合输出最终答案<br><br>
+这种「思考→行动→观察→再思考」的循环就是ReAct的核心。注意第2轮和第3轮：Agent不是一次性搜索所有信息，而是在每轮观察后<strong>动态决定下一步</strong>需要什么。这就是ReAct与一次性检索的关键区别——ReAct是<strong>渐进式推理</strong>，每一步都基于前一步的观察结果。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">def</span> <span class="fn">exercise0_step2_run_react_loop</span>():
+    <span class="str">"""步骤2: 用模拟器跑完整的ReAct循环"""</span>
+
+    <span class="com"># 定义模拟工具</span>
+    <span class="kw">def</span> <span class="fn">mock_search</span>(query: <span class="cls">str</span>) -> <span class="cls">str</span>:
+        mock_data = {
+            <span class="str">"苏州户口迁移"</span>: <span class="str">"苏州市户口迁移需满足：1)合法稳定住所；2)参加社保满3年；3)无犯罪记录。办理地点：辖区派出所户籍窗口。"</span>,
+            <span class="str">"苏州社保转移"</span>: <span class="str">"苏州社保转移流程：1)原参保地开具参保凭证；2)新参保地提交转移申请；3)45个工作日内完成转移。线上可通过国家社会保险公共服务平台办理。"</span>,
+            <span class="str">"苏州公积金"</span>: <span class="str">"苏州公积金提取条件：购房、租房、退休、离职等。购房提取额度为账户余额的90%。"</span>,
+        }
+        <span class="kw">for</span> key, value <span class="kw">in</span> mock_data.items():
+            <span class="kw">if</span> <span class="fn">any</span>(k <span class="kw">in</span> query <span class="kw">for</span> k <span class="kw">in</span> key):
+                <span class="kw">return</span> value
+        <span class="kw">return</span> <span class="str">f"未找到与「</span>{query}<span class="str">」直接相关的结果"</span>
+
+    <span class="kw">def</span> <span class="fn">mock_calculator</span>(expression: <span class="cls">str</span>) -> <span class="cls">str</span>:
+        <span class="kw">try</span>:
+            allowed = <span class="fn">set</span>(<span class="str">"0123456789+-*/().% "</span>)
+            <span class="kw">if</span> <span class="fn">all</span>(c <span class="kw">in</span> allowed <span class="kw">for</span> c <span class="kw">in</span> expression):
+                <span class="kw">return</span> <span class="str">f"计算结果: </span>{<span class="fn">eval</span>(expression)}<span class="str">"</span>
+            <span class="kw">return</span> <span class="str">"表达式包含不允许的字符"</span>
+        <span class="kw">except</span> <span class="cls">Exception</span>:
+            <span class="kw">return</span> <span class="str">"计算错误，请检查表达式格式"</span>
+
+    tools = {
+        <span class="str">"搜索"</span>: mock_search,
+        <span class="str">"计算器"</span>: mock_calculator,
+    }
+
+    sim = <span class="fn">ReActLoopSimulator</span>(tools=tools, max_iterations=<span class="num">5</span>, verbose=<span class="kw">True</span>)
+
+    <span class="com"># 预设的推理计划（模拟LLM的推理过程）</span>
+    iteration_plan = [
+        {<span class="str">"thought"</span>: <span class="str">"用户问的是户口迁移的条件，我需要先搜索苏州户口迁移政策"</span>,
+         <span class="str">"action"</span>: <span class="str">"搜索"</span>, <span class="str">"action_input"</span>: <span class="str">"苏州户口迁移"</span>},
+        {<span class="str">"thought"</span>: <span class="str">"搜索结果提到需要社保满3年，我来算一下用户2018年开始交社保到现在够不够3年"</span>,
+         <span class="str">"action"</span>: <span class="str">"计算器"</span>, <span class="str">"action_input"</span>: <span class="str">"2026 - 2018"</span>},
+        {<span class="str">"thought"</span>: <span class="str">"已交社保8年，满足3年条件。再搜索一下社保转移能否同步办理"</span>,
+         <span class="str">"action"</span>: <span class="str">"搜索"</span>, <span class="str">"action_input"</span>: <span class="str">"苏州社保转移"</span>},
+        {<span class="str">"thought"</span>: <span class="str">"现在信息足够了，可以综合回答"</span>,
+         <span class="str">"action"</span>: <span class="str">"完成"</span>, <span class="str">"action_input"</span>: <span class="str">"根据查询结果：1)户口迁移需合法稳定住所+社保满3年+无犯罪记录（您已交8年社保，满足条件）；2)社保转移可同步在线办理"</span>},
+    ]
+
+    question = <span class="str">"我是外地户口在苏州工作8年，想把户口迁过来，社保能一起转吗？"</span>
+    context = <span class="str">f"问题：</span>{question}<span class="str">\n\n请使用 Thought-Action-Observation 格式推理。"</span>
+    sim.history = []
+
+    <span class="fn">print</span>(<span class="str">f"\n用户问题: </span>{question}<span class="str">"</span>)
+    <span class="kw">for</span> i, plan <span class="kw">in</span> <span class="fn">enumerate</span>(iteration_plan):
+        <span class="fn">print</span>(<span class="str">f"\n--- 迭代 </span>{i + <span class="num">1</span>}<span class="str"> ---"</span>)
+        thought = plan[<span class="str">"thought"</span>]
+        action = plan[<span class="str">"action"</span>]
+        action_input = plan[<span class="str">"action_input"</span>]
+
+        <span class="fn">print</span>(<span class="str">f"Thought: </span>{thought}<span class="str">"</span>)
+        <span class="fn">print</span>(<span class="str">f"Action: </span>{action}<span class="str">(</span>{action_input}<span class="str">)"</span>)
+
+        <span class="kw">if</span> action == <span class="str">"完成"</span>:
+            <span class="fn">print</span>(<span class="str">f"最终答案: </span>{action_input}<span class="str">"</span>)
+            <span class="kw">break</span>
+
+        observation = sim.tools[action](action_input)
+        <span class="fn">print</span>(<span class="str">f"Observation: </span>{observation}<span class="str">"</span>)
+
+        step = <span class="cls">ReActStep</span>(
+            iteration=i + <span class="num">1</span>,
+            thought=thought,
+            action=action,
+            action_input=action_input,
+            observation=observation,
+            tokens_used=<span class="fn">len</span>(context) // <span class="num">4</span>,
+        )
+        sim.history.<span class="fn">append</span>(step)
+        context += <span class="str">f"\nThought: </span>{thought}<span class="str">\nAction: </span>{action}<span class="str">[</span>{action_input}<span class="str">]\nObservation: </span>{observation}<span class="str">"</span>
+
+    <span class="kw">return</span> sim</div>
+</div>
+</div>
+
+<div class="topic-card" id="s0-3">
+<h3>步骤3: 上下文消融实验</h3>
+<p>消融实验（Ablation Study）是理解Agent组件重要性的关键方法：逐个移除上下文中的不同部分，观察Agent能力如何退化。这就像拆解一台机器看每个零件的作用。</p>
+
+<div class="principle-card">
+<div class="pc-title">消融实验原理：验证组件不可替代性</div>
+<div class="pc-body">
+消融实验的逻辑非常简单：<br>
+1. 先用<strong>完整配置</strong>运行，得到基线性能（Baseline）<br>
+2. 逐个<strong>移除</strong>某个组件，观察性能变化<br>
+3. 性能下降越多 → 说明该组件越重要<br><br>
+在Agent上下文中，主要有以下可消融的组件：<br>
+- <strong>对话历史</strong>：移除后Agent无法追问，多轮对话能力丧失<br>
+- <strong>推理链</strong>（Thought链）：移除后复杂推理断裂，准确率下降<br>
+- <strong>工具返回结果</strong>（Observation）：移除后等于无工具，回到纯聊天<br>
+- <strong>全部移除</strong>只剩系统提示+问题：几乎无Agent能力
+</div>
+</div>
+
+<table class="compare-table">
+<tr><th>移除组件</th><th>Token占比</th><th>能力影响</th></tr>
+<tr><td>完整上下文 (FULL)</td><td>100%</td><td>基线性能，完整能力</td></tr>
+<tr><td>对话历史</td><td>60%</td><td>无法追问，多轮对话能力丧失</td></tr>
+<tr><td>推理链</td><td>75%</td><td>复杂推理断裂，准确率下降</td></tr>
+<tr><td>工具返回结果</td><td>70%</td><td>相当于无工具，回到纯聊天</td></tr>
+<tr><td>仅系统提示+问题</td><td>20%</td><td>几乎无Agent能力</td></tr>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">核心认知：Context是Agent的「工作记忆」</div>
+<div class="pc-body">
+消融实验的核心结论是：<strong>Context中的每个组件都不可省略</strong>。就像人的工作记忆——如果你忘记了之前的对话内容、忘记了推理过程、忘记了查到的信息，你就不可能给出好的回答。Agent也是如此。<br><br>
+这也是为什么上下文管理（压缩、摘要、记忆系统）如此重要——我们既要保留关键信息，又要在有限的Token窗口内高效利用空间。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">def</span> <span class="fn">exercise0_step3_ablation</span>(sim: ReActLoopSimulator):
+    <span class="str">"""步骤3: 上下文消融实验"""</span>
+    <span class="fn">print</span>(<span class="str">"消融实验目的：验证Agent各组件的不可替代性"</span>)
+    <span class="fn">print</span>(<span class="str">"通过逐步移除上下文中的不同部分，观察Agent能力如何退化"</span>)
+
+    results = sim.<span class="fn">context_ablation</span>(<span class="str">"外地户口迁移苏州"</span>)
+
+    <span class="kw">for</span> mode, info <span class="kw">in</span> results.items():
+        <span class="fn">print</span>(<span class="str">f"</span>{mode:<span class="num">25</span>} {info[<span class="str">'estimated_tokens'</span>]:><span class="num">10</span>}  {info[<span class="str">'effect'</span>]}<span class="str">"</span>)</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s1">
+<div class="section-header">
+<div class="section-tag morning">上午 · 实战层</div>
+<h2>课题1: 政务服务智能问答助手</h2>
+<p>从零搭建政务服务问答系统，掌握 创建智能体→构建知识库→导入FAQ→配置RAG技能→测试 的完整流程</p>
+</div>
+
+<div class="topic-card" id="s1-1">
+<h3>步骤1: 初始化TeleAgent客户端</h3>
+<p>所有与TeleAgent平台的交互都通过<code>TeleAgentClient</code>完成。它封装了REST API调用，提供简洁的Python接口。</p>
+
+<div class="principle-card">
+<div class="pc-title">TeleAgentClient 核心能力</div>
+<div class="pc-body">
+<code>TeleAgentClient</code> 封装了以下能力：<br>
+- <strong>智能体管理</strong>：<code>create_agent()</code>, <code>list_agents()</code>, <code>get_agent()</code>, <code>delete_agent()</code><br>
+- <strong>对话</strong>：<code>chat()</code>, <code>chat_multi_turn()</code><br>
+- <strong>知识库</strong>：<code>create_knowledge_base()</code>, <code>upload_text()</code>, <code>upload_documents()</code>, <code>query_knowledge_base()</code><br>
+- <strong>技能</strong>：<code>create_skill()</code>, <code>bind_skill_to_agent()</code><br>
+- <strong>工作流</strong>：<code>create_workflow()</code>, <code>run_workflow()</code><br>
+- <strong>工具</strong>：<code>call_tool()</code><br><br>
+使用前需设置环境变量：<code>TELEAGENT_BASE_URL</code>和<code>TELEAGENT_TOKEN</code>
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">def</span> <span class="fn">exercise1_step1_init_client</span>():
+    <span class="str">"""步骤1: 初始化TeleAgent客户端"""</span>
+    client = <span class="fn">get_client</span>()
+    <span class="fn">print</span>(<span class="str">"本课题构建政务服务问答系统，核心流程："</span>)
+    <span class="fn">print</span>(<span class="str">"  创建智能体 → 构建知识库 → 导入FAQ → 配置RAG技能 → 测试"</span>)
+    <span class="fn">print</span>(<span class="str">"关键原理：RAG = 检索(Retrieval) + 增强(Augmented) + 生成(Generation)"</span>)
+    agents = client.<span class="fn">list_agents</span>()
+    <span class="fn">print</span>(<span class="str">f"连接成功！当前平台智能体数量: </span>{<span class="fn">len</span>(agents)}<span class="str">"</span>)
+    <span class="kw">return</span> client</div>
+</div>
+</div>
+
+<div class="topic-card" id="s1-2">
+<h3>步骤2: 创建政务服务问答智能体 + 知识库</h3>
+
+<div class="step-block">
+<span class="step-num">1</span>
+<h4>创建智能体</h4>
+<p>System Prompt是Agent行为的「宪法」，定义了Agent的边界和规范。好的System Prompt应该包含：角色定义、行为要求、业务范围、输出格式约束。</p>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"政务服务问答助手"</span>,
+    description=<span class="str">"面向政务大厅的7x24小时智能问答系统"</span>,
+    system_prompt=<span class="str">"""你是一个政务服务智能问答助手，为办事群众提供政务咨询服务。
+
+核心要求：
+1. 回答必须准确，严格依据知识库内容，不编造政策
+2. 如果知识库没有相关信息，明确告知并建议咨询12345热线
+3. 列出所需材料时，使用清晰的编号列表格式
+4. 提及办理时限和费用（如有）
+5. 推荐线上办理渠道（如「一网通办」平台）
+
+业务范围：户籍、社保、公积金、不动产登记、婚姻登记等"""</span>,
+    model=<span class="str">"default"</span>,
+)</div>
+</div>
+
+<div class="step-block">
+<span class="step-num">2</span>
+<h4>创建知识库并导入FAQ</h4>
+<p>知识库是RAG的「记忆库」。FAQ文档经过<strong>分块(Chunk)→嵌入(Embedding)→索引(Index)</strong>后可供检索。分块大小影响检索精度：政务FAQ每条较短，<code>chunk_size=500</code>足够。</p>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">kb = client.<span class="fn">create_knowledge_base</span>(
+    name=<span class="str">"政务服务FAQ知识库"</span>,
+    description=<span class="str">"包含户籍、社保、公积金等常见政务问题及标准答案"</span>,
+    embedding_model=<span class="str">"default"</span>,
+)
+kb_id = kb.<span class="fn">get</span>(<span class="str">"id"</span>)
+
+<span class="com"># 导入FAQ数据</span>
+faq_path = os.path.<span class="fn">join</span>(DATA_DIR, <span class="str">"gov_faq.json"</span>)
+<span class="kw">with</span> <span class="fn">open</span>(faq_path, <span class="str">"r"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+    faqs = json.<span class="fn">load</span>(f)
+
+<span class="kw">for</span> faq <span class="kw">in</span> faqs:
+    content = <span class="str">f"问题：</span>{faq[<span class="str">'question'</span>]}<span class="str">\n类别：</span>{faq[<span class="str">'category'</span>]}<span class="str">\n答案：</span>{faq[<span class="str">'answer'</span>]}<span class="str">"</span>
+    client.<span class="fn">upload_text</span>(kb_id, title=faq[<span class="str">"question"</span>], content=content)
+    <span class="fn">print</span>(<span class="str">f"  已导入: [</span>{faq[<span class="str">'category'</span>]}<span class="str">] </span>{faq[<span class="str">'question'</span>]}<span class="str">"</span>)
+
+<span class="fn">print</span>(<span class="str">f"共导入 </span>{<span class="fn">len</span>(faqs)}<span class="str"> 条FAQ"</span>)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s1-3">
+<h3>步骤3: 配置RAG技能 + 多轮对话测试</h3>
+
+<div class="step-block">
+<span class="step-num">3</span>
+<h4>创建RAG技能并绑定到智能体</h4>
+<p>RAG技能配置决定检索质量：<code>top_k</code>控制召回文档数量（3条足够），<code>temperature</code>控制生成多样性（政务场景需要确定性，设为0.3）。<code>prompt_template</code>定义了RAG的提示模板，其中<code>{context}</code>会被检索到的文档替换，<code>{question}</code>会被用户问题替换。</p>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">skill = client.<span class="fn">create_skill</span>(
+    name=<span class="str">"政务知识库问答"</span>,
+    skill_type=<span class="str">"rag"</span>,
+    config={
+        <span class="str">"knowledge_base_id"</span>: kb_id,
+        <span class="str">"retrieval_top_k"</span>: <span class="num">3</span>,
+        <span class="str">"temperature"</span>: <span class="num">0.3</span>,
+        <span class="str">"max_tokens"</span>: <span class="num">1000</span>,
+        <span class="str">"prompt_template"</span>: <span class="str">"""基于以下参考资料回答用户问题。如果资料中没有相关信息，请明确说明。
+
+参考资料：
+{context}
+
+用户问题：{question}
+
+请提供准确、完整的回答："""</span>,
+    },
+)
+client.<span class="fn">bind_skill_to_agent</span>(agent_id, skill.<span class="fn">get</span>(<span class="str">"id"</span>))</div>
+</div>
+
+<div class="step-block">
+<span class="step-num">4</span>
+<h4>多轮对话测试</h4>
+<p>注意对比：有知识库的回答vs无知识库的回答。第4个边界case「离婚手续」最容易体现差异——无知识库的Agent可能编造不存在的流程，有知识库的Agent会依据知识库内容回答。</p>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">test_questions = [
+    <span class="str">"新生儿落户需要什么材料？"</span>,
+    <span class="str">"社保怎么从外地转过来？"</span>,
+    <span class="str">"公积金最多能贷多少？"</span>,
+    <span class="str">"我想办理离婚手续怎么办？"</span>,  <span class="com"># 边界case测试</span>
+]
+
+<span class="kw">for</span> q <span class="kw">in</span> test_questions:
+    <span class="fn">print</span>(<span class="str">f"\n👤 用户: </span>{q}<span class="str">"</span>)
+    result = client.<span class="fn">chat</span>(agent_id, q)
+    <span class="fn">print</span>(<span class="str">f"🤖 助手: </span>{result.<span class="fn">get</span>(<span class="str">'content'</span>, <span class="str">''</span>)}<span class="str">"</span>)</div>
+</div>
+
+<div class="principle-card warn">
+<div class="pc-title">RAG核心流程：检索 → 增强 → 生成</div>
+<div class="pc-body">
+当用户提问时，RAG的完整流程是：<br>
+1. <strong>检索(Retrieval)</strong>：将用户问题向量化，在知识库中搜索语义最相近的文档片段<br>
+2. <strong>增强(Augmented)</strong>：将检索到的文档片段作为上下文注入LLM的提示中<br>
+3. <strong>生成(Generation)</strong>：LLM基于增强后的上下文生成回答<br><br>
+关键：<code>temperature=0.3</code> 确保回答确定性高（政务场景不能随意发挥），<code>top_k=3</code> 召回3条最相关文档（足够覆盖又不会引入太多噪声）。
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s2">
+<div class="section-header">
+<div class="section-tag morning">上午 · 实战层</div>
+<h2>课题2: 制造领域工业知识库</h2>
+<p>工业场景与政务场景的核心差异：术语精确性要求高、安全警告必须突出、回答需结构化</p>
+</div>
+
+<div class="topic-card" id="s2-1">
+<h3>创建工业运维知识库智能体</h3>
+<p>工业场景与政务场景有三个关键差异：</p>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">🎯</div>
+<div class="cc-name">术语精确性</div>
+<div class="cc-desc">设备型号（如CNC-500V）、故障代码（如E001）不能模糊匹配，必须精确命中</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">⚠️</div>
+<div class="cc-name">安全警告</div>
+<div class="cc-desc">涉及高压电、运动部件等操作不当可造成人身伤害，必须突出安全警告</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">📋</div>
+<div class="cc-name">结构化回答</div>
+<div class="cc-desc">必须按「现象→原因→步骤→预防」格式输出，不能随意组织</div>
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"工业设备运维知识库"</span>,
+    description=<span class="str">"工厂设备运维知识库，支持自然语言查询设备故障、维修方案、操作规程"</span>,
+    system_prompt=<span class="str">"""你是一个工业设备运维知识助手，帮助工厂维修工程师快速查找设备故障原因和维修方案。
+
+核心要求：
+1. 严格依据设备手册和故障案例回答
+2. 回答格式：故障现象 → 可能原因 → 处理步骤 → 预防措施
+3. 涉及安全操作的，必须标注安全警告
+4. 如果问题不明确，追问设备型号和故障代码
+5. 推荐相关预防性维护措施
+
+知识范围：CNC加工中心、变频器、PLC、工业机器人、传感器等设备"""</span>,
+    model=<span class="str">"default"</span>,
+)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s2-2">
+<h3>构建工业知识库 + 问答测试</h3>
+
+<div class="principle-card">
+<div class="pc-title">chunk_size=800 vs 500：为什么工业文档需要更大的分块？</div>
+<div class="pc-body">
+政务FAQ每条仅几十字，<code>chunk_size=500</code>足够。<br>
+但工业维修文档的步骤通常是连续的（如「断电→拆外壳→检查接线→测量电压→更换元件→测试→装回」），如果分块太小会把一个完整维修步骤截断，导致检索到的只是半截信息。<br><br>
+因此工业文档<code>chunk_size=800</code>，确保维修步骤不被截断。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 构建知识库（注意chunk_size=800）</span>
+kb = client.<span class="fn">create_knowledge_base</span>(
+    name=<span class="str">"工业设备运维知识库"</span>,
+    description=<span class="str">"CNC、变频器、PLC等设备的故障手册与操作规程"</span>,
+)
+
+docs_path = os.path.<span class="fn">join</span>(DATA_DIR, <span class="str">"industrial_kb.json"</span>)
+<span class="kw">with</span> <span class="fn">open</span>(docs_path, <span class="str">"r"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+    docs = json.<span class="fn">load</span>(f)
+
+<span class="kw">for</span> doc <span class="kw">in</span> docs:
+    client.<span class="fn">upload_text</span>(kb_id, title=doc[<span class="str">"title"</span>], content=doc[<span class="str">"content"</span>],
+                        chunk_size=<span class="num">800</span>)  <span class="com"># 工业文档chunk_size更大</span>
+
+<span class="com"># 问答测试</span>
+test_queries = [
+    <span class="str">"CNC主轴有异响是什么原因？"</span>,
+    <span class="str">"变频器报E001过流保护怎么处理？"</span>,
+    <span class="str">"PLC和上位机通讯不上怎么排查？"</span>,
+]
+<span class="kw">for</span> q <span class="kw">in</span> test_queries:
+    result = client.<span class="fn">chat</span>(agent_id, q)
+    <span class="fn">print</span>(<span class="str">f"🤖 知识库: </span>{result.<span class="fn">get</span>(<span class="str">'content'</span>, <span class="str">''</span>)}<span class="str">"</span>)</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s2_5">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 原理层</div>
+<h2>课题2.5: RAG原理深入实验</h2>
+<p>从嵌入向量到检索策略到Agentic RAG，深入理解RAG的每一个环节</p>
+</div>
+
+<div class="topic-card" id="s2_5-1">
+<h3>步骤1: 稠密嵌入原理 — 语义相近→向量相近</h3>
+<p>嵌入(Embedding)是RAG的基石。它将文本转化为高维向量，使语义相近的文本在向量空间中距离更近。</p>
+
+<div class="flow-diagram">文本 ──[嵌入模型]──► 向量（如768维浮点数组）
+
+例：
+「公积金提取」    → [0.12, -0.34,  0.56, ...]  ← 语义A
+「住房公积金取出」  → [0.11, -0.32,  0.55, ...]  ← 语义A（相近！）
+「天气预报」      → [-0.45, 0.78,  0.23, ...]  ← 语义B（远离！）
+
+余弦相似度：
+  cos(A, A') ≈ 0.98  ← 语义相近，向量相近
+  cos(A, B)  ≈ -0.30 ← 语义无关，向量远离</div>
+
+<div class="principle-card">
+<div class="pc-title">嵌入原理详解：为什么语义相近的文本向量也相近？</div>
+<div class="pc-body">
+嵌入模型（如BGE-M3、text-embedding-ada-002）在海量文本上训练，学习到：<br>
+- <strong>语义相似</strong>的句子 → 映射到向量空间中<strong>相近的位置</strong><br>
+- <strong>语义不同</strong>的句子 → 映射到向量空间中<strong>远离的位置</strong><br><br>
+核心公式是<strong>余弦相似度</strong>：<code>cos(A,B) = (A·B) / (|A|×|B|)</code><br>
+值域[-1, 1]：1表示完全相同，0表示无关，-1表示相反<br><br>
+这就是RAG检索的基础：用户问题向量 → 与知识库中所有文档向量计算余弦相似度 → 取top_k个最相似的文档
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="kw">class</span> <span class="cls">EmbeddingVisualizer</span>:
+    <span class="str">"""嵌入向量可视化与对比工具"""</span>
+
+    <span class="kw">@staticmethod</span>
+    <span class="kw">def</span> <span class="fn">cosine_similarity</span>(v1: <span class="cls">List</span>[<span class="cls">float</span>], v2: <span class="cls">List</span>[<span class="cls">float</span>]) -> <span class="cls">float</span>:
+        <span class="str">"""计算余弦相似度"""</span>
+        dot = <span class="fn">sum</span>(a * b <span class="kw">for</span> a, b <span class="kw">in</span> <span class="fn">zip</span>(v1, v2))
+        norm1 = <span class="fn">sum</span>(a * a <span class="kw">for</span> a <span class="kw">in</span> v1) ** <span class="num">0.5</span>
+        norm2 = <span class="fn">sum</span>(b * b <span class="kw">for</span> b <span class="kw">in</span> v2) ** <span class="num">0.5</span>
+        <span class="kw">return</span> dot / (norm1 * norm2) <span class="kw">if</span> norm1 * norm2 > <span class="num">0</span> <span class="kw">else</span> <span class="num">0</span>
+
+    <span class="kw">@staticmethod</span>
+    <span class="kw">def</span> <span class="fn">mock_embed</span>(text: <span class="cls">str</span>, dim: <span class="cls">int</span> = <span class="num">8</span>) -> <span class="cls">List</span>[<span class="cls">float</span>]:
+        <span class="str">"""模拟文本嵌入（用哈希生成确定性向量，仅用于教学演示）"""</span>
+        h = hashlib.<span class="fn">md5</span>(text.<span class="fn">encode</span>()).<span class="fn">hexdigest</span>()
+        <span class="kw">return</span> [((<span class="fn">int</span>(h[i:i+<span class="num">2</span>], <span class="num">16</span>) / <span class="num">255</span>) - <span class="num">0.5</span>) * <span class="num">2</span>
+                <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="fn">min</span>(dim * <span class="num">2</span>, <span class="fn">len</span>(h)), <span class="num">2</span>)]
+
+    <span class="kw">def</span> <span class="fn">demo_semantic_similarity</span>(self):
+        sentences = [
+            <span class="str">"公积金怎么提取"</span>,
+            <span class="str">"住房公积金如何取出"</span>,
+            <span class="str">"社保转移怎么办"</span>,
+            <span class="str">"今天的天气怎么样"</span>,
+        ]
+        embeddings = {s: self.<span class="fn">mock_embed</span>(s) <span class="kw">for</span> s <span class="kw">in</span> sentences}
+        <span class="kw">for</span> i, s1 <span class="kw">in</span> <span class="fn">enumerate</span>(sentences):
+            <span class="kw">for</span> j, s2 <span class="kw">in</span> <span class="fn">enumerate</span>(sentences):
+                <span class="kw">if</span> i < j:
+                    sim = self.<span class="fn">cosine_similarity</span>(embeddings[s1], embeddings[s2])
+                    <span class="fn">print</span>(<span class="str">f"  「</span>{s1[:<span class="num">8</span>]}<span class="str">」 vs 「</span>{s2[:<span class="num">8</span>]}<span class="str">」 余弦相似度: </span>{sim:+.<span class="num">3</span>f}<span class="str">"</span>)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s2_5-2">
+<h3>步骤2: 三种检索策略对比</h3>
+
+<table class="compare-table">
+<tr><th>检索方式</th><th>原理</th><th>优势</th><th>劣势</th></tr>
+<tr><td>稀疏检索(BM25)</td><td>关键词TF-IDF匹配</td><td>精确术语匹配强</td><td>无法理解同义词</td></tr>
+<tr><td>稠密检索</td><td>语义向量相似度</td><td>模糊语义匹配强</td><td>精确术语可能漏</td></tr>
+<tr><td>混合检索</td><td>两路融合+重排序</td><td>兼顾精确和模糊</td><td>计算成本更高</td></tr>
+</table>
+
+<div class="principle-card">
+<div class="pc-title">混合检索 = 稠密(语义) + 稀疏(关键词) + 重排序</div>
+<div class="pc-body">
+混合检索通过 <strong>Reciprocal Rank Fusion (RRF)</strong> 融合两路结果：<br>
+- 稠密检索找到语义相近的文档（如「公积金怎么取」匹配到「住房公积金提取条件」）<br>
+- 稀疏检索找到关键词匹配的文档（如「公积金」精确匹配）<br>
+- RRF将两路排名融合，取综合排名最优的文档<br>
+- 再用 <strong>Cross-Encoder</strong> 对融合结果重排序，提升精度<br><br>
+实际部署建议：优先使用混合检索，兼顾语义和精确匹配。
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 三种检索效果对比</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body"><span class="com"># 查询: 「公积金怎么取出来」</span>
+
+<span class="com"># 稠密检索结果（语义匹配）</span>
+<span class="com"># #1 住房公积金提取条件及流程  ← 语义匹配「取出来→提取」</span>
+<span class="com"># #2 公积金贷款额度计算方法  ← 部分匹配</span>
+<span class="com"># #3 社保缴费基数调整通知    ← 不相关</span>
+
+<span class="com"># 稀疏检索结果（关键词匹配）</span>
+<span class="com"># #1 公积金贷款额度计算方法  ← 精确匹配「公积金」</span>
+<span class="com"># #2 住房公积金提取条件及流程  ← 部分匹配</span>
+<span class="com"># #3 社保缴费基数调整通知    ← 不相关</span>
+
+<span class="com"># 混合检索结果（融合+重排序）</span>
+<span class="com"># #1 住房公积金提取条件及流程  ← 两个信号都命中 ⭐</span>
+<span class="com"># #2 公积金贷款额度计算方法</span>
+<span class="com"># #3 社保缴费基数调整通知</span></div>
+</div>
+</div>
+
+<div class="topic-card" id="s2_5-3">
+<h3>步骤3: 被动RAG vs Agentic RAG</h3>
+<p>传统被动RAG只做1次检索，不管结果够不够；Agentic RAG让Agent自主决定是否检索、是否需要再次检索。</p>
+
+<div class="flow-diagram">╔══════════════════════════════════════════════════════════╗
+║              传统被动 RAG 流程                             ║
+║                                                            ║
+║  用户问题 ──► 检索1次 ──► 拼接上下文 ──► LLM生成回答      ║
+║                                                            ║
+║  特点：检索是「被动」的，只做1次，不管检索结果够不够       ║
+╚══════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════╗
+║              Agentic RAG 流程                              ║
+║                                                            ║
+║  用户问题 ──► Agent思考 ──► 需要检索吗？                  ║
+║                   │         │                              ║
+║                   │    ┌────┴────┐                         ║
+║                   │    │不需要    │需要                      ║
+║                   │    ▼         ▼                          ║
+║                   │  直接回答   检索+评估                    ║
+║                   │               │                        ║
+║                   │         ┌─────┴──────┐                 ║
+║                   │         │结果够吗？    │                ║
+║                   │     够了│         │不够                 ║
+║                   │         ▼         ▼                     ║
+║                   │       生成回答  换关键词再检索            ║
+║                   │                   │                     ║
+║                   │                   └──► 回到评估(最多N次) ║
+╚══════════════════════════════════════════════════════════╝</div>
+
+<table class="compare-table">
+<tr><th>场景</th><th>被动RAG</th><th>Agentic RAG</th></tr>
+<tr><td>简单：「新生儿落户要什么材料？」</td><td>检索1次→命中→回答 ✅</td><td>思考→检索→评估(够了)→回答 ✅</td></tr>
+<tr><td>复杂：「外地户口迁苏州，社保转移能一起办吗，要多久？」</td><td>检索1次→命中户口但漏社保时限→回答不完整 ❌</td><td>检索户口→评估(缺社保)→检索社保→完整回答 ✅</td></tr>
+<tr><td>超范围：「苏州哪里有好吃的？」</td><td>检索1次→无命中→仍尝试生成→可能幻觉 ⚠️</td><td>思考→决定不检索→直接告知超出范围 ✅</td></tr>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">Agentic RAG 三大核心能力</div>
+<div class="pc-body">
+1. <strong>自主决策</strong>：判断是否需要检索（简单问题可以直接回答，节省检索开销）<br>
+2. <strong>自主迭代</strong>：检索结果不够时自动换关键词再检索（多轮检索确保完整性）<br>
+3. <strong>自主拒绝</strong>：超出知识范围时直接说「不知道」，避免幻觉<br><br>
+本质区别：<strong>被动RAG是「检索管道」，Agentic RAG是「有判断力的检索员」</strong>。TeleAgent平台默认使用Agentic RAG模式。
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="s3">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 实战层</div>
+<h2>课题3: 医疗领域病历生成</h2>
+<p>构建门诊病历辅助生成助手，体验专业领域Prompt设计的要点</p>
+</div>
+
+<div class="topic-card" id="s3-1">
+<h3>创建病历辅助生成智能体</h3>
+
+<div class="principle-card">
+<div class="pc-title">医疗场景Prompt设计要点</div>
+<div class="pc-body">
+1. <strong>格式严格</strong>：必须包含主诉、现病史、既往史、体格检查、初步诊断、处理意见<br>
+2. <strong>术语规范</strong>：使用医学术语而非口语（如「恶心」而非「想吐」）<br>
+3. <strong>药品规范</strong>：通用名+剂量+用法+频次（如「氨氯地平5mg qd」）<br>
+4. <strong>安全底线</strong>：必须声明「仅辅助生成草稿，最终诊断和处方必须由执业医师确认签字」
+</div>
+</div>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">agent = client.<span class="fn">create_agent</span>(
+    name=<span class="str">"门诊病历辅助生成"</span>,
+    description=<span class="str">"基层医院门诊病历辅助生成，基于医生输入的症状和诊断，生成规范化的病历记录"</span>,
+    system_prompt=<span class="str">"""你是一个门诊病历辅助生成助手，帮助基层医生快速生成规范的门诊病历。
+
+生成规则：
+1. 严格按照门诊病历规范格式生成
+2. 必须包含：主诉、现病史、既往史、体格检查、初步诊断、处理意见
+3. 使用规范医学术语，不使用口语化表达
+4. 药品使用通用名，标注剂量、用法、频次
+5. 需要进一步检查的，明确标注检查项目
+
+重要：本助手仅辅助生成病历草稿，最终诊断和处方必须由执业医师确认签字。"""</span>,
+    model=<span class="str">"default"</span>,
+)</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3-2">
+<h3>病历生成测试</h3>
+<p>测试两个典型案例：高血压头痛和儿童发热。观察Agent如何将口语化输入转化为规范病历。</p>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">test_cases = [
+    <span class="str">"患者女，45岁，反复头痛3天，伴恶心，无呕吐，既往高血压病史5年，目前服用氨氯地平5mg qd。查体：BP 155/95mmHg，神清，颈软。"</span>,
+    <span class="str">"患儿男，3岁，发热2天，T 38.5℃，伴咳嗽、流涕，精神可，进食略减。查体：咽红，双肺呼吸音粗，未闻及啰音。"</span>,
+]
+
+<span class="kw">for</span> case <span class="kw">in</span> test_cases:
+    <span class="fn">print</span>(<span class="str">f"\n👤 医生输入: </span>{case}<span class="str">"</span>)
+    result = client.<span class="fn">chat</span>(agent_id, case)
+    <span class="fn">print</span>(<span class="str">f"🤖 生成病历:\n</span>{result.<span class="fn">get</span>(<span class="str">'content'</span>, <span class="str">''</span>)}<span class="str">"</span>)</div>
+</div>
+
+<div class="tips-box">
+<div class="tips-title">观察要点</div>
+<p>对比医生输入和生成病历，注意：1) 口语表达→规范术语的转化；2) 完整病历格式的补充（主诉/现病史/诊断等）；3) 安全声明的自动添加</p>
+</div>
+</div>
+</div>
+
+<div class="section" id="s3_5">
+<div class="section-header">
+<div class="section-tag afternoon">下午 · 原理层</div>
+<h2>课题3.5: 上下文压缩策略实验</h2>
+<p>长对话场景下Token不够用怎么办？6种压缩策略帮你解决</p>
+</div>
+
+<div class="topic-card" id="s3_5-1">
+<h3>步骤1: 为什么需要上下文压缩？</h3>
+
+<div class="principle-card">
+<div class="pc-title">上下文压缩的必要性</div>
+<div class="pc-body">
+LLM上下文窗口有限（4K/8K/128K tokens），长对话场景下历史消息会逐渐占满窗口。问题不仅是「装不下」，还有：<br>
+- <strong>延迟</strong>：Token越多，推理延迟越高<br>
+- <strong>成本</strong>：按Token计费，Token越多费用越高<br>
+- <strong>噪声</strong>：过多无关历史干扰LLM判断<br><br>
+压缩策略的核心目标：<strong>在保留关键信息的前提下减少Token消耗</strong>
+</div>
+</div>
+
+<h4>6种压缩策略概览</h4>
+<table class="compare-table">
+<tr><th>策略</th><th>原理</th><th>适用场景</th></tr>
+<tr><td>none</td><td>不压缩，保留全部历史</td><td>短对话</td></tr>
+<tr><td>sliding_window</td><td>保留最近N轮</td><td>简单场景，最常用</td></tr>
+<tr><td>summary</td><td>早期对话压缩为摘要</td><td>需要上下文但不需原文</td></tr>
+<tr><td>key_facts</td><td>提取关键信息</td><td>信息密度高的场景</td></tr>
+<tr><td>summary_with_reference</td><td>摘要+引用编号</td><td>需要回溯原文</td></tr>
+<tr><td>hierarchical</td><td>分层级：最近完整+中期摘要+早期关键</td><td>超长对话</td></tr>
+</table>
+</div>
+
+<div class="topic-card" id="s3_5-2">
+<h3>步骤2: 压缩率 vs 信息保留率对比</h3>
+<p>用一个10条消息的政务对话来测试6种策略的压缩率和信息保留效果：</p>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">messages = [
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"我想咨询公积金提取的问题，我叫张明"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"张先生你好，公积金提取有多种情形，请问您是购房提取还是租房提取？"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"购房提取，我买了XX小区的房子，花了200万"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"购房提取需要提供购房合同、房产证、身份证等材料。"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"身份证号是320506199001011234，手机号13812345678"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"已记录您的身份信息。提取额度上限为账户余额，留10%保证金。"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"那社保转移怎么办理？需要多久？"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"社保转移可以通过国家社会保险公共服务平台线上办理，一般45个工作日完成。"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"好的，另外我还想问问新生儿落户的事"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"新生儿落户需要：出生医学证明、父母结婚证、户口簿、身份证。"</span>},
+]
+
+compressor = <span class="cls">ContextCompressor</span>()
+
+<span class="com"># 检查关键信息是否被保留</span>
+key_info_checks = {
+    <span class="str">"姓名"</span>: <span class="kw">lambda</span> msgs: <span class="fn">any</span>(<span class="str">"张明"</span> <span class="kw">in</span> m.<span class="fn">get</span>(<span class="str">"content"</span>, <span class="str">""</span>) <span class="kw">for</span> m <span class="kw">in</span> msgs),
+    <span class="str">"身份证"</span>: <span class="kw">lambda</span> msgs: <span class="fn">any</span>(<span class="str">"320506"</span> <span class="kw">in</span> m.<span class="fn">get</span>(<span class="str">"content"</span>, <span class="str">""</span>) <span class="kw">for</span> m <span class="kw">in</span> msgs),
+    <span class="str">"金额"</span>: <span class="kw">lambda</span> msgs: <span class="fn">any</span>(<span class="str">"200万"</span> <span class="kw">in</span> m.<span class="fn">get</span>(<span class="str">"content"</span>, <span class="str">""</span>) <span class="kw">for</span> m <span class="kw">in</span> msgs),
+    <span class="str">"社保时限"</span>: <span class="kw">lambda</span> msgs: <span class="fn">any</span>(<span class="str">"45"</span> <span class="kw">in</span> m.<span class="fn">get</span>(<span class="str">"content"</span>, <span class="str">""</span>) <span class="kw">for</span> m <span class="kw">in</span> msgs),
+    <span class="str">"落户材料"</span>: <span class="kw">lambda</span> msgs: <span class="fn">any</span>(<span class="str">"出生医学证明"</span> <span class="kw">in</span> m.<span class="fn">get</span>(<span class="str">"content"</span>, <span class="str">""</span>) <span class="kw">for</span> m <span class="kw">in</span> msgs),
+}
+
+<span class="kw">for</span> strategy <span class="kw">in</span> <span class="cls">ContextCompressor</span>.STRATEGIES:
+    compressed = compressor.<span class="fn">compress</span>(messages, strategy=strategy)
+    orig_chars = <span class="fn">sum</span>(<span class="fn">len</span>(m[<span class="str">"content"</span>]) <span class="kw">for</span> m <span class="kw">in</span> messages)
+    comp_chars = <span class="fn">sum</span>(<span class="fn">len</span>(m[<span class="str">"content"</span>]) <span class="kw">for</span> m <span class="kw">in</span> compressed)
+    ratio = comp_chars / orig_chars * <span class="num">100</span>
+
+    retained = [info <span class="kw">for</span> info, check <span class="kw">in</span> key_info_checks.items() <span class="kw">if</span> <span class="fn">check</span>(compressed)]
+    retention_rate = <span class="fn">len</span>(retained) / <span class="fn">len</span>(key_info_checks) * <span class="num">100</span>
+
+    <span class="fn">print</span>(<span class="str">f"</span>{strategy:<span class="num">25</span>} 压缩率:<span class="num">{ratio</span>:.<span class="num">0</span>f}% 信息保留:<span class="num">{retention_rate</span>:.<span class="num">0</span>f}%<span class="str">"</span>)</div>
+</div>
+
+<div class="tips-box">
+<div class="tips-title">策略选择建议</div>
+<p>- 压缩率最低(信息最全)：none（不压缩），但Token消耗最大</p>
+<p>- 性价比最优：summary_with_reference，压缩到50%左右且保留引用能力</p>
+<p>- 极致压缩：hierarchical，分层级保留，最适合超长对话</p>
+<p>- 简单场景：sliding_window，最简单有效</p>
+</div>
+</div>
+
+<div class="topic-card" id="s3_5-3">
+<h3>步骤3: 政务问答场景实战</h3>
+<p>在一个真实的5轮政务对话中测试压缩效果：</p>
+
+<div class="code-block">
+<div class="code-header">
+<span class="lang-badge">Python - 政务场景压缩实战</span>
+<button class="copy-btn" onclick="copyCode(this)">复制</button>
+</div>
+<div class="code-body">gov_messages = [
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"你好，我想咨询新生儿落户的事情"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"您好！新生儿落户需要：1)出生医学证明；2)父母结婚证；3)户口簿；4)身份证。到户籍地派出所办理即可。"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"我们夫妻都是外地户口，能在苏州落户吗？"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"如果父母双方都是外地户口，新生儿一般随父母户籍。但若您在苏州有合法稳定住所并满足落户条件，可先将一方户口迁入苏州，再为新生儿落户。"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"那如果要把我的户口迁过来需要什么条件？我叫李华，身份证321287198805056789"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"李先生您好，苏州户口迁入需要在苏州参加社保满3年、有合法稳定住所、无犯罪记录。"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"我2015年就在苏州交社保了，房子也买了，应该没问题吧？"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"根据您的情况，社保已满11年，有自有住房，只要无犯罪记录就可以申请。建议带齐材料到辖区派出所户籍窗口办理。"</span>},
+    {<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"公积金贷款额度怎么算的？我想再买一套"</span>},
+    {<span class="str">"role"</span>: <span class="str">"assistant"</span>, <span class="str">"content"</span>: <span class="str">"苏州公积金贷款额度计算：月缴存额x贷款年限x12x0.5，单人最高70万，夫妻最高100万。"</span>},
+]
+
+compressor = <span class="cls">ContextCompressor</span>()
+
+<span class="com"># 使用summary_with_reference策略压缩</span>
+compressed = compressor.<span class="fn">compress</span>(gov_messages, strategy=<span class="str">"summary_with_reference"</span>)
+comp_chars = <span class="fn">sum</span>(<span class="fn">len</span>(m[<span class="str">"content"</span>]) <span class="kw">for</span> m <span class="kw">in</span> compressed)
+orig_chars = <span class="fn">sum</span>(<span class="fn">len</span>(m[<span class="str">"content"</span>]) <span class="kw">for</span> m <span class="kw">in</span> gov_messages)
+<span class="fn">print</span>(<span class="str">f"压缩率: </span>{comp_chars / orig_chars * <span class="num">100</span>:.<span class="num">0</span>f}%<span class="str">"</span>)</div>
+</div>
+
+<div class="principle-card green">
+<div class="pc-title">政务场景压缩实战要点</div>
+<div class="pc-body">
+- 政务场景涉及姓名、身份证等<strong>关键个人信息</strong>，推荐<code>summary_with_reference</code>策略<br>
+- 压缩后的摘要仍保留<strong>引用编号</strong>（如[msg0], [msg2]），需要时可回溯原文<br>
+- 生产环境中摘要由LLM生成，质量更高（模拟器中用关键词提取代替）<br>
+- 关键原则：<strong>宁可多保留一点关键信息，也不要丢失不可恢复的数据</strong>（如身份证号、金额）
+</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="quiz">
+<div class="section-header">
+<div class="section-tag afternoon">总结</div>
+<h2>课堂测验</h2>
+<p>检验Day 2学习成果</p>
+</div>
+
+<div class="topic-card">
+<div class="quiz-box">
+<div class="quiz-q">Q1: Agent核心公式 Agent = LLM + Context + Tools 中，移除Context会导致什么？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. Agent无法理解问题</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. Agent无法记忆，每轮都是「失忆」状态，多轮对话能力丧失</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. Agent无法调用工具</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 没有任何影响</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q2: 工业知识库的chunk_size设为800（比政务的500大），原因是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 工业文档质量更高</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">B. 维修步骤不宜截断，较大分块保证完整步骤</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">C. 工业文档数量更多</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 工业术语更短</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q3: Agentic RAG相比被动RAG的核心优势是？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. 检索速度更快</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">B. 支持更多文件格式</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">C. 自主决策是否检索、自主迭代补充检索、自主拒绝超范围问题</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. 不需要知识库</div>
+</div>
+
+<div class="quiz-box">
+<div class="quiz-q">Q4: 在政务场景中，涉及姓名、身份证等关键信息的对话，推荐哪种上下文压缩策略？</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">A. sliding_window（最简单）</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">B. key_facts（信息提取）</div>
+<div class="quiz-a" onclick="checkQuiz(this, true)">C. summary_with_reference（摘要+引用，可回溯原文）</div>
+<div class="quiz-a" onclick="checkQuiz(this, false)">D. none（不压缩）</div>
+</div>
+</div>
+</div>
+
+<div class="section" id="preview">
+<div class="summary-card">
+<h3>Day 2 总结</h3>
+<p>今天我们完成了从理论到实践的跨越：理解了Agent核心公式、运行了ReAct循环、搭建了政务和工业知识库、深入了RAG原理、体验了病历生成、掌握了上下文压缩策略。</p>
+<p style="font-size:13px;color:var(--accent2)">核心收获：Agent = LLM + Context + Tools | RAG = 检索 + 增强 + 生成 | 压缩策略选择看场景</p>
+</div>
+
+<div class="summary-card">
+<h3>Day 3 预告：文档生成与审核</h3>
+<p>明天将进入文档生成与审核领域——构建合同审核智能体（含人工审批HITL）、招投标文件助手、公文生成助手，以及记忆系统和Prompt消融实验。</p>
+<p style="font-size:13px;color:var(--accent)">课题3.8: 用户记忆系统 | 课题4: 合同审核(HITL) | 课题5: 招投标 | 课题6: 公文生成 | 课题7: HR制度审查(记忆联动) | 课题7.5: Prompt消融 | 课题8: 治理简报</p>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+<p>区县AI赋能培训 · Day 2 · TeleAgent实战入门</p>
+<p>5天22个实战课题 · 从理论到路演 · 2026年7月</p>
+</div>
+</div>
+
+<script>
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function navClick(el){document.getElementById('sidebar').classList.remove('open');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active')}
+function copyCode(btn){const code=btn.closest('.code-block').querySelector('.code-body').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='已复制!';setTimeout(()=>btn.textContent='复制',1500)})}
+function checkQuiz(el,correct){const box=el.closest('.quiz-box');box.querySelectorAll('.quiz-a').forEach(a=>{a.style.pointerEvents='none';if(a===el){a.classList.add(correct?'correct':'wrong')}else if(correct&&a!==el){}});if(!correct){const answers=box.querySelectorAll('.quiz-a');answers.forEach(a=>{if(!a.classList.contains('wrong'))a.style.opacity='0.4'})}}
+window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;const p=h>0?Math.round(window.scrollY/h*100):0;document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressText').textContent=p+'%';
+const sections=document.querySelectorAll('.section');let active=null;sections.forEach(s=>{if(s.getBoundingClientRect().top<120)active=s});if(active){document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.getAttribute('href')==='#'+active.id)})}});
+</script>
+</body>
+</html>
