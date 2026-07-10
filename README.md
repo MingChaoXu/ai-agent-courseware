@@ -22,8 +22,6 @@
 ├── Day5_ComplexAgentAndRoadshow.html
 ├── requirements.txt
 ├── .env.example
-├── projects/                    # Full-stack projects
-│   └── gov-qa/                  # Government Services QA (FastAPI + Vue + Skill)
 └── exercises/
     ├── common/
     │   ├── shared_utils.py
@@ -36,6 +34,14 @@
     │   ├── contract_samples.json
     │   └── production_data.json
     ├── day2/
+    │   └── ex1_gov_qa/         # Full-stack demo: FastAPI + Vue + Skill
+    │       ├── run.py           # Training script (LCEL RAG Chain)
+    │       ├── EXERCISE.md      # Exercise description
+    │       ├── PROJECT_README.md
+    │       ├── backend/         # FastAPI backend (agent + API)
+    │       ├── frontend/        # Vue 3 SPA (CDN)
+    │       ├── data/            # Real gov FAQ data (50 entries)
+    │       └── skill/           # TeleAgent Skill
     ├── day3/
     ├── day4/
     └── day5/
