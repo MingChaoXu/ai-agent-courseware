@@ -205,7 +205,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="nav-group">
 <div class="nav-group-title">Day 1 总结</div>
 <a class="nav-item" href="#summary" onclick="navClick(this)">核心知识点回顾</a>
-<a class="nav-item" href="#quiz" onclick="navClick(this)">自测练习</a>
 <a class="nav-item" href="#preview" onclick="navClick(this)">Day 2 预告</a>
 </div>
 </nav>
@@ -1541,50 +1540,6 @@ Day4: 数据+多模态      Day5: 复杂智能体+路演
 </div>
 </div>
 
-<div class="section" id="quiz">
-<h3 style="text-align:center;margin-bottom:20px">自测练习</h3>
-
-<div class="quiz-box">
-<div class="quiz-q">Q1: Agent = LLM + Context + Tools，如果移除Tools，Agent退化为？</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">A. 规则引擎</div>
-<div class="quiz-a" onclick="checkQuiz(this, true)">B. ChatBot（纯对话）</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">C. 知识库</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">D. 完全无法运行</div>
-</div>
-
-<div class="quiz-box">
-<div class="quiz-q">Q2: 政务问答场景应该设置temperature为多少？</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">A. 1.0（高创造性）</div>
-<div class="quiz-a" onclick="checkQuiz(this, true)">B. 0.1-0.3（准确性优先）</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">C. 0.7（平衡）</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">D. 2.0（最高创造性）</div>
-</div>
-
-<div class="quiz-box">
-<div class="quiz-q">Q3: RAG中"混合检索"是指？</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">A. 同时使用多个LLM</div>
-<div class="quiz-a" onclick="checkQuiz(this, true)">B. 稠密检索+稀疏检索+重排序</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">C. 检索+生成交替进行</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">D. 多个知识库同时检索</div>
-</div>
-
-<div class="quiz-box">
-<div class="quiz-q">Q4: System Prompt三元组是？</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">A. 输入+处理+输出</div>
-<div class="quiz-a" onclick="checkQuiz(this, true)">B. 角色+职责+格式</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">C. 问题+检索+回答</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">D. 思考+行动+观察</div>
-</div>
-
-<div class="quiz-box">
-<div class="quiz-q">Q5: Agentic RAG相比被动RAG的核心优势是？</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">A. 检索速度更快</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">B. 支持更多文件格式</div>
-<div class="quiz-a" onclick="checkQuiz(this, true)">C. 自主决策是否检索、自主迭代补充检索、自主拒绝超范围问题</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">D. 不需要知识库</div>
-</div>
-</div>
-
 <div class="section" id="preview">
 <div class="summary-card">
 <h3>Day 2 预告：TeleAgent实战入门</h3>
@@ -1605,7 +1560,6 @@ Day4: 数据+多模态      Day5: 复杂智能体+路演
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
 function navClick(el){document.getElementById('sidebar').classList.remove('open');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active')}
 function copyCode(btn){const code=btn.closest('.code-block').querySelector('.code-body').textContent;navigator.clipboard.writeText(code).then(()=>{btn.textContent='已复制!';setTimeout(()=>btn.textContent='复制',1500)})}
-function checkQuiz(el,correct){const box=el.closest('.quiz-box');box.querySelectorAll('.quiz-a').forEach(a=>{a.style.pointerEvents='none';if(a===el){a.classList.add(correct?'correct':'wrong')}else if(correct&&a!==el){}});if(!correct){const answers=box.querySelectorAll('.quiz-a');answers.forEach(a=>{if(!a.classList.contains('wrong'))a.style.opacity='0.4'})}}
 window.addEventListener('scroll',()=>{const h=document.documentElement.scrollHeight-window.innerHeight;const p=h>0?Math.round(window.scrollY/h*100):0;document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressText').textContent=p+'%';
 const sections=document.querySelectorAll('.section');let active=null;sections.forEach(s=>{if(s.getBoundingClientRect().top<120)active=s});if(active){document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.getAttribute('href')==='#'+active.id)})}});
 </script>
