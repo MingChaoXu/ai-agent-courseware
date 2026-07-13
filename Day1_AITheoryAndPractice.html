@@ -1333,83 +1333,95 @@ sim = viz.cosine_similarity(v1, v2)
 <div class="section" id="s7">
 <div class="section-header">
 <span class="section-tag afternoon">下午 · 2.4</span>
-<h2>TeleAgent平台概览</h2>
-<p>API架构、智能体创建流程、5天课程全景图 · 30分钟</p>
+<h2>智能体平台与开发流程</h2>
+<p>平台架构、API调用流程、5天课程全景图 · 30分钟</p>
 </div>
 
 <div class="topic-card" id="s7-1">
-<h3>API架构与Python客户端</h3>
+<h3>智能体平台架构与API调用</h3>
 
 <div class="flow-diagram">
-TeleAgent 平台架构：
+智能体平台架构（通用模型）：
 
 ┌──────────┐   REST API    ┌──────────────┐
-│  Python  │ ◄────────────►│  TeleAgent   │
-│  客户端   │   JSON/HTTP   │   服务平台    │
+│  Python  │ ◄────────────►│  智能体       │
+│  代码调用 │   JSON/HTTP   │   服务平台    │
 └──────────┘               └──────────────┘
     │                           │
-    │ 封装API调用               │ 管理
+    │ HTTP请求封装              │ 管理
     ▼                           ▼
  ┌──────────────────────────────────────┐
  │  核心API：                           │
- │  • create_agent()   创建智能体       │
- │  • chat()           与智能体对话     │
- │  • create_knowledge_base()  创建KB   │
- │  • upload_text()    上传知识文档     │
- │  • create_skill()   创建技能         │
- │  • bind_skill_to_agent() 绑定技能    │
- │  • create_workflow() 创建工作流      │
- │  • run_workflow()   运行工作流       │
- │  • call_tool()      调用平台工具     │
- └──────────────────────────────────────┘</div>
+ │  • POST /agents       创建智能体     │
+ │  • POST /agents/:id/chat  对话      │
+ │  • POST /knowledge_bases  创建KB     │
+ │  • POST /kb/:id/documents 上传文档   │
+ │  • POST /skills       创建技能       │
+ │  • POST /agents/:id/skills 绑定技能  │
+ │  • POST /workflows    创建工作流     │
+ │  • POST /workflows/:id/run 运行工作流│
+ └──────────────────────────────────────┘
+
+注：不同平台（TeleAI开放平台、LangChain、Dify等）
+API路径和参数格式不同，但核心流程一致</div>
 
 <div class="code-block">
 <div class="code-header">
-<span class="lang-badge">Python · TeleAgent客户端</span>
+<span class="lang-badge">Python · 智能体平台API调用示意</span>
 <button class="copy-btn" onclick="copyCode(this)">复制</button>
 </div>
-<div class="code-body"><span class="kw">from</span> teleagent_client <span class="kw">import</span> TeleAgentClient, get_client
+<div class="code-body"><span class="com"># 以下为通用Agent平台API调用流程示意</span>
+<span class="com"># 实际使用时替换为对应平台的SDK（如TeleAI开放平台SDK）</span>
 
-<span class="com"># 获取默认客户端（自动读取环境变量）</span>
-client = get_client()
+<span class="kw">import</span> requests
 
-<span class="com"># 测试连接</span>
-agents = client.list_agents()
-<span class="fn">print</span>(<span class="fstr">f"连接成功！当前智能体数量: {len(agents)}"</span>)
+BASE_URL = <span class="str">"https://api.example.com/v1"</span>  <span class="com"># 替换为实际平台地址</span>
+HEADERS = {<span class="str">"Authorization"</span>: <span class="str">"Bearer YOUR_API_KEY"</span>}
 
-<span class="com"># 创建智能体</span>
-agent = client.create_agent(
-    name=<span class="str">"政务问答助手"</span>,
-    description=<span class="str">"政务服务智能问答"</span>,
-    system_prompt=<span class="str">"你是政务问答助手..."</span>,
-    model=<span class="str">"default"</span>
-)
-agent_id = agent.get(<span class="str">"id"</span>)
+<span class="com"># ① 测试连接 —— 列出已有智能体</span>
+resp = requests.get(<span class="fstr">f"{BASE_URL}/agents"</span>, headers=HEADERS)
+<span class="fn">print</span>(<span class="fstr">f"连接成功！当前智能体数量: {len(resp.json())}"</span>)
 
-<span class="com"># 与智能体对话</span>
-result = client.chat(agent_id, <span class="str">"公积金提取需要什么材料？"</span>)
-<span class="fn">print</span>(result.get(<span class="str">"content"</span>, <span class="str">""</span>))
+<span class="com"># ② 创建智能体</span>
+agent = requests.post(<span class="fstr">f"{BASE_URL}/agents"</span>, headers=HEADERS, json={
+    <span class="str">"name"</span>: <span class="str">"政务问答助手"</span>,
+    <span class="str">"description"</span>: <span class="str">"政务服务智能问答"</span>,
+    <span class="str">"system_prompt"</span>: <span class="str">"你是政务问答助手..."</span>,
+    <span class="str">"model"</span>: <span class="str">"default"</span>
+}).json()
+agent_id = agent[<span class="str">"id"</span>]
 
-<span class="com"># 创建知识库</span>
-kb = client.create_knowledge_base(
-    name=<span class="str">"政务FAQ知识库"</span>,
-    description=<span class="str">"户籍、社保、公积金等FAQ"</span>
-)
-kb_id = kb.get(<span class="str">"id"</span>)
+<span class="com"># ③ 与智能体对话</span>
+result = requests.post(<span class="fstr">f"{BASE_URL}/agents/{agent_id}/chat"</span>,
+    headers=HEADERS, json={<span class="str">"message"</span>: <span class="str">"公积金提取需要什么材料？"</span>}).json()
+<span class="fn">print</span>(result[<span class="str">"content"</span>])
 
-<span class="com"># 上传文档到知识库</span>
-client.upload_text(kb_id,
-    title=<span class="str">"公积金提取FAQ"</span>,
-    content=<span class="str">"购房提取需提供：购房合同、身份证..."</span>
-)
+<span class="com"># ④ 创建知识库</span>
+kb = requests.post(<span class="fstr">f"{BASE_URL}/knowledge_bases"</span>, headers=HEADERS, json={
+    <span class="str">"name"</span>: <span class="str">"政务FAQ知识库"</span>,
+    <span class="str">"description"</span>: <span class="str">"户籍、社保、公积金等FAQ"</span>
+}).json()
+kb_id = kb[<span class="str">"id"</span>]
 
-<span class="com"># 创建RAG技能并绑定</span>
-skill = client.create_skill(<span class="str">"政务问答"</span>, <span class="str">"rag"</span>, {
-    <span class="str">"knowledge_base_id"</span>: kb_id,
-    <span class="str">"retrieval_top_k"</span>: <span class="num">3</span>,
-    <span class="str">"temperature"</span>: <span class="num">0.3</span>
-})
-client.bind_skill_to_agent(agent_id, skill.get(<span class="str">"id"</span>))</div>
+<span class="com"># ⑤ 上传文档到知识库</span>
+requests.post(<span class="fstr">f"{BASE_URL}/knowledge_bases/{kb_id}/documents"</span>,
+    headers=HEADERS, json={
+        <span class="str">"title"</span>: <span class="str">"公积金提取FAQ"</span>,
+        <span class="str">"content"</span>: <span class="str">"购房提取需提供：购房合同、身份证..."</span>
+    })
+
+<span class="com"># ⑥ 创建RAG技能并绑定到智能体</span>
+skill = requests.post(<span class="fstr">f"{BASE_URL}/skills"</span>, headers=HEADERS, json={
+    <span class="str">"name"</span>: <span class="str">"政务问答"</span>,
+    <span class="str">"type"</span>: <span class="str">"rag"</span>,
+    <span class="str">"config"</span>: {
+        <span class="str">"knowledge_base_id"</span>: kb_id,
+        <span class="str">"retrieval_top_k"</span>: <span class="num">3</span>,
+        <span class="str">"temperature"</span>: <span class="num">0.3</span>
+    }
+}).json()
+requests.post(<span class="fstr">f"{BASE_URL}/agents/{agent_id}/skills"</span>,
+    headers=HEADERS, json={<span class="str">"skill_id"</span>: skill[<span class="str">"id"</span>]})</div>
 </div>
 </div>
 
@@ -1423,13 +1435,13 @@ client.bind_skill_to_agent(agent_id, skill.get(<span class="str">"id"</span>))</
 </div>
 <div class="step-block">
 <span class="step-num">2</span>
-<h4>调用create_agent()创建智能体</h4>
+<h4>调用创建智能体API发起创建请求</h4>
 <p>传入name、description、system_prompt、model参数，获得agent_id。</p>
 </div>
 <div class="step-block">
 <span class="step-num">3</span>
 <h4>创建知识库并上传文档（如需RAG）</h4>
-<p>调用create_knowledge_base()、upload_text()，文档自动分块→嵌入→索引。</p>
+<p>创建KB、上传文档，平台自动完成分块→嵌入→索引。</p>
 </div>
 <div class="step-block">
 <span class="step-num">4</span>
@@ -1438,7 +1450,7 @@ client.bind_skill_to_agent(agent_id, skill.get(<span class="str">"id"</span>))</
 </div>
 <div class="step-block">
 <span class="step-num">5</span>
-<h4>调用chat()测试对话</h4>
+<h4>调用对话API测试交互</h4>
 <p>多轮对话测试，覆盖正常case和边界case，验证回答质量。</p>
 </div>
 </div>
