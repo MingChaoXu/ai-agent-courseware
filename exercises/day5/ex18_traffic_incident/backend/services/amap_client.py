@@ -265,7 +265,7 @@ class AMapClient:
             ]
         return result
 
-    def _mock_around(self, location: str, categories: List[str]]) -> Dict[str, List[Dict]]:
+    def _mock_around(self, location: str, categories: List[str]) -> Dict[str, List[Dict]]:
         mock = _MOCK_AROUND.get(location, {})
         result = {}
         for cat in categories:
