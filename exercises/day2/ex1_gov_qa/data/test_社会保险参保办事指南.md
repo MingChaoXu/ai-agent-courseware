@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '262ff6c7-90b6-4d88-acc0-7c9b55b4c29f'
-  PropagateID: '262ff6c7-90b6-4d88-acc0-7c9b55b4c29f'
-  ReservedCode1: 'dd5a2a0e-64cb-430a-9247-7aab1654dcc1'
-  ReservedCode2: 'dd5a2a0e-64cb-430a-9247-7aab1654dcc1'
----
-
 # 相山区人力资源和社会保障局公共服务办事指南（2025年版）
 
 来源：相山区人民政府

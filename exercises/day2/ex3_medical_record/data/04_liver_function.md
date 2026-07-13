@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '3e0c8bb9-6aff-40f9-94ba-46f97f7f9622'
-  PropagateID: '3e0c8bb9-6aff-40f9-94ba-46f97f7f9622'
-  ReservedCode1: '41149458-5b4c-4144-b38a-68ef13d40175'
-  ReservedCode2: '41149458-5b4c-4144-b38a-68ef13d40175'
----
-
 # 检验报告样本2 - 肝功能异常
 
 ## 检验数据

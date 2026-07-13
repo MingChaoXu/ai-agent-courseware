@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '0d35c9fc-8c60-49a5-8aa1-99b8b25ced93'
-  PropagateID: '0d35c9fc-8c60-49a5-8aa1-99b8b25ced93'
-  ReservedCode1: '543281d2-e734-49db-831e-f150404db5c1'
-  ReservedCode2: '543281d2-e734-49db-831e-f150404db5c1'
----
-
 # 居住证申领指南
 
 来源：凉山彝族自治州人民政府

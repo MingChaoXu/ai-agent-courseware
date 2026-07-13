@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '60629796-ee90-4c78-a761-439f2ba4c2a7'
-  PropagateID: '60629796-ee90-4c78-a761-439f2ba4c2a7'
-  ReservedCode1: '8526a7d4-6266-49c6-94d1-a009d2c356f4'
-  ReservedCode2: '8526a7d4-6266-49c6-94d1-a009d2c356f4'
----
-
 # 韶关市住房公积金个人住房贷款购房指南
 
 来源：韶关市住房公积金管理中心

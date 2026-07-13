@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '9ec3fba0-686b-4bda-9cda-39eeb05bdf23'
-  PropagateID: '9ec3fba0-686b-4bda-9cda-39eeb05bdf23'
-  ReservedCode1: '65700e6d-6b57-4303-86ea-5143a976a5ea'
-  ReservedCode2: '65700e6d-6b57-4303-86ea-5143a976a5ea'
----
-
 # 诊疗方案样本2 - 2型糖尿病初诊
 
 ## 症状描述

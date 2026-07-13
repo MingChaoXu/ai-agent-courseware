@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '0b5e9c3a-7437-46fd-a1aa-06bf8621719e'
-  PropagateID: '0b5e9c3a-7437-46fd-a1aa-06bf8621719e'
-  ReservedCode1: '2cc5acc9-ad43-43e6-9991-5775bd33ffd1'
-  ReservedCode2: '2cc5acc9-ad43-43e6-9991-5775bd33ffd1'
----
-
 # 户政业务网上办理指引
 
 来源：广州市公安局番禺分局
