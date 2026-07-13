@@ -1,3 +1,14 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: 'be141b36-f943-40cf-99fd-8c2380032058'
+  PropagateID: 'be141b36-f943-40cf-99fd-8c2380032058'
+  ReservedCode1: '8a411a82-b1eb-4530-b6cb-23a2f5986a24'
+  ReservedCode2: '8a411a82-b1eb-4530-b6cb-23a2f5986a24'
+---
+
 # 区县AI赋能培训课程
 
 面向电信行业客户经理与解决方案经理的5天AI智能体实战培训课程，涵盖AI理论与实践、RAG知识库、文档审核、多模态数据分析、复杂智能体等16+行业场景。
@@ -48,7 +59,7 @@
 | ex0 | ReAct推理原理 | ex0_react_principle/ |
 | ex1 | 政务智能问答 | ex1_gov_qa/ |
 | ex2 | 工业知识库检索 | ex2_industrial_kb/ |
-| ex3 | 医疗病历摘要 | ex3_medical_record/ |
+| ex3 | 基层门诊AI辅助诊疗 | ex3_medical_record/ |
 | ex3.5 | 上下文压缩 | ex3_5_context_compress/ |
 
 ### Day 3 — 上下文工程与文档审核
