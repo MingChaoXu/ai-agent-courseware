@@ -118,7 +118,34 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 .vis-figure .vis-caption strong{color:var(--text2)}
 .vis-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
 .vis-grid .vis-figure{margin:0}
-@media(max-width:700px){.vis-grid{grid-template-columns:1fr}}
+.paradigm-timeline{display:flex;align-items:stretch;gap:0;margin:20px 0;position:relative}
+.paradigm-step{flex:1;text-align:center;padding:20px 12px;position:relative;border-top:3px solid var(--border);transition:all .3s}
+.paradigm-step:hover{border-top-color:var(--accent);transform:translateY(-2px)}
+.paradigm-step .ps-year{font-size:11px;color:var(--text3);font-weight:700;letter-spacing:1px}
+.paradigm-step .ps-name{font-size:15px;font-weight:800;margin:4px 0;background:linear-gradient(135deg,var(--accent),var(--accent5));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.paradigm-step .ps-desc{font-size:11px;color:var(--text2);line-height:1.6}
+.paradigm-step .ps-icon{font-size:28px;margin-bottom:6px}
+.paradigm-step:not(:last-child)::after{content:'→';position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:16px;z-index:1}
+.etclovg-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:20px 0}
+.etclovg-card{text-align:center;padding:14px 6px;border-radius:10px;border:1px solid var(--border);transition:all .3s;position:relative;overflow:hidden}
+.etclovg-card:hover{transform:translateY(-3px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.etclovg-card .ec-letter{font-size:28px;font-weight:900;margin-bottom:2px}
+.etclovg-card .ec-name{font-size:10px;font-weight:700;margin-bottom:4px;line-height:1.3}
+.etclovg-card .ec-desc{font-size:9px;color:var(--text3);line-height:1.5}
+.etclovg-card.core{border-color:var(--accent);background:rgba(37,99,235,.05)}
+.etclovg-card.core .ec-letter{color:var(--accent)}
+.etclovg-card.ctrl{border-color:var(--accent2);background:rgba(5,150,105,.05)}
+.etclovg-card.ctrl .ec-letter{color:var(--accent2)}
+.loop-diagram{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin:20px 0;position:relative}
+.loop-diagram svg{width:100%;height:auto;display:block}
+.example-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin:16px 0}
+.example-box .ex-tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;margin-bottom:8px}
+.example-box .ex-tag.harness{background:rgba(37,99,235,.12);color:var(--accent)}
+.example-box .ex-tag.loop{background:rgba(124,58,237,.12);color:var(--accent5)}
+.example-box h4{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.example-box p{font-size:12px;color:var(--text2);line-height:1.8}
+.example-box code{background:rgba(74,158,255,.1);color:var(--accent);padding:1px 5px;border-radius:3px;font-size:11px}
+@media(max-width:700px){.vis-grid{grid-template-columns:1fr}.etclovg-grid{grid-template-columns:repeat(4,1fr)}.paradigm-timeline{flex-direction:column}.paradigm-step:not(:last-child)::after{content:'↓';right:auto;bottom:-14px;top:auto;left:50%;transform:translateX(-50%)}}
 @media(max-width:900px){
 .sidebar{transform:translateX(-100%)}
 .sidebar.open{transform:translateX(0)}
@@ -154,6 +181,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <a class="nav-item" href="#s3-1" onclick="navClick(this)">├ Agent核心公式</a>
 <a class="nav-item" href="#s3-2" onclick="navClick(this)">├ 三大组件详解</a>
 <a class="nav-item" href="#s3-3" onclick="navClick(this)">└ 从ChatBot到Agent演进</a>
+<a class="nav-item" href="#s3-4" onclick="navClick(this)">└ AI工程范式演进：Harness与Loop</a>
 </div>
 <div class="nav-group">
 <div class="nav-group-title">下午 · Prompt工程与ReAct</div>
@@ -606,6 +634,308 @@ Level 5 ── 自主Agent（未来）
      示例：完全自主的商业决策Agent
 
   本课程覆盖：Level 1 → Level 4</div>
+</div>
+
+<div class="topic-card" id="s3-4">
+<h3>AI工程范式演进：从Prompt到Loop</h3>
+
+<div class="paradigm-timeline">
+<div class="paradigm-step">
+<div class="ps-icon">&#128221;</div>
+<div class="ps-year">2023</div>
+<div class="ps-name">Prompt Engineering</div>
+<div class="ps-desc">写好提示词<br>就能让模型干活</div>
+</div>
+<div class="paradigm-step">
+<div class="ps-icon">&#128218;</div>
+<div class="ps-year">2024-25</div>
+<div class="ps-name">Context Engineering</div>
+<div class="ps-desc">塞对上下文<br>比写对提示词更重要</div>
+</div>
+<div class="paradigm-step">
+<div class="ps-icon">&#128295;</div>
+<div class="ps-year">2025-26</div>
+<div class="ps-name">Harness Engineering</div>
+<div class="ps-desc">模型之外的约束<br>决定了Agent可靠性</div>
+</div>
+<div class="paradigm-step">
+<div class="ps-icon">&#128260;</div>
+<div class="ps-year">2026</div>
+<div class="ps-name">Loop Engineering</div>
+<div class="ps-desc">设计循环<br>让Agent自己驱动自己</div>
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#9889; 核心洞察：模型正在变成通用商品</div>
+<div class="pc-body">
+CMU/Yale/Amazon联合发表的综述论文<strong>《Agent Harness Engineering: A Survey》</strong>提出<strong>绑定约束论（Binding-Constraint Thesis）</strong>：<br><br>
+<strong>长程任务的基准方差由执行Harness驱动，而非模型本身。</strong><br><br>
+同一个模型，仅修改外层Harness，可<a href="https://picrew.github.io/LLM-Harness/" target="_blank">获得最高10x的性能提升</a>，远超模型升级带来的2-4个点。拼的不是谁的模型更强，而是<strong>谁的环境更扎实、验证链路更完整</strong>。
+</div>
+</div>
+
+<h4>Harness Engineering：Agent的"变速箱+刹车"</h4>
+
+<div class="principle-card green">
+<div class="pc-title">&#128663; 类比：Agent是一辆车</div>
+<div class="pc-body">
+<strong>模型 = 引擎</strong>（马力大，给油就响）<br>
+<strong>Prompt = 方向盘</strong>（你打方向引擎带着你走）<br>
+<strong>交互程序 = 车轮</strong>（承载它上路）<br><br>
+但引擎+方向盘+车轮本身<strong>不是车</strong>——你不能开着引擎上路。<br>
+你还需要：<strong>变速箱</strong>（Harness编排）、<strong>制动器</strong>（Harness约束）、<strong>仪表盘</strong>（Harness可观测性）、<strong>刹车</strong>（Harness治理）。<br><br>
+<strong>公式：Agent = LLM（大脑）+ Harness（全部约束与支撑体系）</strong>
+</div>
+</div>
+
+<h4>ETCLOVG 七层架构</h4>
+<p>论文提出的七层分类体系，前四层为<strong>核心运行底座</strong>，后三层为<strong>全局管控平面</strong>：</p>
+
+<div class="etclovg-grid">
+<div class="etclovg-card core">
+<div class="ec-letter">E</div>
+<div class="ec-name">Execution</div>
+<div class="ec-desc">执行环境<br>沙箱/容器/终端</div>
+</div>
+<div class="etclovg-card core">
+<div class="ec-letter">T</div>
+<div class="ec-name">Tool</div>
+<div class="ec-desc">工具协议<br>注册/调用/权限</div>
+</div>
+<div class="etclovg-card core">
+<div class="ec-letter">C</div>
+<div class="ec-name">Context</div>
+<div class="ec-desc">上下文管理<br>记忆/RAG/压缩</div>
+</div>
+<div class="etclovg-card core">
+<div class="ec-letter">L</div>
+<div class="ec-name">Lifecycle</div>
+<div class="ec-desc">编排调度<br>ReAct/状态机</div>
+</div>
+<div class="etclovg-card ctrl">
+<div class="ec-letter">O</div>
+<div class="ec-name">Observability</div>
+<div class="ec-desc">可观测性<br>日志/Trace/指标</div>
+</div>
+<div class="etclovg-card ctrl">
+<div class="ec-letter">V</div>
+<div class="ec-name">Verification</div>
+<div class="ec-desc">验证评估<br>断言/测评/回归</div>
+</div>
+<div class="etclovg-card ctrl">
+<div class="ec-letter">G</div>
+<div class="ec-name">Governance</div>
+<div class="ec-desc">安全治理<br>合规/红线/熔断</div>
+</div>
+</div>
+
+<div class="example-box">
+<div class="ex-tag harness">应用示例：政务服务问答Agent的Harness</div>
+<h4>E层 — 执行环境：沙箱内运行，禁止直接访问生产数据库</h4>
+<p>Agent调用的数据库查询只能在只读副本上执行，写操作必须经过审批流。</p>
+<h4>T层 — 工具协议：注册了3个工具——<code>search_policy</code>、<code>query_db</code>、<code>generate_form</code></h4>
+<p>每个工具声明了输入输出Schema，Agent无法调用未注册的工具。</p>
+<h4>C层 — 上下文管理：政策文档RAG + 对话历史滑动窗口</h4>
+<p>超过上下文窗口时，自动压缩早期对话，保留关键实体和意图。</p>
+<h4>L层 — 编排调度：ReAct循环，最多5轮</h4>
+<p>每轮 = Thought → <code>search_policy</code> → Observation → Thought → <code>generate_form</code> → 结束</p>
+<h4>O层 — 可观测性：每步记录token消耗、工具调用耗时、检索命中率</h4>
+<p>运维大屏实时展示：平均响应时间、工具失败率、用户满意度。</p>
+<h4>V层 — 验证评估：输出格式校验 + 政策引用可溯源性检查</h4>
+<p>自动检查：回答是否引用了真实政策文号？表格是否符合标准格式？</p>
+<h4>G层 — 安全治理：敏感信息脱敏 + 话题红线 + 成本上限</h4>
+<p>身份证号自动脱敏为***；涉及投资建议时强制转人工；单次会话Token上限2000。</p>
+</div>
+
+<h4>Loop Engineering：从"人驱动AI"到"系统驱动AI"</h4>
+
+<div class="principle-card">
+<div class="pc-title">&#128260; 2026年6月，三条引爆社区的言论</div>
+<div class="pc-body">
+<strong>Boris Cherny</strong>（Claude Code负责人，Anthropic）：<br>
+"我不再亲自提示Claude了，我的工作就是写循环(loops)，让循环去提示Claude。"<br><br>
+<strong>Peter Steinberger</strong>（OpenClaw创始人，现OpenAI）：<br>
+"你不该再给编程Agent写提示词，你应该设计循环来提示你的Agent。" → <strong>800万次浏览</strong><br><br>
+<strong>Addy Osmani</strong>（Google Cloud AI总监）：<br>
+同天发表长文《Loop Engineering》，正式将这个范式系统化命名。
+</div>
+</div>
+
+<div class="loop-diagram">
+<svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/></marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#059669"/></marker>
+    <marker id="arrowPurple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/></marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/></marker>
+  </defs>
+
+  <!-- 旧方式：Prompt驱动 -->
+  <text x="400" y="30" text-anchor="middle" font-size="15" font-weight="800" fill="#1e293b">旧方式：Prompt驱动（人当调度器）</text>
+  <rect x="50" y="45" width="700" height="90" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="90" y="75" font-size="20">&#128100;</text>
+  <text x="115" y="75" font-size="12" font-weight="700" fill="#92400e">人</text>
+  <line x1="145" y1="70" x2="200" y2="70" stroke="#d97706" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="205" y="55" width="100" height="32" rx="6" fill="#fff" stroke="#d97706" stroke-width="1.5"/>
+  <text x="255" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">写Prompt</text>
+  <line x1="310" y1="70" x2="370" y2="70" stroke="#d97706" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="375" y="50" width="90" height="40" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="420" y="68" text-anchor="middle" font-size="11" font-weight="700" fill="#1e40af">Agent</text>
+  <text x="420" y="82" text-anchor="middle" font-size="9" fill="#3b82f6">执行一步</text>
+  <line x1="470" y1="70" x2="530" y2="70" stroke="#d97706" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="535" y="55" width="100" height="32" rx="6" fill="#fff" stroke="#d97706" stroke-width="1.5"/>
+  <text x="585" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">人看结果</text>
+  <line x1="640" y1="70" x2="640" y2="115" stroke="#d97706" stroke-width="2"/>
+  <line x1="640" y1="115" x2="90" y2="115" stroke="#d97706" stroke-width="2"/>
+  <line x1="90" y1="115" x2="90" y2="90" stroke="#d97706" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="365" y="130" text-anchor="middle" font-size="10" fill="#92400e">&#x21BB; 人手动循环——瓶颈是人，不是AI</text>
+
+  <!-- 新方式：Loop驱动 -->
+  <text x="400" y="175" text-anchor="middle" font-size="15" font-weight="800" fill="#1e293b">新方式：Loop驱动（系统当调度器）</text>
+  <rect x="50" y="190" width="700" height="220" rx="12" fill="#f0fdf4" stroke="#059669" stroke-width="2"/>
+
+  <!-- Trigger -->
+  <rect x="80" y="210" width="110" height="40" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="135" y="228" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">&#9889; Trigger</text>
+  <text x="135" y="243" text-anchor="middle" font-size="9" fill="#b45309">触发器</text>
+
+  <!-- Arrow to Agent Loop -->
+  <line x1="195" y1="230" x2="240" y2="230" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Agent Loop (core) -->
+  <rect x="245" y="200" width="160" height="60" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="325" y="224" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af">&#x21BB; Agent Loop</text>
+  <text x="325" y="244" text-anchor="middle" font-size="9" fill="#3b82f6">推理→调用工具→观察结果</text>
+
+  <!-- Arrow to Validator -->
+  <line x1="410" y1="230" x2="455" y2="230" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Validator / Gate -->
+  <rect x="460" y="205" width="110" height="50" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="515" y="226" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">&#128274; Validator</text>
+  <text x="515" y="245" text-anchor="middle" font-size="9" fill="#dc2626">门控/验证器</text>
+
+  <!-- Pass arrow (right) -->
+  <line x1="575" y1="230" x2="620" y2="230" stroke="#059669" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="598" y="222" text-anchor="middle" font-size="9" font-weight="700" fill="#059669">&#10003; 通过</text>
+
+  <!-- Done -->
+  <rect x="625" y="212" width="100" height="38" rx="8" fill="#dcfce7" stroke="#059669" stroke-width="2"/>
+  <text x="675" y="230" text-anchor="middle" font-size="11" font-weight="800" fill="#166534">&#10003; Done</text>
+  <text x="675" y="244" text-anchor="middle" font-size="9" fill="#16a34a">输出结果</text>
+
+  <!-- Fail arrow (down, loop back) -->
+  <line x1="515" y1="260" x2="515" y2="320" stroke="#dc2626" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <text x="530" y="295" font-size="9" font-weight="700" fill="#dc2626">&#10007; 不通过</text>
+
+  <!-- Feedback box -->
+  <rect x="430" y="325" width="170" height="50" rx="8" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="515" y="346" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">&#x21BB; Feedback Loop</text>
+  <text x="515" y="363" text-anchor="middle" font-size="9" fill="#7c3aed">修正策略/换工具/降级</text>
+
+  <!-- Arrow back to Agent Loop -->
+  <line x1="430" y1="350" x2="245" y2="350" stroke="#7c3aed" stroke-width="2"/>
+  <line x1="245" y1="350" x2="245" y2="260" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrowPurple)"/>
+
+  <!-- Memory -->
+  <rect x="80" y="320" width="110" height="50" rx="8" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="135" y="341" text-anchor="middle" font-size="11" font-weight="700" fill="#6d28d9">&#128190; Memory</text>
+  <text x="135" y="358" text-anchor="middle" font-size="9" fill="#7c3aed">跨轮状态/记忆</text>
+
+  <!-- Memory arrow to Agent Loop -->
+  <line x1="135" y1="315" x2="135" y2="260" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowPurple)"/>
+
+  <!-- Guardrails -->
+  <rect x="670" y="310" width="60" height="80" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="700" y="335" text-anchor="middle" font-size="10" font-weight="700" fill="#dc2626">&#128737;</text>
+  <text x="700" y="352" text-anchor="middle" font-size="9" font-weight="700" fill="#991b1b">Guard</text>
+  <text x="700" y="367" text-anchor="middle" font-size="8" fill="#dc2626">成本上限</text>
+  <text x="700" y="381" text-anchor="middle" font-size="8" fill="#dc2626">超时熔断</text>
+
+  <!-- Guard arrow pointing down to break loop -->
+  <line x1="670" y1="350" x2="610" y2="350" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="640" y="342" text-anchor="middle" font-size="8" fill="#dc2626">强制退出</text>
+</svg>
+</div>
+
+<table class="compare-table">
+<thead>
+<tr><th>组件</th><th>作用</th><th>类比</th><th>不存在时会怎样</th></tr>
+</thead>
+<tbody>
+<tr><td>Trigger</td><td>什么条件启动循环</td><td>闹钟/开关</td><td>Agent永远等着不动</td></tr>
+<tr><td>Agent Loop</td><td>核心执行循环（推理→调用→观察）</td><td>发动机活塞</td><td>没有循环，只做一步就停</td></tr>
+<tr><td>Validator</td><td>每步输出的质量检查</td><td>质检站</td><td>错误累积，越跑越偏</td></tr>
+<tr><td>Feedback Loop</td><td>不通过时自动修正</td><td>方向盘修正</td><td>做错一次就永远错下去</td></tr>
+<tr><td>Memory</td><td>循环间保持上下文</td><td>笔记本</td><td>每轮"失忆"，重复犯错</td></tr>
+<tr><td>Guardrails</td><td>成本/超时/权限红线</td><td>刹车+保险丝</td><td>Token账单爆炸或无限循环</td></tr>
+</tbody>
+</table>
+
+<div class="example-box">
+<div class="ex-tag loop">应用示例：区县运维工单自动处理Loop</div>
+<h4>场景：运维Agent自动处理服务器告警工单</h4>
+<p>
+<strong>Trigger</strong>：监控系统推送告警事件（CPU > 95%持续5分钟）<br>
+<strong>Agent Loop 第1轮</strong>：Agent推理 → 调用<code>ssh_tool</code>查看Top进程 → 发现是批处理任务占用<br>
+<strong>Validator</strong>：检查Agent输出是否包含"进程名"和"CPU占比" → 通过<br>
+<strong>Agent Loop 第2轮</strong>：Agent推理 → 调用<code>query_history</code>查询该任务历史 → 发现是每月例行任务<br>
+<strong>Validator</strong>：检查是否引用了真实历史记录 → 通过<br>
+<strong>Agent Loop 第3轮</strong>：Agent生成处置建议 → "建议将批处理任务调度至凌晨2点执行"<br>
+<strong>Validator</strong>：建议中包含具体cron表达式 + 影响范围评估 → 通过 ✓<br>
+<strong>Guardrails</strong>：本轮消耗Token 1,847 &lt; 上限2,000；耗时23秒 &lt; 60秒超时 → 继续<br>
+<strong>Done</strong>：输出处置工单，自动派发给运维人员确认<br><br>
+<strong style="color:#dc2626">如果不通过会怎样？</strong> 第2轮Agent未引用历史记录 → Validator判定不通过 → Feedback Loop自动补充"请查询该任务最近3次执行记录" → 重新进入Agent Loop
+</p>
+</div>
+
+<div class="example-box">
+<div class="ex-tag loop">应用示例：政务文档审查Loop</div>
+<h4>场景：合同审查Agent自动标注风险条款</h4>
+<p>
+<strong>Trigger</strong>：用户上传合同PDF → 系统提取文本后触发<br>
+<strong>Agent Loop 第1轮</strong>：Agent逐条款审查 → 标注3处潜在风险<br>
+<strong>Validator</strong>：检查每处标注是否包含<strong>条款原文+风险原因+修改建议</strong> → 2处通过，1处缺少修改建议<br>
+<strong>Feedback Loop</strong>：自动补充"请为第3处风险补充修改建议" → Agent补充建议 → 再次验证 → 全部通过 ✓<br>
+<strong>Memory</strong>：记住本合同的行业类型和甲方信息，后续条款审查参考<br>
+<strong>Guardrails</strong>：审查条款超过50条时，自动拆分为多轮处理，单轮不超过30条；累计Token超5,000时强制输出已审查结果<br>
+<strong>Done</strong>：输出标注完的风险审查报告
+</p>
+</div>
+
+<h4>Harness vs Loop：什么关系？</h4>
+
+<div class="principle-card green">
+<div class="pc-title">&#127968; Harness是地基，Loop是上层建筑</div>
+<div class="pc-body">
+<strong>Harness</strong> 解决"Agent能不能跑起来"——造路、设红绿灯、装摄像头（ETCLOVG静态基础设施）<br>
+<strong>Loop</strong> 解决"Agent能不能自己跑完"——设计公交线路的调度系统（触发-执行-评估-修正的动态循环）<br><br>
+两者的区别不在于组件不同（都会涉及工具、验证、上下文），而在于<strong>关注重心</strong>不同：<br>
+- Harness → <strong>静态约束</strong>：环境怎么搭、工具怎么挂、安全怎么控<br>
+- Loop → <strong>动态编排</strong>：循环怎么转、错误怎么纠、结果怎么验<br><br>
+<strong>在真实生产Agent中，两者是互补共生的。</strong>没有Harness的Loop是裸奔（没有安全网），没有Loop的Harness是摆设（跑不起来）。
+</div>
+</div>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888; Loop Engineering 的三大风险</div>
+<div class="pc-body">
+<strong>1. 成本失控</strong>：自动循环可能无限重试——没有Guardrails的Loop = 没有刹车的车，Token账单可能从$0.5跑到$50<br>
+<strong>2. 方向漂移</strong>：Validator太弱时，Agent会在错误方向上越走越远——第1轮改错文件，第47轮还在改错文件<br>
+<strong>3. 并非万能</strong>：探索性/创意性任务（头脑风暴、战略规划），Loop比手动Prompt更差——需要人的判断力，不是循环次数
+</div>
+</div>
+
+<div class="tips-box">
+<div class="tips-title">&#128161; 与本课程的对应关系</div>
+<p><strong>Day2 ReAct原理</strong> = Loop的Agent Loop层（Thought→Action→Observation循环）</p>
+<p><strong>Day2 RAG</strong> = Harness的C层（Context管理）+ T层（检索工具）</p>
+<p><strong>Day2-5 Skill工具链</strong> = Harness的T层（工具注册与调用）</p>
+<p><strong>Day5 消融评估</strong> = Harness的V层（验证评估）+ Loop的Validator</p>
+<p><strong>Day5 治理Agent</strong> = Harness的G层（安全治理）+ Loop的Guardrails</p>
+</div>
 </div>
 </div>
 
