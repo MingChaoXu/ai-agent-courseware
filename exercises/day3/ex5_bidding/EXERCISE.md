@@ -1,44 +1,48 @@
 ## 课题名称
 
-招标文件分析
+招标文件智能分析
 
 ## 学习目标
 
-- 掌握多 Chain 协作模式
-- 理解技术方案生成与合规检查的分离原则
+- 掌握PydanticOutputParser实现招标文件的结构化分析
+
+## 项目概述
+
+招标文件分析助手，分析6个维度（项目信息/资格要求/技术要求/评分标准/截止时间/风险提示）。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
 
 ## 任务要求
 
-1. **构建 Chain1：技术方案生成**：
-   - 输入招标需求描述，输出技术方案文本
-   - 方案应覆盖：技术架构、实施路径、资源配置、风险预案
+### 步骤1：定义Pydantic模型
 
-2. **构建 Chain2：合规检查**：
-   - 使用 PydanticOutputParser 定义合规检查报告结构
-   - 字段包含：合规项、不合规项、修改建议、整体合规评分
-   - 校验技术方案是否满足招标文件中的硬性要求
+  - `BiddingAnalysisResult`: project_info, qualification_req, technical_summary, scoring_criteria, deadline_info, risk_alerts, recommendations
 
-3. **流程编排**：
-   - 将 Chain1 的输出作为 Chain2 的输入，形成串行 Pipeline
-   - 使用 LCEL 的 `|` 管道操作符或 RunnableSequence 编排流程
-   - 可选：实现迭代优化——如不合规项超过阈值，自动将修改建议反馈给 Chain1 重新生成
+### 步骤2：使用PydanticOutputParser构建结构化输出Chain
+
+### 步骤3：配置fallback_chain处理解析失败
+
+### 步骤4：System Prompt中注入招标文件分析规则
+
+### 步骤5：构建FastAPI后端 + Vue前端（含招标样本选择卡片）
 
 ## 技术栈
 
-- LangChain 1.x（PydanticOutputParser, ChatPromptTemplate, LCEL）
+- `PydanticOutputParser`（结构化输出解析）
+- `ChatPromptTemplate`（提示模板）
+- LCEL（管道式Chain组装）
+- FastAPI + Vue 3 CDN
 
 ## 输入数据
 
-- 模拟的招标文件需求描述（含技术要求、资质要求、交付要求等）
+- 测试样本位于 `data/` 目录下
+- 运行后可通过前端界面选择样本快速体验
 
 ## 预期输出
 
-- 技术方案文本
-- 合规性检查报告（结构化 JSON）
+- 对话式交互界面，用户输入文本后返回AI分析结果
+- 结构化JSON输出，前端渲染为卡片式展示
 
 ## 提示与思考
 
-- 为什么要将"生成"和"检查"拆成两个 Chain，而不是一个 Chain 同时完成？
-- 如果合规检查发现严重不合规，自动迭代重新生成是否总是好的？可能带来什么问题？
-- 招标场景中，哪些合规项适合用规则引擎硬检查，哪些需要 LLM 软判断？
-- 试着用两个不同角色的 System Prompt 分别定义 Chain1（方案专家）和 Chain2（审核专家），观察效果差异。
+- 如何从非结构化的招标文件中提取结构化信息？Prompt设计有什么技巧？
+- 评分标准分析如何量化？LLM能准确计算得分吗？
+- 如果招标文件很长（超过上下文窗口），应该如何处理？

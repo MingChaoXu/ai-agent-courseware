@@ -4,116 +4,57 @@
 
 ## 学习目标
 
-- 掌握PydanticOutputParser实现结构化输出
-- 理解LLM输出格式控制原理
-- 学会设计多模块Agent系统（5个独立Structured Output Chain）
-- 掌握SQLite轻量数据库集成（5张表：患者/就诊/指标/用药/诊断）
-- 理解AI结果自动提取联动机制（病历→诊断+用药，检验→异常指标）
-- 了解医疗场景AI辅助的合规要求与安全边界
+- 掌握PydanticOutputParser结构化输出，设计多模块Agent系统+SQLite患者数据库
 
 ## 项目概述
 
-本项目实现一个基层门诊AI辅助诊疗系统，包含5个功能模块：
-
-1. **门诊病历生成**：从医生的口语化症状描述自动生成规范门诊病历
-2. **检验报告解读**：智能解读检验报告各项指标的临床意义
-3. **诊疗方案推荐**：根据症状推荐检查项目和用药方案
-4. **病历质控校验**：按《病历书写基本规范》对病历进行质量检查
-5. **患者档案管理**：患者数据库+诊断/用药/指标管理+就诊时序+SVG趋势图+AI时序病情分析
+5模块医疗AI助手（病历生成/检验解读/诊疗推荐/病历质控/时序分析）。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
 
 ## 任务要求
 
 ### 步骤1：定义Pydantic模型
 
-- 为5个模块分别定义Pydantic输出模型：
-  - `MedicalRecord`：病历生成（主诉、现病史、既往史、体检、诊断、处理意见）
-  - `LabReportInterpretation`：检验解读（指标列表含异常标注、综合解读、复查建议）
-  - `TreatmentPlan`：诊疗推荐（可能诊断、推荐检查、用药方案、注意事项、风险提示）
-  - `QualityControlResult`：病历质控（质控等级、缺项、不规范用语、逻辑矛盾、修改建议、评分）
-  - `TimelineAnalysis`：时序分析（患者概况、病情演变、关键变化、治疗效果、风险预警、后续建议、随访计划）
-- 使用 `PydanticOutputParser` 将每个模型转为输出解析器
-- 让LLM输出严格符合对应模型的JSON
+  - `MedicalRecord`: patient_info, chief_complaint, present_illness, past_history, physical_examination, preliminary_diagnosis, treatment_plan
+  - `LabReportInterpretation`: report_type, key_indicators(含is_abnormal布尔标注), overall_interpretation, clinical_correlation, follow_up_suggestions
+  - `TreatmentPlan`: possible_diagnoses, recommended_exams, medication_suggestions, precautions, risk_alerts
+  - `QualityControlResult`: quality_level(甲/乙/丙), missing_items, nonstandard_terms, logic_issues, modification_suggestions, overall_score
+  - `TimelineAnalysis`: patient_summary, disease_progression, key_changes, treatment_effectiveness, risk_assessment, future_recommendations, follow_up_plan
 
-### 步骤2：构建5条LCEL Chain
+### 步骤2：构建5条独立LCEL Chain（Prompt + Parser + LLM）
 
-- 每个模块组装独立Chain：`Prompt + Parser + LLM`
-- 在Prompt中注入Parser的格式指令
-- 每个模块使用针对性的System Prompt
-- 为每条Chain配置fallback（解析失败时返回纯文本）
+- 构建5条独立LCEL Chain（Prompt + Parser + LLM），每条Chain配置fallback
 
-### 步骤3：数据库层设计
+### 步骤3：实现SQLite数据库层（patients + visits两张表）
 
-- 使用SQLite实现患者档案持久化（零配置、无需额外依赖）
-- 设计5张表：`patients`（基本信息）、`visits`（就诊记录）、`vital_signs`（关键指标时序）、`medications`（用药记录）、`diagnoses`（诊断记录）
-- 16种可追踪指标（血压/血糖/心率/体温/肌酐/HbA1c等），每种含参考范围
-- 实现完整CRUD操作及趋势查询
-- 自动种子数据：5位患者含丰富就诊历史和指标时序（慢阻肺、糖尿病、儿科、冠心病、痛风）
-- `get_patient_timeline_text()` 整合诊断+用药+指标时序+就诊记录供AI分析
+- 实现SQLite数据库层（patients + visits两张表），包含CRUD和种子数据
 
-### 步骤4：API路由设计
+### 步骤4：统一/api/chat接口通过module参数选择模块
 
-- 统一 `/api/chat` 接口，通过 `module` 参数选择功能模块，`patient_id` 可选归档
-- `/api/health` 返回系统状态和可用模块列表
-- `/api/patients` 患者CRUD + 搜索 + 综合摘要
-- `/api/patients/{id}/visits` 就诊记录查询/新增/删除
-- `/api/patients/{id}/vital-trends` 指标趋势数据（供前端画图）
-- `/api/patients/{id}/medications` 用药管理（新增/停用）
-- `/api/patients/{id}/diagnoses` 诊断管理（新增/标记缓解）
-- `/api/patients/timeline-analysis` 触发AI时序分析
-- 归档时自动提取：病历→诊断+用药，检验→异常指标存入vital_signs
-- 错误处理：API未配置时返回503，参数无效返回400
+- 统一/api/chat接口通过module参数选择模块，patient_id可选归档
 
-### 步骤5：前端5模块Tab界面
+### 步骤5：实现/api/patients路由（CRUD + 就诊记录 + timeline-analysis端点）
 
-- Tab切换5个功能模块（病历生成/检验解读/诊疗推荐/病历质控/患者档案）
-- 前4个模块有样本选择卡片（嵌入真实医疗数据）
-- 患者档案Tab：搜索/列表、患者详情（诊断+用药+SVG趋势图+就诊时间线）、指标录入/用药/诊断添加、AI时序分析
-- 对话时可选「归档至患者」，支持内联快速新建患者
-- 结构化结果展示，中文标签映射
-- 检验指标异常/正常高亮显示
-
-### 步骤6：测试与验证
-
-- 使用data/目录下的8份测试样本覆盖前4个模块
-- 数据库自带5位种子患者的丰富就诊记录和指标时序，可测试趋势图和时序分析
-- 验证每个模块输出的结构化字段完整性
-- 测试归档联动：病历生成后自动提取诊断和用药
-- 测试边界情况：极短输入、非医疗文本、混合语言
+### 步骤6：构建前端5模块Tab界面（含患者档案管理、就诊时间轴、AI时序分析）
 
 ## 技术栈
 
-- LangChain 1.x
 - `PydanticOutputParser`（结构化输出解析）
 - `ChatPromptTemplate`（提示模板）
 - LCEL（管道式Chain组装）
-- FastAPI（后端API）
-- SQLite（患者数据库，5张表，零配置）
-- Vue 3 CDN（前端界面）
-- TeleAgent Skill（11个tool函数：6个AI+5个患者DB）
+- FastAPI + Vue 3 CDN
 
 ## 输入数据
 
-- data/01-02：门诊病历样本（慢性支气管炎、急性阑尾炎）
-- data/03-04：检验报告样本（血常规贫血、肝功能异常）
-- data/05-06：诊疗方案样本（慢阻肺加重、2型糖尿病）
-- data/07-08：病历质控样本（乙级病历、丙级病历）
-- 数据库种子：5位患者含丰富就诊历史+指标时序（自动初始化）
+- 测试样本位于 `data/` 目录下
+- 运行后可通过前端界面选择样本快速体验
 
 ## 预期输出
 
-- 病历生成：结构化JSON病历（7个字段）
-- 检验解读：含异常标注的指标列表+综合分析
-- 诊疗推荐：诊断+检查+用药+注意事项+风险
-- 病历质控：质控等级+缺项+不规范用语+修改建议+评分
-- 时序分析：患者概况+病情演变+关键变化+治疗效果+风险预警+后续建议+随访计划
+- 对话式交互界面，用户输入文本后返回AI分析结果
+- 结构化JSON输出，前端渲染为卡片式展示
 
 ## 提示与思考
 
-- `PydanticOutputParser` 是如何让LLM输出指定格式的？提示词中做了什么？
+- PydanticOutputParser是如何让LLM输出指定格式的？提示词中做了什么？
 - 如果LLM输出的JSON不合法，Parser会怎样？fallback机制如何工作？
-- 5个模块共享LLM配置但独立Prompt，这种架构有什么优缺点？
 - SQLite作为嵌入式数据库，与Redis/PostgreSQL在医疗场景中各有什么适用边界？
-- 患者就诊数据的自动归档（每次对话可选存档）如何设计才能兼顾隐私与便利？
-- 归档时自动提取诊断/用药/指标的正则表达式方法有什么局限？如何用LLM替代？
-- 医疗AI辅助系统为什么必须保留"仅供参考，最终由医生决定"的声明？
-- 病历质控的评分规则如何设计才能兼顾自动化和准确性？

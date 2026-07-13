@@ -1,38 +1,48 @@
 ## 课题名称
 
-制造业BI分析
+制造业BI分析Agent
 
 ## 学习目标
 
-- 掌握LangGraph ReAct Agent构建
-- 实现Agent自主决策何时调用工具
-- 理解Agent与Chain的本质区别
+- 掌握LangGraph create_react_agent实现制造业BI分析，对比Agent与Chain模式
+
+## 项目概述
+
+制造业BI分析助手，使用数据查询和代码执行工具分析生产数据。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
 
 ## 任务要求
 
-- 定义Python执行工具：pandas数据查询、统计计算、趋势分析
-- 用langgraph.create_react_agent构建BI分析Agent
-- 测试Agent能否自主决定查数据、算统计还是直接回答
-- 对比Agent模式 vs 固定Chain模式的分析能力
+### 步骤1：定义工具函数
+
+  - `query_production_data`: 查询生产数据，输入查询条件返回产线产量、良品率等
+  - `execute_code`: 执行Python代码进行数据分析，输入代码字符串返回结果
+
+### 步骤2：使用langgraph.prebuilt.create_react_agent创建Agent
+
+### 步骤3：实现chat()函数通过agent.invoke()获取回答
+
+### 步骤4：对比ReAct Agent与普通LCEL Chain在数据分析场景下的差异
+
+### 步骤5：构建FastAPI后端 + Vue前端
 
 ## 技术栈
 
-- LangChain 1.x
-- LangGraph (create_react_agent, Tool)
-- pandas
+- LangGraph `create_react_agent`
+- `langchain_core.tools.Tool`（工具定义）
+- FastAPI + Vue 3 CDN
 
 ## 输入数据
 
-data/production_data.json（270条生产线数据）
+- 测试样本位于 `data/` 目录下
+- 运行后可通过前端界面选择样本快速体验
 
 ## 预期输出
 
-- Agent自主决策的分析过程日志
-- 多维度BI分析报告
+- 对话式交互界面，用户输入文本后返回AI分析结果
+- 工具调用过程可视化，展示Thought → Action → Observation
 
 ## 提示与思考
 
-- **Agent vs Chain的核心区别**：Chain是固定流程（输入→A→B→C→输出），Agent是自主决策（输入→思考→选工具→执行→再思考→...→输出）。Chain简单可控，Agent灵活智能。
-- **ReAct循环**：Reasoning（推理当前该做什么）→ Acting（调用工具执行）→ Observing（观察结果）→ 再次Reasoning，直到得出最终答案。
-- **工具设计要点**：每个工具的描述（description）要清晰准确，Agent依赖描述来决定是否调用。工具粒度要合理——太粗则灵活性差，太细则决策成本高。
-- 思考：如果用户问"哪条生产线产量最高"，Agent需要调用哪些工具？如果问"帮我总结一下整体生产情况"呢？两种问题下Agent的决策路径有何不同？
+- execute_code工具的安全沙箱如何设计？如何防止恶意代码？
+- Agent模式vs直接写SQL查询，在什么场景下各有什么优势？
+- 如何扩展更多工具（如生成图表、发送报告）？

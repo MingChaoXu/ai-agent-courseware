@@ -4,36 +4,49 @@
 
 ## 学习目标
 
-- 掌握4Agent并行+条件分支架构
-- 实现多任务并行处理和条件路由
+- 掌握多Agent并行+条件分支架构，实现社会治理事件处理
+
+## 项目概述
+
+4个Agent协作：event_entry_agent(事件录入) + legal_consultation_agent(法律咨询,条件触发) + brief_generation_agent(通报生成) + alert_agent(预警处置)。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
 
 ## 任务要求
 
-1. 实现4个Agent：事件采集Agent→舆情分析Agent（并行）+ 风险评估Agent（并行）→决策建议Agent
-2. 实现并行处理：舆情分析和风险评估同时进行
-3. 实现条件分支：根据风险等级走不同审批路径
-4. 用TeleAgentClient的workflow功能编排流程
+### 步骤1：定义各Agent的LCEL Chain
+
+  - `event_entry_agent`: 录入社会治理事件，分类归档
+  - `legal_consultation_agent`: 为纠纷类事件提供法律咨询建议（条件触发：仅纠纷类）
+  - `brief_generation_agent`: 生成社会治理通报
+  - `alert_agent`: 评估事件风险等级，触发预警
+
+### 步骤2：create_agent()返回包含4条Chain的字典
+
+### 步骤3：chat()函数调用各Chain
+
+- chat()函数调用各Chain，legal_consultation_agent仅在纠纷类事件时触发
+
+### 步骤4：构建FastAPI后端 + Vue前端
+
+- 构建FastAPI后端 + Vue前端，展示多Agent并行+条件分支
 
 ## 技术栈
 
-- LangChain 1.x
-- LangGraph
-- TeleAgentClient (workflow)
+- 多条独立LCEL Chain（每条Agent一条）
+- `ChatPromptTemplate` + `StrOutputParser`
+- FastAPI + Vue 3 CDN
 
 ## 输入数据
 
-- 模拟的社会治理事件
+- 测试样本位于 `data/` 目录下
+- 运行后可通过前端界面选择样本快速体验
 
 ## 预期输出
 
-- 并行处理日志
-- 条件分支决策路径
-- 综合处置建议
+- 对话式交互界面，用户输入文本后返回AI分析结果
+- 多Agent协作结果，按模块分区展示
 
 ## 提示与思考
 
-- LangGraph中如何表达并行节点？思考`Send`操作和分支条件的实现方式。
-- 并行执行的两个Agent完成时间不同，如何等待两者都完成后再进入决策建议Agent？
-- 条件分支的路由逻辑应该放在哪里？是放在节点内部还是图的边定义中？
-- 如果舆情分析和风险评估的结论冲突（一个说低风险一个说高风险），决策建议Agent应该如何处理？
-- 对比串行处理和并行处理的效率差异，量化并行带来的加速比。
+- 条件分支如何实现？如何根据事件类型决定是否触发legal_consultation_agent？
+- 并行执行和串行执行在什么场景下各有什么优势？
+- 风险等级评估如何量化？alert_agent的判定标准如何设计？

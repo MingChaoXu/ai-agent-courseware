@@ -1,76 +1,93 @@
-# Multimodal Processing Mode Comparison - 多模态处理三种模式对比
+# 多模态处理三种模式对比
 
-A full-stack AI agent project with FastAPI backend, Vue frontend, and TeleAgent skill integration.
+## 项目说明
 
-## Quick Start
+多模态AI技术教学助手，帮助理解多模态信息处理的不同方式。本文件是代码实现的技术文档，包含架构设计、API说明和代码细节。
 
-### 1. Install dependencies
-
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-### 2. Configure API
-
-```bash
-cp .env.example .env
-# Edit .env with your API key and base URL
-```
-
-### 3. Start the server
-
-```bash
-cd backend
-python main.py
-```
-
-The API will be available at http://localhost:8000
-
-API docs: http://localhost:8000/docs
-
-### 4. Open the frontend
-
-Open `frontend/index.html` in a browser, or access it through the FastAPI static file serving.
-
-## API Endpoints
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | /api/health | System health check |
-| POST | /api/chat | Send question/request to agent |
-
-
-
-## Project Structure
+## 项目结构
 
 ```
 ex8_5_multimodal/
 ├── backend/
 │   ├── main.py
 │   ├── config.py
-│   ├── agent/
-│   │   └── agent.py
-│   ├── api/
-│   │   ├── chat.py
-│   │   └── health.py
-│   ├── models/
-│   │   └── schemas.py
-│   └── requirements.txt
+│   ├── agent/agent.py
+│   ├── api/chat.py
+│   ├── api/health.py
+│   └── models/schemas.py
 ├── frontend/
-│   └── index.html
-├── data/
+│   └── index.html          # Vue 3 CDN 单页应用
 ├── skill/
-│   ├── SKILL.md
+│   ├── SKILL.md             # Skill文档
 │   └── tools/
-│       └── tool.py
-├── .env.example
-└── .gitignore
+│       └── tool.py          # TeleAgent Skill工具
+├── data/                    # 测试数据
+├── EXERCISE.md              # 学生任务要求
+├── PROJECT_README.md        # 本文件
+└── .env.example             # 环境变量模板
 ```
 
-## Tech Stack
+## 后端架构
 
-- **Backend**: FastAPI + LangChain 1.x
-- **Frontend**: Vue 3 (CDN) + CSS
-- **LLM**: OpenAI-compatible API
-- **Skill**: Python module for TeleAgent integration
+### 对比实验架构
+
+在代码中预定义对比数据（`COMPARISON_DATA`列表），`chat()`函数将对比数据注入到LLM的context中：
+
+- NATIVE模式: 直接多模态输入到GPT-4o（优势: 端到端,信息损失小, 劣势: 成本高,延迟大）
+- EXTRACT模式: OCR/检测转文本后再给LLM（优势: 成本低,可复用, 劣势: 信息有损失）
+- TOOL模式: Agent调用专业视觉工具（优势: 灵活可控,可扩展, 劣势: 架构复杂）
+
+**Chain组装**：`ChatPromptTemplate → LLM → StrOutputParser`
+
+LLM基于注入的对比数据回答用户问题，实现教学式的对比分析。
+
+### API接口
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /api/health | 健康检查 |
+| POST | /api/chat | 对话/分析接口 |
+
+### 关键文件说明
+
+- `agent/agent.py`: 核心Agent/Chain逻辑，定义Pydantic模型、工具函数、Chain工厂
+- `api/chat.py`: 对话接口，调用agent并返回结果
+- `api/health.py`: 健康检查接口
+- `models/schemas.py`: Pydantic请求/响应模型（ChatRequest/ChatResponse/HealthResponse）
+- `config.py`: 从.env读取LLM配置（API Key/Model/Base URL）
+- `main.py`: FastAPI入口，注册路由、初始化Agent、CORS配置
+
+## 前端说明
+
+Vue 3 CDN单页应用，无需构建工具。主要功能：
+- 对话式交互界面
+- 文本回答展示
+- 样本快速选择（嵌入测试数据）
+- 健康状态实时显示
+
+## Skill说明
+
+封装为单个tool函数，支持CLI调用（chat/health两个命令）。
+
+## 快速启动
+
+```bash
+# 1. 配置环境变量
+cp .env.example .env
+# 编辑.env填入LLM API配置
+
+# 2. 安装依赖
+pip install langchain langchain-openai langgraph faiss-cpu python-dotenv fastapi uvicorn
+
+# 3. 启动后端
+cd backend
+python main.py
+# 访问 http://localhost:8000
+```
+
+## 技术栈
+
+- **LLM框架**: LangChain 1.x + LangGraph
+- **后端**: FastAPI + Uvicorn
+- **前端**: Vue 3 (CDN)
+- **LLM接口**: OpenAI兼容协议

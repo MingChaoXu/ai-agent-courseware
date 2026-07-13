@@ -1,89 +1,110 @@
 # 基层门诊AI辅助诊疗
 
-A full-stack AI agent project with FastAPI backend, Vue frontend, SQLite patient database, and TeleAgent skill integration.
+## 项目说明
 
-## Quick Start
+5模块医疗AI助手（病历生成/检验解读/诊疗推荐/病历质控/时序分析）。本文件是代码实现的技术文档，包含架构设计、API说明和代码细节。
 
-### 1. Install dependencies
-
-```bash
-cd backend
-pip install -r requirements.txt
-```
-
-### 2. Configure API
-
-```bash
-cp .env.example .env
-# Edit .env with your API key and base URL
-```
-
-### 3. Start the server
-
-```bash
-cd backend
-python main.py
-```
-
-The API will be available at http://localhost:8000
-
-API docs: http://localhost:8000/docs
-
-### 4. Open the frontend
-
-Open `frontend/index.html` in a browser, or access it through the FastAPI static file serving.
-
-## API Endpoints
-
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | /api/health | System health check |
-| POST | /api/chat | AI analysis (5 modules, optional patient archiving) |
-| GET | /api/patients | List patients (with search) |
-| POST | /api/patients | Create patient |
-| GET | /api/patients/{id}/summary | Comprehensive patient summary |
-| GET | /api/patients/{id}/visits | Get visit records |
-| GET | /api/patients/{id}/vital-trends | Vital sign trends for charting |
-| GET | /api/patients/{id}/medications | Medications list |
-| GET | /api/patients/{id}/diagnoses | Diagnoses list |
-| POST | /api/patients/vitals | Add vital sign |
-| POST | /api/patients/medications | Add medication |
-| POST | /api/patients/diagnoses | Add diagnosis |
-| POST | /api/patients/timeline-analysis | AI timeline analysis |
-
-## Project Structure
+## 项目结构
 
 ```
 ex3_medical_record/
 ├── backend/
-│   ├── main.py              # FastAPI entry, init agent + DB
-│   ├── config.py            # Settings from .env
-│   ├── agent/
-│   │   └── agent.py         # 5 Pydantic models + LCEL Chains
-│   ├── api/
-│   │   ├── chat.py          # /api/chat + auto-extract logic
-│   │   ├── health.py        # /api/health
-│   │   └── patients.py      # Patient/Visit/Vital/Med/Diag CRUD + timeline
-│   ├── db/
-│   │   └── database.py      # SQLite 5 tables + seed data
-│   ├── models/
-│   │   └── schemas.py       # Pydantic request/response
-│   └── requirements.txt
+│   ├── main.py
+│   ├── config.py
+│   ├── agent/agent.py
+│   ├── api/chat.py
+│   ├── api/health.py
+│   ├── models/schemas.py
+│   ├── api/patients.py
+│   ├── db/database.py
+│   └── db/__init__.py
 ├── frontend/
-│   └── index.html           # Vue 3 SPA, 5 Tabs, SVG trend charts
-├── data/                    # 8 test samples + patients.db
+│   └── index.html          # Vue 3 CDN 单页应用
 ├── skill/
-│   ├── SKILL.md
+│   ├── SKILL.md             # Skill文档
 │   └── tools/
-│       └── tool.py          # 11 tool functions (6 AI + 5 patient DB)
-├── .env.example
-└── .gitignore
+│       └── tool.py          # TeleAgent Skill工具
+├── data/                    # 测试数据
+├── EXERCISE.md              # 学生任务要求
+├── PROJECT_README.md        # 本文件
+└── .env.example             # 环境变量模板
 ```
 
-## Tech Stack
+## 后端架构
 
-- **Backend**: FastAPI + LangChain 1.x + SQLite
-- **Frontend**: Vue 3 (CDN) + CSS + SVG charts
-- **LLM**: OpenAI-compatible API
-- **Database**: SQLite (5 tables, 16 vital metrics, zero-config)
-- **Skill**: Python module for TeleAgent integration (11 tools)
+### 结构化输出架构
+
+使用`PydanticOutputParser`实现LLM输出的结构化控制：
+
+**Pydantic模型定义**：
+- `MedicalRecord`: patient_info, chief_complaint, present_illness, past_history, physical_examination, preliminary_diagnosis, treatment_plan
+- `LabReportInterpretation`: report_type, key_indicators(含is_abnormal布尔标注), overall_interpretation, clinical_correlation, follow_up_suggestions
+- `TreatmentPlan`: possible_diagnoses, recommended_exams, medication_suggestions, precautions, risk_alerts
+- `QualityControlResult`: quality_level(甲/乙/丙), missing_items, nonstandard_terms, logic_issues, modification_suggestions, overall_score
+- `TimelineAnalysis`: patient_summary, disease_progression, key_changes, treatment_effectiveness, risk_assessment, future_recommendations, follow_up_plan
+
+**Chain组装**：`ChatPromptTemplate + format_instructions → LLM → PydanticOutputParser`
+
+**Fallback机制**：主Chain解析失败时，自动切换到`StrOutputParser`返回纯文本，保证服务可用性。
+
+`analyze()`函数调用`agent["chain"].invoke()`，成功返回`result.model_dump()`，失败则走fallback。
+
+### API接口
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | /api/health | 健康检查（返回5个模块列表） |
+| POST | /api/chat | 结构化分析（module参数选择模块，patient_id可选归档） |
+| GET | /api/patients | 患者列表（支持关键词搜索） |
+| POST | /api/patients | 创建患者 |
+| GET | /api/patients/{id} | 患者详情 |
+| PUT | /api/patients/{id} | 更新患者信息 |
+| DELETE | /api/patients/{id} | 删除患者 |
+| GET | /api/patients/{id}/visits | 就诊记录列表 |
+| POST | /api/patients/visits | 新增就诊记录 |
+| DELETE | /api/patients/visits/{id} | 删除就诊记录 |
+| POST | /api/patients/timeline-analysis | AI时序病情分析 |
+
+### 关键文件说明
+
+- `agent/agent.py`: 核心Agent/Chain逻辑，定义Pydantic模型、工具函数、Chain工厂
+- `api/chat.py`: 对话接口，调用agent并返回结果
+- `api/health.py`: 健康检查接口
+- `models/schemas.py`: Pydantic请求/响应模型（ChatRequest/ChatResponse/HealthResponse）
+- `config.py`: 从.env读取LLM配置（API Key/Model/Base URL）
+- `main.py`: FastAPI入口，注册路由、初始化Agent、CORS配置
+
+## 前端说明
+
+Vue 3 CDN单页应用，无需构建工具。主要功能：
+- 对话式交互界面
+- 结构化结果卡片展示（中文标签映射）
+- 样本快速选择（嵌入测试数据）
+- 健康状态实时显示
+
+## Skill说明
+
+封装为6个tool函数（5个AI模块 + health_check），支持CLI指定模块和输入文本。
+
+## 快速启动
+
+```bash
+# 1. 配置环境变量
+cp .env.example .env
+# 编辑.env填入LLM API配置
+
+# 2. 安装依赖
+pip install langchain langchain-openai langgraph faiss-cpu python-dotenv fastapi uvicorn
+
+# 3. 启动后端
+cd backend
+python main.py
+# 访问 http://localhost:8000
+```
+
+## 技术栈
+
+- **LLM框架**: LangChain 1.x + LangGraph
+- **后端**: FastAPI + Uvicorn
+- **前端**: Vue 3 (CDN)
+- **LLM接口**: OpenAI兼容协议

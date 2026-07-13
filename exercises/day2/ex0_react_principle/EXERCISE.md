@@ -1,53 +1,54 @@
 ## 课题名称
 
-ReAct推理原理
+ReAct推理原理实验
 
 ## 学习目标
 
-- 理解Agent核心框架（LLM + Context + Tools）
-- 掌握ReAct循环（Thought → Action → Observation）
-- 理解上下文对推理的影响
+- 理解ReAct（Reasoning + Acting）推理范式，掌握LangGraph create_react_agent实现工具调用循环
+
+## 项目概述
+
+政务咨询助手，使用Thought → Action → Observation循环推理。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
 
 ## 任务要求
 
-### 步骤1：理解Agent核心三要素框架
+### 步骤1：定义工具函数
 
-- 了解LLM、Context、Tools三个核心组件的作用
-- 手动组装一个简单Agent，将三要素组合到一起运行
+  - `search_policy`: 搜索政务政策信息，输入关键词返回政策内容
+  - `calculate`: 计算数学表达式，输入表达式字符串返回结果
 
-### 步骤2：手动模拟ReAct循环
+### 步骤2：使用langgraph.prebuilt.create_react_agent创建Agent
 
-- 用代码跑通 Thought → Action → Observation 循环
-- 打印每一步的中间状态，直观理解推理过程
+- 使用langgraph.prebuilt.create_react_agent创建Agent，传入LLM和工具列表
 
-### 步骤3：上下文消融实验
+### 步骤3：在Agent的prompt中指定ReAct推理流程（Thought → Action → Observation）
 
-- 逐步移除上下文信息（从完整上下文 → 部分上下文 → 无上下文）
-- 观察并记录每一步推理质量的变化
+### 步骤4：实现chat()函数
 
-### 步骤4：用LangChain原生API构建真实的ReAct Agent
+- 实现chat()函数，通过agent.invoke()传入messages获取最终回答
 
-- 使用 `langgraph.create_react_agent` 构建真实Agent
-- 定义Tool并注册到Agent中，观察完整的ReAct推理流程
+### 步骤5：构建FastAPI后端 + Vue前端
+
+- 构建FastAPI后端 + Vue前端，实现交互式对话界面
 
 ## 技术栈
 
-- LangChain 1.x
-- LangGraph (`create_react_agent`, `Tool`)
+- LangGraph `create_react_agent`
+- `langchain_core.tools.Tool`（工具定义）
+- FastAPI + Vue 3 CDN
 
 ## 输入数据
 
-- 模拟的数学计算工具（加、减、乘、除）
-- 模拟的天气查询工具（根据城市返回天气信息）
+- 测试样本位于 `data/` 目录下
+- 运行后可通过前端界面选择样本快速体验
 
 ## 预期输出
 
-- ReAct循环完整日志（包含每一步的Thought、Action、Observation）
-- 上下文消融对比结果（完整/部分/无上下文下推理质量差异）
-- 真实Agent运行截图或日志
+- 对话式交互界面，用户输入文本后返回AI分析结果
+- 工具调用过程可视化，展示Thought → Action → Observation
 
 ## 提示与思考
 
-- ReAct的核心思想是什么？为什么不直接让LLM回答，而要先行动再观察？
-- 上下文消融实验中，哪个上下文信息对推理影响最大？
-- `create_react_agent` 中的Tool是如何被LLM感知到的？提示词里发生了什么？
+- ReAct循环中，LLM是如何决定调用哪个工具的？
+- 如果工具返回错误信息，Agent会如何处理？
+- 对比直接调用LLM，ReAct模式在什么场景下更有优势？

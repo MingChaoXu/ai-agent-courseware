@@ -1,46 +1,50 @@
 ## 课题名称
 
-合同风险审核
+合同风险智能审查
 
 ## 学习目标
 
-- 掌握 PydanticOutputParser 在复杂结构化输出中的应用
-- 理解 Human-in-the-Loop（HITL）审批流程
-- 实现审核结果的结构化表达
+- 掌握PydanticOutputParser实现合同风险审查的结构化输出
+
+## 项目概述
+
+合同风险审查助手，审查6个维度（违约责任/付款条件/知识产权/争议解决/保密条款/终止条款）。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
 
 ## 任务要求
 
-1. **定义审核数据模型**：
-   - 使用 Pydantic BaseModel 定义合同风险审核的输出结构
-   - 字段应包含：风险条款原文、风险等级（高/中/低）、修改建议、审批状态（待审批/已通过/已驳回）
+### 步骤1：定义Pydantic模型
 
-2. **构建自动审核 Chain**：
-   - 使用 LCEL 构建 chain：ChatPromptTemplate | LLM | PydanticOutputParser
-   - 对每个合同条款进行风险识别和等级评定
-   - 输出结构化审核报告
+  - `ContractAuditResult`: overall_risk_level(低/中/高), risk_items, missing_clauses, recommendations, summary
 
-3. **实现 HITL 审批节点**：
-   - 风险等级为"高"的条款，自动标记为"待审批"
-   - 在终端交互中提示审核人员确认或驳回
-   - 审批结果回写到审核报告中
+### 步骤2：使用PydanticOutputParser构建结构化输出Chain（Prompt + Parser + LLM）
+
+### 步骤3：配置fallback_chain（StrOutputParser）
+
+- 配置fallback_chain（StrOutputParser），解析失败时返回纯文本
+
+### 步骤4：System Prompt中注入6个审查维度的规则
+
+### 步骤5：构建FastAPI后端 + Vue前端（含合同样本选择卡片）
 
 ## 技术栈
 
-- LangChain 1.x（PydanticOutputParser, ChatPromptTemplate, LCEL）
-- langchain-classic
+- `PydanticOutputParser`（结构化输出解析）
+- `ChatPromptTemplate`（提示模板）
+- LCEL（管道式Chain组装）
+- FastAPI + Vue 3 CDN
 
 ## 输入数据
 
-- `data/contract_samples.json`（4份合同样本，每份含多个条款）
+- 测试样本位于 `data/` 目录下
+- 运行后可通过前端界面选择样本快速体验
 
 ## 预期输出
 
-- 结构化审核报告（含风险等级和修改建议）
-- 高风险条款的 HITL 审批流程交互记录
+- 对话式交互界面，用户输入文本后返回AI分析结果
+- 结构化JSON输出，前端渲染为卡片式展示
 
 ## 提示与思考
 
-- PydanticOutputParser 如何保证 LLM 输出严格符合预期结构？如果 LLM 输出不符合格式会怎样？
-- HITL 的粒度如何选择？是逐条审批还是整份合同审批？各有什么利弊？
-- 风险等级的判定标准应该如何传达给 LLM？试着用 few-shot 示例提升判定的稳定性。
-- 在实际电信业务中，哪些合同条款最需要 HITL 机制？
+- PydanticOutputParser生成的format_instructions具体长什么样？
+- 风险等级（低/中/高）是LLM判断的还是规则计算的？各有什么优劣？
+- 如何设计HITL（Human-in-the-Loop）流程让法务人员审核AI结果？
