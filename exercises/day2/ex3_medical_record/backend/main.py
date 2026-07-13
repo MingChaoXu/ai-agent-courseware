@@ -1,5 +1,5 @@
 """
-Medical Record Structured Generation Backend - FastAPI Main Entry Point
+Medical AI Assistant Backend - FastAPI Main Entry Point
 """
 
 import sys
@@ -18,9 +18,9 @@ from api import chat, health
 
 # ---- App Init ----
 app = FastAPI(
-    title="Medical Record Structured Generation",
-    description="医疗病历结构化生成 - AI Agent Backend",
-    version="1.0.0",
+    title="Medical AI Assistant",
+    description="基层门诊AI辅助诊疗 - 4模块智能助手",
+    version="2.0.0",
 )
 
 # CORS for frontend
@@ -46,7 +46,7 @@ async def startup():
         return
     agent_instance = agent.create_agent()
     chat.agent_instance = agent_instance
-    print(f"[STARTUP] Agent initialized: 医疗病历结构化生成")
+    print(f"[STARTUP] Agent initialized: 基层门诊AI辅助诊疗 (4 modules: record/lab/treatment/qc)")
 
 
 # ---- Register Routers ----

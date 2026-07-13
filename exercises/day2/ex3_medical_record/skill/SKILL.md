@@ -1,16 +1,18 @@
-# Medical Record Structured Generation Skill
+# Medical AI Assistant Skill
 
 ## Description
 
-医疗病历结构化生成 skill for TeleAgent.
-
-Produces structured MedicalRecord output via PydanticOutputParser.
+基层门诊AI辅助诊疗 skill for TeleAgent. Provides 4 modules: medical record generation, lab report interpretation, treatment plan recommendation, and medical record quality control.
 
 ## Tools
 
 | Tool | Description | Parameters |
 |------|-------------|------------|
-| `ex3_medical_record_analyze` | Analyze input text | input_text (str) |
+| `medical_generate_record` | Generate structured outpatient medical record from symptom description | input_text (str) |
+| `medical_interpret_lab` | Interpret lab test results with clinical significance | input_text (str) |
+| `medical_recommend_treatment` | Recommend examination and treatment plan based on symptoms | input_text (str) |
+| `medical_quality_control` | Quality control check on existing medical record | input_text (str) |
+| `medical_health_check` | Check agent health and available modules | - |
 
 ## Installation
 
@@ -33,6 +35,27 @@ Requires a `.env` file in the project root:
 ## CLI Usage
 
 ```bash
-  python skill/tools/tool.py analyze -q 'input text'
+  python skill/tools/tool.py record -q "55岁男性，反复咳嗽1月余"
+  python skill/tools/tool.py lab -q "血红蛋白95g/L，MCV 72fL"
+  python skill/tools/tool.py treatment -q "慢阻肺急性加重"
+  python skill/tools/tool.py qc -q "门诊病历：患者张某..."
   python skill/tools/tool.py health
 ```
+
+## Module Details
+
+### 1. 门诊病历生成 (record)
+Input: Doctor's oral symptom description
+Output: Structured outpatient record (chief complaint, present illness, past history, physical exam, diagnosis, treatment plan)
+
+### 2. 检验报告解读 (lab)
+Input: Lab test data text
+Output: Key indicators with abnormality flags, clinical significance, overall interpretation, follow-up suggestions
+
+### 3. 诊疗方案推荐 (treatment)
+Input: Symptom description or diagnosis
+Output: Possible diagnoses, recommended exams, medication plan, precautions, risk alerts
+
+### 4. 病历质控校验 (qc)
+Input: Complete outpatient record text
+Output: Quality grade (甲/乙/丙), missing items, nonstandard terms, logic issues, modification suggestions, score
