@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>交通事件智能处置Agent</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #1e40af;
+      --primary-light: #1e40af88;
+      --primary-bg: #eff6ff;
+      --accent: #f59e0b;
+      --accent-bg: #fffbeb;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-secondary: #64748b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100vh; }
+    .app { display: flex; flex-direction: column; height: 100vh; max-width: 960px; margin: 0 auto; }
+    /* Header */
+    .header { padding: 12px 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .header-top { display: flex; align-items: center; gap: 12px; }
+    .header h1 { font-size: 18px; font-weight: 600; }
+    .header .badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
+    .badge.ok { background: #ecfdf5; color: var(--success); }
+    .badge.err { background: #fef2f2; color: var(--danger); }
+    .badge.amap-online { background: #eff6ff; color: var(--info); }
+    .badge.amap-offline { background: var(--accent-bg); color: var(--accent); }
+    /* Tabs */
+    .tabs { display: flex; gap: 0; margin-top: 10px; border-bottom: 2px solid var(--border); }
+    .tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--text-secondary); transition: all 0.2s; white-space: nowrap; }
+    .tab:hover { color: var(--primary); }
+    .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+    /* Messages */
+    .messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .empty-state { text-align: center; color: var(--text-secondary); padding: 40px 20px; }
+    .empty-state .icon { font-size: 42px; margin-bottom: 12px; opacity: 0.3; }
+    .empty-state h3 { font-size: 16px; margin-bottom: 6px; color: var(--text); }
+    .empty-state p { font-size: 13px; }
+    /* Sample Cards */
+    .sample-section { margin-top: 16px; text-align: left; }
+    .sample-section .section-title { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
+    .sample-cards { display: flex; flex-wrap: wrap; gap: 8px; }
+    .sample-card { padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 12px; transition: all 0.2s; background: var(--surface); max-width: 260px; }
+    .sample-card:hover { border-color: var(--primary-light); background: var(--primary-bg); }
+    .sample-card .card-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .sample-card .card-sub { color: var(--text-secondary); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sample-card .card-tag { font-size: 10px; padding: 1px 6px; border-radius: 10px; display: inline-block; margin-top: 2px; }
+    .tag-accident { background: #fef2f2; color: #dc2626; }
+    .tag-construction { background: var(--accent-bg); color: #d97706; }
+    .tag-weather { background: #eff6ff; color: #2563eb; }
+    .tag-facility { background: #f0fdf4; color: #16a34a; }
+    .tag-congestion { background: #fdf4ff; color: #a855f7; }
+    /* Agent Result Panels */
+    .agent-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .agent-panel-header { padding: 10px 14px; background: var(--primary-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .agent-panel-header .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .agent-panel-header .step-title { font-size: 13px; font-weight: 600; color: var(--primary); }
+    .agent-panel-header .step-status { margin-left: auto; font-size: 11px; color: var(--text-secondary); }
+    .agent-panel-body { padding: 14px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; max-height: 400px; overflow-y: auto; }
+    .agent-panel-body.error { color: var(--danger); }
+    /* AMap Data Panel */
+    .amap-panel { background: var(--accent-bg); border: 1px solid #fde68a; border-radius: 10px; padding: 12px 14px; font-size: 12px; }
+    .amap-panel-title { font-size: 12px; font-weight: 600; color: #92400e; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .amap-section { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #fef3c7; }
+    .amap-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .amap-section-label { font-weight: 600; color: #78350f; font-size: 11px; margin-bottom: 4px; }
+    .amap-section-value { color: var(--text); }
+    .amap-poi-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
+    .amap-poi-item { padding: 2px 6px; background: white; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; }
+    .amap-poi-item .poi-dist { color: var(--text-secondary); }
+    .amap-route-item { padding: 3px 6px; background: white; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; margin-top: 2px; }
+    /* Input Area */
+    .input-area { padding: 12px 24px; border-top: 1px solid var(--border); background: var(--surface); }
+    .input-box { display: flex; gap: 8px; align-items: flex-end; }
+    .input-box textarea { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; resize: none; outline: none; font-family: inherit; min-height: 44px; max-height: 200px; }
+    .input-box textarea:focus { border-color: var(--primary-light); }
+    .input-box button { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+    .input-box button:hover { background: #1d4ed8; }
+    .input-box button:disabled { opacity: 0.5; cursor: not-allowed; }
+    /* Typing */
+    .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
+    .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); animation: blink 1.4s infinite both; }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+    /* Incident Archive */
+    .archive-list { display: flex; flex-direction: column; gap: 8px; }
+    .incident-card { padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: var(--surface); }
+    .incident-card:hover { border-color: var(--primary-light); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .incident-card .ic-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .incident-card .ic-id { font-size: 11px; color: var(--text-secondary); }
+    .incident-card .ic-type { font-size: 11px; padding: 1px 6px; border-radius: 10px; font-weight: 500; }
+    .incident-card .ic-status { font-size: 11px; padding: 1px 6px; border-radius: 10px; margin-left: auto; }
+    .status-pending { background: var(--accent-bg); color: var(--accent); }
+    .status-analyzed { background: #eff6ff; color: var(--info); }
+    .status-dispatched { background: #fef2f2; color: var(--danger); }
+    .status-resolved { background: #ecfdf5; color: var(--success); }
+    .incident-card .ic-desc { font-size: 13px; color: var(--text); margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .incident-card .ic-meta { font-size: 11px; color: var(--text-secondary); display: flex; gap: 12px; }
+    /* Incident Detail */
+    .detail-back { padding: 8px 0; cursor: pointer; color: var(--primary); font-size: 13px; }
+    .detail-card { padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); margin-bottom: 12px; }
+    .detail-card .dc-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+    .detail-card .dc-row { display: flex; gap: 8px; margin-bottom: 4px; font-size: 13px; }
+    .detail-card .dc-label { color: var(--text-secondary); min-width: 80px; }
+    .detail-card .dc-value { color: var(--text); flex: 1; }
+    .dispatch-card { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); margin-bottom: 8px; }
+    .dispatch-card .dc-time { font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; }
+    .dispatch-card .dc-section { margin-bottom: 6px; }
+    .dispatch-card .dc-section-label { font-size: 11px; font-weight: 600; color: var(--primary); margin-bottom: 2px; }
+    .dispatch-card .dc-section-body { font-size: 12px; line-height: 1.6; white-space: pre-wrap; }
+    /* Filter Bar */
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+    .filter-bar input, .filter-bar select { padding: 6px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+    .filter-bar input:focus, .filter-bar select:focus { border-color: var(--primary-light); }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-top">
+        <h1>交通事件智能处置Agent</h1>
+        <span class="badge" :class="agentReady ? 'ok' : 'err'">{{ agentReady ? 'Agent就绪' : '未初始化' }}</span>
+        <span class="badge" :class="amapMode === 'online' ? 'amap-online' : 'amap-offline'">
+          {{ amapMode === 'online' ? '高德在线' : '高德离线' }}
+        </span>
+      </div>
+      <div class="tabs">
+        <div class="tab" :class="{active: tab === 'chat'}" @click="tab = 'chat'">事件处置</div>
+        <div class="tab" :class="{active: tab === 'archive'}" @click="tab = 'archive'; loadIncidents()">事件档案</div>
+      </div>
+    </div>
+
+    <!-- Chat Tab -->
+    <template v-if="tab === 'chat'">
+      <div class="messages" ref="msgContainer">
+        <div v-if="messages.length === 0" class="empty-state">
+          <div class="icon">🚦</div>
+          <h3>交通事件智能处置Agent</h3>
+          <p>输入交通事件描述，5个Agent将协作完成：事件感知 → 影响评估 → 疏导方案 → 信息发布 → 复盘报告</p>
+          <div class="sample-section">
+            <div class="section-title">快速选择样本</div>
+            <div class="sample-cards">
+              <div v-for="s in samples" :key="s.title" class="sample-card" @click="useSample(s)">
+                <div class="card-title">{{ s.title }}</div>
+                <div class="card-sub">{{ s.text.substring(0, 40) }}...</div>
+                <span class="card-tag" :class="s.tagClass">{{ s.tagLabel }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <template v-for="(msg, i) in messages" :key="i">
+          <!-- User message -->
+          <div v-if="msg.role === 'user'" class="msg user" style="display:flex;gap:12px;align-self:flex-end;flex-direction:row-reverse;">
+            <div class="msg-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">报</div>
+            <div class="msg-body" style="padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.7;max-width:640px;background:var(--primary);color:white;border-bottom-right-radius:4px;word-break:break-word;">{{ msg.text }}</div>
+          </div>
+
+          <!-- Agent results -->
+          <div v-else-if="msg.role === 'assistant'" style="display:flex;flex-direction:column;gap:12px;max-width:780px;">
+            <!-- AMap Data Panel -->
+            <div v-if="msg.amapData && msg.amapData.geocode" class="amap-panel">
+              <div class="amap-panel-title">📍 高德地图数据 ({{ msg.amapMode }})</div>
+              <div class="amap-section">
+                <div class="amap-section-label">地理编码</div>
+                <div class="amap-section-value">{{ msg.amapData.geocode.formatted_address }} ({{ msg.amapData.geocode.location }})</div>
+              </div>
+              <div v-if="msg.amapData.traffic" class="amap-section">
+                <div class="amap-section-label">实时路况</div>
+                <div class="amap-section-value">{{ msg.amapData.traffic.status }} - {{ msg.amapData.traffic.description }}</div>
+              </div>
+              <div v-if="msg.amapData.around" class="amap-section">
+                <div class="amap-section-label">周边救援资源</div>
+                <template v-for="(pois, cat) in msg.amapData.around">
+                  <div v-if="pois && pois.length" :key="cat" style="margin-top:4px;">
+                    <span style="font-weight:600;color:#78350f;font-size:11px;">{{ amapLabels[cat] || cat }}:</span>
+                    <div class="amap-poi-list">
+                      <span v-for="p in pois" :key="p.name" class="amap-poi-item">{{ p.name }} <span class="poi-dist">{{ p.distance }}m</span></span>
+                    </div>
+                  </div>
+                </template>
+              </div>
+              <div v-if="msg.amapData.detour_routes && msg.amapData.detour_routes.length" class="amap-section">
+                <div class="amap-section-label">分流路线方案</div>
+                <div v-for="(r, idx) in msg.amapData.detour_routes" :key="idx" class="amap-route-item">{{ r.route }} | {{ r.distance }} | {{ r.duration }} | {{ r.tolls }}</div>
+              </div>
+            </div>
+
+            <!-- Agent Panels -->
+            <div v-for="(agentKey, idx) in agentKeys" :key="agentKey">
+              <div v-if="msg.results && msg.results[agentKey]" class="agent-panel">
+                <div class="agent-panel-header">
+                  <div class="step-num">{{ idx + 1 }}</div>
+                  <div class="step-title">{{ agentLabels[agentKey] }}</div>
+                  <div class="step-status">{{ agentKey }}</div>
+                </div>
+                <div class="agent-panel-body" :class="{error: msg.results[agentKey].startsWith('[')}">{{ msg.results[agentKey] }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading -->
+          <div v-else-if="msg.role === 'loading'" style="display:flex;gap:12px;">
+            <div class="msg-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--primary-bg);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">AI</div>
+            <div style="padding:12px 16px;border-radius:12px;font-size:14px;background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px;">
+              <div class="typing"><span></span><span></span><span></span></div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">5个Agent协作分析中...</div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <div class="input-box">
+          <textarea v-model="input" placeholder="输入交通事件描述，如：三环路辅路与人民路交叉口发生多车追尾事故..." @keydown.enter.exact.prevent="send" rows="1" ref="inputEl"></textarea>
+          <button @click="send" :disabled="loading || !input.trim()">{{ loading ? '分析中' : '发送' }}</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Archive Tab -->
+    <template v-if="tab === 'archive'">
+      <div class="messages">
+        <div v-if="!selectedIncident">
+          <div class="filter-bar">
+            <input v-model="archiveKeyword" placeholder="搜索事件..." @input="loadIncidents" style="flex:1;" />
+            <select v-model="archiveStatus" @change="loadIncidents">
+              <option value="">全部状态</option>
+              <option value="pending">待处理</option>
+              <option value="analyzed">已分析</option>
+              <option value="dispatched">已处置</option>
+              <option value="resolved">已结案</option>
+            </select>
+          </div>
+          <div class="archive-list">
+            <div v-for="inc in incidents" :key="inc.id" class="incident-card" @click="selectIncident(inc.id)">
+              <div class="ic-header">
+                <span class="ic-id">#{{ inc.id }}</span>
+                <span v-if="inc.incident_type" class="ic-type" :class="getTypeClass(inc.incident_type)">{{ inc.incident_type }}</span>
+                <span class="ic-status" :class="'status-' + inc.status">{{ getStatusLabel(inc.status) }}</span>
+              </div>
+              <div class="ic-desc">{{ inc.description }}</div>
+              <div class="ic-meta">
+                <span v-if="inc.location">📍 {{ inc.location }}</span>
+                <span v-if="inc.severity">⚠ {{ inc.severity }}</span>
+                <span>🕐 {{ inc.created_at }}</span>
+                <span v-if="inc.dispatch_count">📋 {{ inc.dispatch_count }}条处置</span>
+                <span v-if="inc.amap_mode">🗺 {{ inc.amap_mode }}</span>
+              </div>
+            </div>
+            <div v-if="incidents.length === 0" class="empty-state">
+              <div class="icon">📋</div>
+              <p>暂无事件记录</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Incident Detail -->
+        <div v-else>
+          <div class="detail-back" @click="selectedIncident = null; selectedDispatches = []">← 返回列表</div>
+          <div class="detail-card">
+            <div class="dc-title">事件 #{{ selectedIncident.id }}</div>
+            <div class="dc-row"><span class="dc-label">描述</span><span class="dc-value">{{ selectedIncident.description }}</span></div>
+            <div class="dc-row"><span class="dc-label">类型</span><span class="dc-value">{{ selectedIncident.incident_type || '未分类' }}</span></div>
+            <div class="dc-row"><span class="dc-label">位置</span><span class="dc-value">{{ selectedIncident.location || '未知' }}</span></div>
+            <div class="dc-row"><span class="dc-label">严重程度</span><span class="dc-value">{{ selectedIncident.severity || '未评估' }}</span></div>
+            <div class="dc-row"><span class="dc-label">状态</span><span class="dc-value">{{ getStatusLabel(selectedIncident.status) }}</span></div>
+            <div class="dc-row"><span class="dc-label">高德模式</span><span class="dc-value">{{ selectedIncident.amap_mode || '-' }}</span></div>
+            <div class="dc-row"><span class="dc-label">创建时间</span><span class="dc-value">{{ selectedIncident.created_at }}</span></div>
+          </div>
+          <div v-if="selectedIncident.ai_analysis" class="detail-card">
+            <div class="dc-title">AI分析摘要</div>
+            <div style="font-size:13px;line-height:1.7;white-space:pre-wrap;">{{ selectedIncident.ai_analysis }}</div>
+          </div>
+          <div v-if="selectedDispatches.length">
+            <div style="font-size:14px;font-weight:600;margin-bottom:8px;">处置记录 ({{ selectedDispatches.length }})</div>
+            <div v-for="d in selectedDispatches" :key="d.id" class="dispatch-card">
+              <div class="dc-time">🕐 {{ d.created_at }}</div>
+              <div v-if="d.analysis_text" class="dc-section">
+                <div class="dc-section-label">事件分析</div>
+                <div class="dc-section-body">{{ d.analysis_text.substring(0, 200) }}{{ d.analysis_text.length > 200 ? '...' : '' }}</div>
+              </div>
+              <div v-if="d.dispatch_plan" class="dc-section">
+                <div class="dc-section-label">处置方案</div>
+                <div class="dc-section-body">{{ d.dispatch_plan.substring(0, 200) }}{{ d.dispatch_plan.length > 200 ? '...' : '' }}</div>
+              </div>
+              <div v-if="d.publish_text" class="dc-section">
+                <div class="dc-section-label">发布文案</div>
+                <div class="dc-section-body">{{ d.publish_text.substring(0, 150) }}{{ d.publish_text.length > 150 ? '...' : '' }}</div>
+              </div>
+              <div v-if="d.review_report" class="dc-section">
+                <div class="dc-section-label">复盘报告</div>
+                <div class="dc-section-body">{{ d.review_report.substring(0, 150) }}{{ d.review_report.length > 150 ? '...' : '' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </div>
+</div>
+
+<script>
+const { createApp, ref, nextTick, onMounted } = Vue;
+
+createApp({
+  setup() {
+    const tab = ref('chat');
+    const input = ref('');
+    const loading = ref(false);
+    const messages = ref([]);
+    const agentReady = ref(false);
+    const amapMode = ref('offline');
+    const msgContainer = ref(null);
+    const inputEl = ref(null);
+
+    // Archive
+    const incidents = ref([]);
+    const archiveKeyword = ref('');
+    const archiveStatus = ref('');
+    const selectedIncident = ref(null);
+    const selectedDispatches = ref([]);
+
+    const agentKeys = ['incident_analysis', 'impact_assessment', 'dispatch_plan', 'info_publish', 'review_report'];
+    const agentLabels = {
+      incident_analysis: '事件感知与分类',
+      impact_assessment: '影响范围评估',
+      dispatch_plan: '疏导与救援方案',
+      info_publish: '多渠道信息发布',
+      review_report: '事件复盘报告',
+    };
+    const amapLabels = {
+      hospitals: '医院',
+      fire_stations: '消防站',
+      traffic_police: '交警队',
+      gas_stations: '加油站',
+    };
+
+    const samples = [
+      { title: '多车追尾事故', text: '三环路辅路与人民路交叉口发生多车追尾事故，涉及4辆小轿车，1人受伤，占用外侧两条车道，交通中断', tagClass: 'tag-accident', tagLabel: '交通事故' },
+      { title: '路面塌陷', text: '成华大道与建设路交叉口路面塌陷，面积约10平方米，深度约2米，影响双向通行', tagClass: 'tag-facility', tagLabel: '设施故障' },
+      { title: '危化品泄漏', text: '绕城高速K35+200处发生危险化学品车辆泄漏事故，装载盐酸约20吨，有泄漏风险', tagClass: 'tag-accident', tagLabel: '交通事故' },
+      { title: '暴雨积水', text: '天府大道南段与科学城路口暴雨导致严重积水，水深约40厘米，多辆车辆熄火抛锚', tagClass: 'tag-weather', tagLabel: '恶劣天气' },
+      { title: '施工围挡倒塌', text: '光华大道与青羊大道交叉口施工区域围挡倒塌，占用一条机动车道，施工人员1人轻伤', tagClass: 'tag-construction', tagLabel: '道路施工' },
+    ];
+
+    const typeClassMap = { '交通事故': 'tag-accident', '道路施工': 'tag-construction', '恶劣天气': 'tag-weather', '设施故障': 'tag-facility', '交通拥堵': 'tag-congestion' };
+    const statusLabelMap = { pending: '待处理', analyzed: '已分析', dispatched: '已处置', resolved: '已结案' };
+
+    function getTypeClass(t) { return typeClassMap[t] || 'tag-accident'; }
+    function getStatusLabel(s) { return statusLabelMap[s] || s; }
+
+    function useSample(s) {
+      input.value = s.text;
+      nextTick(() => inputEl.value && inputEl.value.focus());
+    }
+
+    async function checkHealth() {
+      try {
+        const res = await fetch('/api/health');
+        if (!res.ok) return;
+        const data = await res.json();
+        agentReady.value = data.agent_ready;
+        amapMode.value = data.amap_mode || 'offline';
+      } catch (e) { /* ignore */ }
+    }
+
+    async function send() {
+      const text = input.value.trim();
+      if (!text || loading.value) return;
+      messages.value.push({ role: 'user', text });
+      messages.value.push({ role: 'loading' });
+      input.value = '';
+      loading.value = true;
+      await scrollBottom();
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: text }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        messages.value.pop(); // remove loading
+
+        if (data.error) {
+          messages.value.push({ role: 'assistant', text: data.error, results: {} });
+        } else {
+          const results = data.results || {};
+          messages.value.push({
+            role: 'assistant',
+            results: results,
+            amapData: results._amap_data || null,
+            amapMode: results._amap_mode || '',
+          });
+        }
+      } catch (e) {
+        messages.value.pop();
+        messages.value.push({ role: 'assistant', text: `请求失败: ${e.message}`, results: { incident_analysis: `[错误] ${e.message}` } });
+      } finally {
+        loading.value = false;
+        await scrollBottom();
+      }
+    }
+
+    async function scrollBottom() {
+      await nextTick();
+      if (msgContainer.value) {
+        msgContainer.value.scrollTop = msgContainer.value.scrollHeight;
+      }
+    }
+
+    async function loadIncidents() {
+      try {
+        const params = new URLSearchParams();
+        if (archiveKeyword.value) params.set('keyword', archiveKeyword.value);
+        if (archiveStatus.value) params.set('status', archiveStatus.value);
+        const res = await fetch(`/api/incidents?${params}`);
+        if (!res.ok) return;
+        incidents.value = await res.json();
+      } catch (e) { /* ignore */ }
+    }
+
+    async function selectIncident(id) {
+      try {
+        const res = await fetch(`/api/incidents/${id}`);
+        if (!res.ok) return;
+        selectedIncident.value = await res.json();
+        const res2 = await fetch(`/api/incidents/${id}/dispatches`);
+        if (res2.ok) selectedDispatches.value = await res2.json();
+      } catch (e) { /* ignore */ }
+    }
+
+    onMounted(() => {
+      checkHealth();
+    });
+
+    return {
+      tab, input, loading, messages, agentReady, amapMode, msgContainer, inputEl,
+      agentKeys, agentLabels, amapLabels, samples,
+      incidents, archiveKeyword, archiveStatus, selectedIncident, selectedDispatches,
+      useSample, send, loadIncidents, selectIncident,
+      getTypeClass, getStatusLabel,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>
