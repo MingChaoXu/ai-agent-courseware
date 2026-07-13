@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: 'd21d10e1-0cf3-47b9-92c4-d2f7b1e62722'
-  PropagateID: 'd21d10e1-0cf3-47b9-92c4-d2f7b1e62722'
-  ReservedCode1: '97524fab-d7fc-44e3-aa24-a23b2fdb148d'
-  ReservedCode2: '97524fab-d7fc-44e3-aa24-a23b2fdb148d'
+  ProduceID: '3e0c8bb9-6aff-40f9-94ba-46f97f7f9622'
+  PropagateID: '3e0c8bb9-6aff-40f9-94ba-46f97f7f9622'
+  ReservedCode1: '41149458-5b4c-4144-b38a-68ef13d40175'
+  ReservedCode2: '41149458-5b4c-4144-b38a-68ef13d40175'
 ---
 
 # 检验报告样本2 - 肝功能异常

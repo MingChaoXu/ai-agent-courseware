@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: '1c7cfbfb-9831-4b0d-a59d-2229e2756604'
-  PropagateID: '1c7cfbfb-9831-4b0d-a59d-2229e2756604'
-  ReservedCode1: 'bdf39db5-70b7-47db-9fc1-e2c578c9e457'
-  ReservedCode2: 'bdf39db5-70b7-47db-9fc1-e2c578c9e457'
+  ProduceID: '3baa0bc2-cbd3-4352-9e6e-016b663e1808'
+  PropagateID: '3baa0bc2-cbd3-4352-9e6e-016b663e1808'
+  ReservedCode1: '7eba0e30-40f9-47c0-85d8-5ff2ae804f7c'
+  ReservedCode2: '7eba0e30-40f9-47c0-85d8-5ff2ae804f7c'
 ---
 
 ## 课题名称

@@ -2,9 +2,11 @@
 
 ## Description
 
-基层门诊AI辅助诊疗 skill for TeleAgent. Provides 5 modules: medical record generation, lab report interpretation, treatment plan recommendation, medical record quality control, and patient timeline analysis.
+基层门诊AI辅助诊疗 skill for TeleAgent. Provides 5 AI modules + patient database management: medical record generation, lab report interpretation, treatment plan recommendation, medical record quality control, patient timeline analysis, and patient DB operations (vitals, medications, diagnoses).
 
 ## Tools
+
+### AI Analysis Modules
 
 | Tool | Description | Parameters |
 |------|-------------|------------|
@@ -14,6 +16,37 @@
 | `medical_quality_control` | Quality control check on existing medical record | input_text (str) |
 | `medical_timeline_analysis` | Analyze patient disease progression across multiple visits | input_text (str) |
 | `medical_health_check` | Check agent health and available modules | - |
+
+### Patient Database Tools
+
+| Tool | Description | Parameters |
+|------|-------------|------------|
+| `patient_list` | Query patient list, searchable by name or phone | keyword (str) |
+| `patient_detail` | Get full patient profile (diagnoses, meds, vitals, visits) | patient_id (int) |
+| `patient_add_vital` | Record a vital sign measurement (BP, glucose, HR, etc.) | patient_id, metric, value, measure_date |
+| `patient_add_medication` | Add a medication record for a patient | patient_id, drug_name, dosage, frequency |
+| `patient_add_diagnosis` | Add a diagnosis record (can mark as chronic) | patient_id, diagnosis_name, is_chronic |
+
+## Vital Sign Metrics
+
+| Key | Label | Unit | Normal Range |
+|-----|-------|------|-------------|
+| systolic_bp | 收缩压 | mmHg | 90-140 |
+| diastolic_bp | 舒张压 | mmHg | 60-90 |
+| heart_rate | 心率 | 次/分 | 60-100 |
+| fasting_glucose | 空腹血糖 | mmol/L | 3.9-6.1 |
+| hba1c | 糖化血红蛋白 | % | 4.0-6.0 |
+| temperature | 体温 | ℃ | 36.0-37.3 |
+| spo2 | 血氧饱和度 | % | 95-100 |
+| weight | 体重 | kg | - |
+| bmi | BMI | kg/m² | 18.5-24.0 |
+| cr | 肌酐 | μmol/L | 44-133 |
+| alt | 谷丙转氨酶 | U/L | 0-40 |
+| hb | 血红蛋白 | g/L | 115-150 |
+| wbc | 白细胞 | ×10⁹/L | 4-10 |
+| tc | 总胆固醇 | mmol/L | 0-5.2 |
+| ldl_c | LDL-C | mmol/L | 0-3.4 |
+| ua | 尿酸 | μmol/L | 150-420 |
 
 ## Installation
 
@@ -36,32 +69,18 @@ Requires a `.env` file in the project root:
 ## CLI Usage
 
 ```bash
+  # AI modules
   python skill/tools/tool.py record -q "55岁男性，反复咳嗽1月余"
   python skill/tools/tool.py lab -q "血红蛋白95g/L，MCV 72fL"
   python skill/tools/tool.py treatment -q "慢阻肺急性加重"
   python skill/tools/tool.py qc -q "门诊病历：患者张某..."
   python skill/tools/tool.py timeline -q "患者张建国，男55岁，3次就诊记录..."
   python skill/tools/tool.py health
+
+  # Patient DB
+  python skill/tools/tool.py patient-list --keyword 张
+  python skill/tools/tool.py patient-detail --patient-id 1
+  python skill/tools/tool.py patient-add-vital --patient-id 1 --metric systolic_bp --value 130
+  python skill/tools/tool.py patient-add-med --patient-id 1 --drug "氨氯地平" --dosage "5mg"
+  python skill/tools/tool.py patient-add-diag --patient-id 1 --diagnosis "高血压病" --chronic
 ```
-
-## Module Details
-
-### 1. 门诊病历生成 (record)
-Input: Doctor's oral symptom description
-Output: Structured outpatient record (chief complaint, present illness, past history, physical exam, diagnosis, treatment plan)
-
-### 2. 检验报告解读 (lab)
-Input: Lab test data text
-Output: Key indicators with abnormality flags, clinical significance, overall interpretation, follow-up suggestions
-
-### 3. 诊疗方案推荐 (treatment)
-Input: Symptom description or diagnosis
-Output: Possible diagnoses, recommended exams, medication plan, precautions, risk alerts
-
-### 4. 病历质控校验 (qc)
-Input: Complete outpatient record text
-Output: Quality grade (甲/乙/丙), missing items, nonstandard terms, logic issues, modification suggestions, score
-
-### 5. 时序病情分析 (timeline)
-Input: Patient's multiple visit records (auto-assembled by backend from database)
-Output: Patient summary, disease progression, key changes, treatment effectiveness, risk assessment, future recommendations, follow-up plan

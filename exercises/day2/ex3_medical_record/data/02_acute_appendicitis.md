@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: 'd0f27132-2397-4362-9712-006ba575a043'
-  PropagateID: 'd0f27132-2397-4362-9712-006ba575a043'
-  ReservedCode1: '7b2b0e23-7a82-4f08-a1a9-a3128244ed0e'
-  ReservedCode2: '7b2b0e23-7a82-4f08-a1a9-a3128244ed0e'
+  ProduceID: 'b4b28d14-6d02-462b-8816-4010f0b0ea4f'
+  PropagateID: 'b4b28d14-6d02-462b-8816-4010f0b0ea4f'
+  ReservedCode1: 'b343dd43-70ef-49ac-b3f0-e7f7bb37b787'
+  ReservedCode2: 'b343dd43-70ef-49ac-b3f0-e7f7bb37b787'
 ---
 
 # 门诊病历样本2 - 急性阑尾炎

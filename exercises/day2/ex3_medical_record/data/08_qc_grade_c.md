@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: '2d5ad756-8932-4974-9155-4fc146979470'
-  PropagateID: '2d5ad756-8932-4974-9155-4fc146979470'
-  ReservedCode1: '30151bfe-5fae-4541-a70c-f604d290b617'
-  ReservedCode2: '30151bfe-5fae-4541-a70c-f604d290b617'
+  ProduceID: 'fdb7f58f-4c67-4c78-a968-ec844e140111'
+  PropagateID: 'fdb7f58f-4c67-4c78-a968-ec844e140111'
+  ReservedCode1: '7eaff541-d4dc-45c5-b604-ba5c17825ecf'
+  ReservedCode2: '7eaff541-d4dc-45c5-b604-ba5c17825ecf'
 ---
 
 # 病历质控样本2 - 丙级病历（严重缺陷）

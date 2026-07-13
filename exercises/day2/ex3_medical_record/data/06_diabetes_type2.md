@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: '5154e96b-b24e-407a-b9e5-af84a2507dc7'
-  PropagateID: '5154e96b-b24e-407a-b9e5-af84a2507dc7'
-  ReservedCode1: 'ce3d18b1-88d6-49fa-83a0-c23ac5f59844'
-  ReservedCode2: 'ce3d18b1-88d6-49fa-83a0-c23ac5f59844'
+  ProduceID: '9ec3fba0-686b-4bda-9cda-39eeb05bdf23'
+  PropagateID: '9ec3fba0-686b-4bda-9cda-39eeb05bdf23'
+  ReservedCode1: '65700e6d-6b57-4303-86ea-5143a976a5ea'
+  ReservedCode2: '65700e6d-6b57-4303-86ea-5143a976a5ea'
 ---
 
 # 诊疗方案样本2 - 2型糖尿病初诊

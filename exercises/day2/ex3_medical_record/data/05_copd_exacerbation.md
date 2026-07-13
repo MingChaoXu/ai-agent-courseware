@@ -3,10 +3,10 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: '0b501881-722c-471c-9841-470cbfb5191b'
-  PropagateID: '0b501881-722c-471c-9841-470cbfb5191b'
-  ReservedCode1: '24bb4d34-cd1c-490e-9959-280cfcef8109'
-  ReservedCode2: '24bb4d34-cd1c-490e-9959-280cfcef8109'
+  ProduceID: 'a86b52f3-3e3c-4878-9567-7f0872975f11'
+  PropagateID: 'a86b52f3-3e3c-4878-9567-7f0872975f11'
+  ReservedCode1: '5b47f1a1-a3cb-47eb-8044-c8ace78264f5'
+  ReservedCode2: '5b47f1a1-a3cb-47eb-8044-c8ace78264f5'
 ---
 
 # 诊疗方案样本1 - 慢阻肺急性加重

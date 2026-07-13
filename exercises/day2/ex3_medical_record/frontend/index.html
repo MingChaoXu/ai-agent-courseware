@@ -19,6 +19,7 @@
       --success: #10b981;
       --danger: #ef4444;
       --warning: #f59e0b;
+      --info: #3b82f6;
     }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100vh; }
     .app { display: flex; flex-direction: column; height: 100vh; max-width: 960px; margin: 0 auto; }
@@ -28,7 +29,7 @@
     .header .badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; background: #ecfdf5; color: var(--success); font-weight: 500; }
     .header .badge.error { background: #fef2f2; color: var(--danger); }
     /* Tabs */
-    .tabs { display: flex; gap: 0; margin-top: 10px; border-bottom: 2px solid var(--border); }
+    .tabs { display: flex; gap: 0; margin-top: 10px; border-bottom: 2px solid var(--border); overflow-x: auto; }
     .tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--text-secondary); transition: all 0.2s; white-space: nowrap; }
     .tab:hover { color: var(--primary); }
     .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
@@ -91,32 +92,18 @@
     .input-box button { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 14px; cursor: pointer; white-space: nowrap; }
     .input-box button:hover { background: var(--primary-light); }
     .input-box button:disabled { opacity: 0.5; cursor: not-allowed; }
-    /* Quick samples in input area */
     .input-samples { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
     .input-samples .sample-chip { padding: 3px 8px; font-size: 11px; border: 1px solid var(--border); border-radius: 14px; cursor: pointer; background: var(--surface); color: var(--text-secondary); transition: all 0.15s; }
     .input-samples .sample-chip:hover { border-color: var(--primary-light); color: var(--primary); background: var(--primary-bg); }
-    /* Typing */
     .typing { display: inline-flex; gap: 4px; padding: 4px 0; }
     .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text-secondary); animation: blink 1.4s infinite both; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes blink { 0%,80%,100% { opacity: 0.2; } 40% { opacity: 1; } }
-    /* Disclaimer */
     .disclaimer { font-size: 11px; color: var(--text-secondary); text-align: center; padding: 4px; background: #fffbeb; border-top: 1px solid #fde68a; }
-    /* ---- Patient Module Styles ---- */
+
+    /* ============== Patient Module Styles ============== */
     .patient-panel { flex: 1; overflow-y: auto; padding: 16px 24px; }
-    .patient-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-    .patient-card { padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: var(--surface); display: flex; align-items: center; gap: 12px; }
-    .patient-card:hover { border-color: var(--primary-light); background: var(--primary-bg); }
-    .patient-card.active { border-color: var(--primary); background: var(--primary-bg); }
-    .patient-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary-bg); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; flex-shrink: 0; }
-    .patient-info { flex: 1; min-width: 0; }
-    .patient-info .name { font-size: 14px; font-weight: 600; color: var(--text); }
-    .patient-info .meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
-    .patient-visit-badge { font-size: 11px; padding: 2px 8px; border-radius: 10px; background: #ecfdf5; color: var(--success); font-weight: 500; }
-    /* Patient Detail */
-    .patient-detail-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .patient-detail-header h3 { font-size: 16px; color: var(--text); }
     .btn { padding: 6px 14px; border-radius: 8px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: all 0.2s; }
     .btn:hover { background: var(--primary-bg); border-color: var(--primary-light); }
     .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
@@ -125,13 +112,71 @@
     .btn-danger { color: var(--danger); border-color: #fecaca; }
     .btn-danger:hover { background: #fef2f2; }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Search bar */
+    .search-bar { display: flex; gap: 8px; margin-bottom: 12px; align-items: center; }
+    .search-bar input { flex: 1; padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+    .search-bar input:focus { border-color: var(--primary-light); }
+
+    /* Patient list */
+    .patient-list { display: flex; flex-direction: column; gap: 8px; }
+    .patient-card { padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: var(--surface); display: flex; align-items: center; gap: 10px; }
+    .patient-card:hover { border-color: var(--primary-light); background: var(--primary-bg); }
+    .patient-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary-bg); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; flex-shrink: 0; }
+    .patient-info { flex: 1; min-width: 0; }
+    .patient-info .name { font-size: 14px; font-weight: 600; color: var(--text); }
+    .patient-info .meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+    .patient-badges { display: flex; gap: 4px; flex-shrink: 0; }
+    .p-badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; font-weight: 500; }
+    .p-badge.visit { background: #ecfdf5; color: var(--success); }
+    .p-badge.med { background: #eff6ff; color: var(--info); }
+    .p-badge.diag { background: #fffbeb; color: var(--warning); }
+
+    /* Add patient form */
+    .add-patient-form { padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; }
+    .form-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+    .form-row label { font-size: 12px; color: var(--text-secondary); min-width: 36px; }
+    .form-row input, .form-row select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; flex: 1; min-width: 70px; }
+    .form-row input:focus, .form-row select:focus { border-color: var(--primary-light); }
+
+    /* ---- Patient Detail ---- */
+    .detail-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .detail-header h3 { font-size: 16px; color: var(--text); }
+    .detail-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* Sub-sections */
+    .section { margin-bottom: 16px; }
+    .section-title { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+    .section-title .count { font-size: 11px; font-weight: 400; color: var(--text-secondary); }
+
+    /* Diagnoses list */
+    .diag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+    .diag-chip { padding: 4px 10px; border-radius: 8px; font-size: 12px; border: 1px solid var(--border); background: var(--surface); }
+    .diag-chip.chronic { border-color: var(--warning); background: #fffbeb; }
+    .diag-chip .chronic-tag { font-size: 10px; color: var(--warning); margin-left: 4px; }
+
+    /* Medications list */
+    .med-list { display: flex; flex-direction: column; gap: 4px; }
+    .med-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); font-size: 12px; }
+    .med-item .drug { font-weight: 600; color: var(--text); }
+    .med-item .dose { color: var(--text-secondary); }
+    .med-item .freq { color: var(--info); font-size: 11px; }
+
+    /* ---- Trend Chart (SVG) ---- */
+    .trend-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .trend-chart { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+    .trend-chart .chart-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 6px; display: flex; justify-content: space-between; }
+    .trend-chart .chart-title .unit { font-weight: 400; color: var(--text-secondary); font-size: 11px; }
+    .trend-chart svg { width: 100%; height: 100px; }
+    .trend-chart .no-data { font-size: 12px; color: var(--text-secondary); text-align: center; padding: 20px; }
+
     /* Timeline */
     .timeline { position: relative; padding-left: 24px; }
     .timeline::before { content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: var(--border); }
-    .timeline-item { position: relative; margin-bottom: 16px; }
+    .timeline-item { position: relative; margin-bottom: 12px; }
     .timeline-item::before { content: ''; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); border: 2px solid var(--surface); z-index: 1; }
-    .timeline-item .visit-date { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
-    .timeline-item .visit-module { font-size: 11px; padding: 1px 8px; border-radius: 10px; display: inline-block; margin-bottom: 4px; }
+    .timeline-item .visit-date { font-size: 12px; color: var(--text-secondary); margin-bottom: 2px; }
+    .timeline-item .visit-module { font-size: 11px; padding: 1px 8px; border-radius: 10px; display: inline-block; margin-bottom: 3px; }
     .module-record { background: #eff6ff; color: #1d4ed8; }
     .module-lab { background: #fef2f2; color: #dc2626; }
     .module-treatment { background: #ecfdf5; color: #059669; }
@@ -139,20 +184,31 @@
     .module-timeline { background: #fdf4ff; color: #a855f7; }
     .timeline-item .visit-text { font-size: 13px; color: var(--text); line-height: 1.5; }
     .timeline-item .visit-detail { font-size: 12px; color: var(--text-secondary); margin-top: 4px; padding: 8px; background: #f8fafc; border-radius: 6px; border: 1px solid var(--border); }
-    /* Add patient form */
-    .add-patient-form { padding: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; }
-    .form-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
-    .form-row label { font-size: 12px; color: var(--text-secondary); min-width: 40px; line-height: 32px; }
-    .form-row input, .form-row select { padding: 6px 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; flex: 1; min-width: 80px; }
-    .form-row input:focus, .form-row select:focus { border-color: var(--primary-light); }
-    /* Timeline analysis result */
+
+    /* Analysis panel */
     .analysis-panel { margin-top: 16px; padding: 16px; background: var(--surface); border: 1px solid var(--primary-light); border-radius: 10px; }
-    .analysis-panel .analysis-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-    /* Patient select dropdown for chat modules */
-    .patient-select-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .analysis-panel .analysis-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 12px; }
+
+    /* Patient select for chat */
+    .patient-select-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
     .patient-select-row label { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }
     .patient-select-row select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; }
-    .patient-select-row select:focus { border-color: var(--primary-light); }
+    /* Quick create patient inline */
+    .quick-create { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 6px; padding: 8px 10px; background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; }
+    .quick-create input, .quick-create select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; }
+    .quick-create input:focus, .quick-create select:focus { border-color: var(--primary-light); }
+    .archive-hint { font-size: 11px; color: var(--success); margin-left: 4px; }
+
+    /* Add vital form */
+    .add-vital-form { display: flex; gap: 6px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
+    .add-vital-form select, .add-vital-form input { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; }
+    .add-vital-form select { min-width: 110px; }
+    .add-vital-form input { width: 70px; }
+    .add-vital-form .btn-sm { padding: 3px 8px; font-size: 11px; }
+
+    /* Add med/diag forms */
+    .inline-form { display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
+    .inline-form input, .inline-form select { padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; outline: none; flex: 1; min-width: 80px; }
   </style>
 </head>
 <body>
@@ -167,16 +223,16 @@
       </div>
     </div>
 
-    <!-- Tab: Patient Archive -->
+    <!-- ========== Patient Archive Tab ========== -->
     <div v-if="activeTab === 'patient'" class="patient-panel">
-      <!-- Add New Patient Form (toggle) -->
+      <!-- Add New Patient (toggle form) -->
       <div v-if="showAddPatient" class="add-patient-form">
-        <div style="font-size:14px;font-weight:600;margin-bottom:10px;">新建患者档案</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px;">新建患者档案</div>
         <div class="form-row">
           <label>姓名</label><input v-model="newPatient.name" placeholder="患者姓名" />
           <label>性别</label>
           <select v-model="newPatient.gender"><option>男</option><option>女</option><option>未知</option></select>
-          <label>年龄</label><input v-model.number="newPatient.age" type="number" placeholder="岁" style="max-width:70px;" />
+          <label>年龄</label><input v-model.number="newPatient.age" type="number" placeholder="岁" style="max-width:60px;" />
         </div>
         <div class="form-row">
           <label>手机</label><input v-model="newPatient.phone" placeholder="手机号" />
@@ -187,12 +243,13 @@
           <button class="btn btn-sm btn-primary" @click="createPatient" :disabled="!newPatient.name.trim()">创建</button>
         </div>
       </div>
-      <div v-else style="margin-bottom:12px;">
-        <button class="btn btn-sm btn-primary" @click="showAddPatient=true">+ 新建患者</button>
-      </div>
 
-      <!-- Patient List (when no patient selected) -->
+      <!-- Patient List (no patient selected) -->
       <div v-if="!selectedPatient">
+        <div class="search-bar">
+          <input v-model="searchKeyword" @input="fetchPatients" placeholder="搜索姓名或手机号..." />
+          <button v-if="!showAddPatient" class="btn btn-sm btn-primary" @click="showAddPatient=true">+ 新建患者</button>
+        </div>
         <div v-if="patients.length === 0" style="text-align:center;padding:40px;color:var(--text-secondary);">
           <div style="font-size:36px;opacity:0.3;margin-bottom:8px;">档案馆</div>
           <p>暂无患者档案，点击上方按钮新建</p>
@@ -201,54 +258,150 @@
           <div v-for="p in patients" :key="p.id" class="patient-card" @click="selectPatient(p)">
             <div class="patient-avatar">{{ p.name.charAt(0) }}</div>
             <div class="patient-info">
-              <div class="name">{{ p.name }} <span style="font-weight:400;font-size:12px;color:var(--text-secondary);">{{ p.gender }} / {{ p.age }}岁</span></div>
-              <div class="meta">{{ p.phone }} {{ p.notes ? ' | ' + p.notes : '' }}</div>
+              <div class="name">{{ p.name }} <span style="font-weight:400;font-size:12px;color:var(--text-secondary);">{{ p.gender }}/{{ p.age }}岁</span></div>
+              <div class="meta">{{ p.phone || '无手机' }} {{ p.notes ? ' | ' + p.notes : '' }}</div>
             </div>
-            <span class="patient-visit-badge">{{ p.visit_count || 0 }}次就诊</span>
+            <div class="patient-badges">
+              <span class="p-badge visit">{{ p.visit_count || 0 }}诊</span>
+              <span v-if="p.med_count" class="p-badge med">{{ p.med_count }}药</span>
+              <span v-if="p.diag_count" class="p-badge diag">{{ p.diag_count }}病</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Patient Detail (when a patient is selected) -->
+      <!-- Patient Detail -->
       <div v-else>
-        <div class="patient-detail-header">
+        <div class="detail-header">
           <h3>{{ selectedPatient.name }} <span style="font-weight:400;font-size:13px;color:var(--text-secondary);">{{ selectedPatient.gender }} / {{ selectedPatient.age }}岁</span></h3>
-          <div style="display:flex;gap:6px;">
+          <div class="detail-actions">
             <button class="btn btn-primary btn-sm" @click="runTimelineAnalysis" :disabled="timelineLoading">
               {{ timelineLoading ? '分析中...' : 'AI时序分析' }}
             </button>
-            <button class="btn btn-sm" @click="selectedPatient=null;visits=[];analysisResult=null;">返回列表</button>
+            <button class="btn btn-sm" @click="goBackList">返回列表</button>
           </div>
         </div>
         <div v-if="selectedPatient.phone || selectedPatient.notes" style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">
-          {{ selectedPatient.phone ? '手机: ' + selectedPatient.phone : '' }}
-          {{ selectedPatient.notes ? ' | 备注: ' + selectedPatient.notes : '' }}
+          <span v-if="selectedPatient.phone">手机: {{ selectedPatient.phone }}</span>
+          <span v-if="selectedPatient.notes"> | 备注: {{ selectedPatient.notes }}</span>
         </div>
 
-        <!-- Timeline -->
-        <div v-if="visits.length === 0" style="text-align:center;padding:20px;color:var(--text-secondary);font-size:13px;">
-          暂无就诊记录，在其他模块对话时可选择归档到此患者
+        <!-- Diagnoses -->
+        <div class="section" v-if="diagnoses.length > 0">
+          <div class="section-title">诊断 <span class="count">({{ diagnoses.length }})</span></div>
+          <div class="diag-list">
+            <div v-for="d in diagnoses" :key="d.id" class="diag-chip" :class="{ chronic: d.is_chronic }">
+              {{ d.diagnosis_name }}<span v-if="d.is_chronic" class="chronic-tag">慢病</span>
+            </div>
+          </div>
+          <div class="inline-form">
+            <input v-model="newDiag.name" placeholder="诊断名称" style="flex:2;" />
+            <select v-model="newDiag.chronic"><option :value="false">急性</option><option :value="true">慢病</option></select>
+            <button class="btn btn-sm btn-primary" @click="addDiagnosis" :disabled="!newDiag.name.trim()">添加</button>
+          </div>
         </div>
-        <div v-else class="timeline">
-          <div v-for="v in visits" :key="v.id" class="timeline-item">
-            <div class="visit-date">{{ v.visit_date }}</div>
-            <span class="visit-module" :class="'module-' + v.module">{{ moduleLabel(v.module) }}</span>
-            <div class="visit-text">{{ truncate(v.input_text, 120) }}</div>
-            <div v-if="v.result && typeof v.result === 'object'" class="visit-detail">
-              <div v-for="(val, key) in v.result" :key="key" style="margin:2px 0;">
-                <strong>{{ labelMap[key] || key }}:</strong> {{ truncate(typeof val === 'object' ? JSON.stringify(val) : String(val), 80) }}
+        <div class="section" v-else>
+          <div class="section-title">诊断</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">暂无诊断</div>
+          <div class="inline-form">
+            <input v-model="newDiag.name" placeholder="诊断名称" style="flex:2;" />
+            <select v-model="newDiag.chronic"><option :value="false">急性</option><option :value="true">慢病</option></select>
+            <button class="btn btn-sm btn-primary" @click="addDiagnosis" :disabled="!newDiag.name.trim()">添加</button>
+          </div>
+        </div>
+
+        <!-- Medications -->
+        <div class="section" v-if="medications.length > 0">
+          <div class="section-title">当前用药 <span class="count">({{ medications.length }})</span></div>
+          <div class="med-list">
+            <div v-for="m in medications" :key="m.id" class="med-item">
+              <span class="drug">{{ m.drug_name }}</span>
+              <span class="dose">{{ m.dosage }}</span>
+              <span class="freq">{{ m.frequency }}</span>
+            </div>
+          </div>
+          <div class="inline-form">
+            <input v-model="newMed.name" placeholder="药品名" style="flex:2;" />
+            <input v-model="newMed.dosage" placeholder="剂量" style="flex:1;" />
+            <input v-model="newMed.freq" placeholder="频次" style="max-width:60px;" />
+            <button class="btn btn-sm btn-primary" @click="addMedication" :disabled="!newMed.name.trim()">添加</button>
+          </div>
+        </div>
+        <div class="section" v-else>
+          <div class="section-title">当前用药</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">暂无用药</div>
+          <div class="inline-form">
+            <input v-model="newMed.name" placeholder="药品名" style="flex:2;" />
+            <input v-model="newMed.dosage" placeholder="剂量" style="flex:1;" />
+            <input v-model="newMed.freq" placeholder="频次" style="max-width:60px;" />
+            <button class="btn btn-sm btn-primary" @click="addMedication" :disabled="!newMed.name.trim()">添加</button>
+          </div>
+        </div>
+
+        <!-- Vital Trend Charts -->
+        <div class="section">
+          <div class="section-title">指标趋势</div>
+          <div class="trend-charts">
+            <div v-for="chart in trendCharts" :key="chart.metric" class="trend-chart">
+              <div class="chart-title">{{ chart.label }} <span class="unit">{{ chart.unit }}</span></div>
+              <div v-if="chart.points.length < 2" class="no-data">数据不足（需>=2个点）</div>
+              <svg v-else :viewBox="'0 0 ' + chartW + ' ' + chartH" preserveAspectRatio="xMidYMid meet">
+                <!-- Normal range band -->
+                <rect v-if="chart.normalRange" :x="chartPad" :y="chart.valToY(chart.normalRange[1])" :width="chartW - 2*chartPad" :height="chart.valToY(chart.normalRange[0]) - chart.valToY(chart.normalRange[1])" fill="#ecfdf5" opacity="0.5" />
+                <!-- Grid lines -->
+                <line v-for="gy in chart.gridY" :key="gy" :x1="chartPad" :y1="gy" :x2="chartW - chartPad" :y2="gy" stroke="#e2e8f0" stroke-width="0.5" />
+                <!-- Line -->
+                <polyline :points="chart.polylinePoints" fill="none" :stroke="chart.color" stroke-width="1.5" stroke-linejoin="round" />
+                <!-- Dots -->
+                <circle v-for="(pt, i) in chart.screenPoints" :key="i" :cx="pt.x" :cy="pt.y" r="3" :fill="chart.color" />
+                <!-- Value labels (first and last) -->
+                <text v-if="chart.screenPoints.length" :x="chart.screenPoints[0].x" :y="chart.screenPoints[0].y - 6" text-anchor="middle" font-size="9" :fill="chart.color">{{ chart.points[0].value }}</text>
+                <text v-if="chart.screenPoints.length > 1" :x="chart.screenPoints[chart.screenPoints.length-1].x" :y="chart.screenPoints[chart.screenPoints.length-1].y - 6" text-anchor="middle" font-size="9" :fill="chart.color">{{ chart.points[chart.points.length-1].value }}</text>
+                <!-- Date labels -->
+                <text v-if="chart.points.length" :x="chartPad" :y="chartH - 2" text-anchor="start" font-size="8" fill="#94a3b8">{{ chart.points[0].date.slice(5,10) }}</text>
+                <text v-if="chart.points.length > 1" :x="chartW - chartPad" :y="chartH - 2" text-anchor="end" font-size="8" fill="#94a3b8">{{ chart.points[chart.points.length-1].date.slice(5,10) }}</text>
+              </svg>
+            </div>
+          </div>
+          <!-- Add vital form -->
+          <div class="add-vital-form">
+            <select v-model="newVital.metric">
+              <option value="">选择指标</option>
+              <option v-for="(meta, key) in vitalMetricsDef" :key="key" :value="key">{{ meta.label }}</option>
+            </select>
+            <input v-model.number="newVital.value" type="number" placeholder="数值" />
+            <input v-model="newVital.date" type="date" style="width:110px;" />
+            <button class="btn btn-sm btn-primary" @click="addVitalSign" :disabled="!newVital.metric || !newVital.value">录入</button>
+          </div>
+        </div>
+
+        <!-- Visit Timeline -->
+        <div class="section">
+          <div class="section-title">就诊记录 <span class="count">({{ visits.length }})</span></div>
+          <div v-if="visits.length === 0" style="text-align:center;padding:16px;color:var(--text-secondary);font-size:13px;">
+            暂无就诊记录，在其他模块对话时可选择归档到此患者
+          </div>
+          <div v-else class="timeline">
+            <div v-for="v in visits" :key="v.id" class="timeline-item">
+              <div class="visit-date">{{ v.visit_date }}</div>
+              <span class="visit-module" :class="'module-' + v.module">{{ moduleLabel(v.module) }}</span>
+              <div class="visit-text">{{ truncate(v.input_text, 100) }}</div>
+              <div v-if="v.result && typeof v.result === 'object'" class="visit-detail">
+                <div v-for="(val, key) in v.result" :key="key" style="margin:2px 0;">
+                  <strong>{{ labelMap[key] || key }}:</strong> {{ truncate(typeof val === 'object' ? JSON.stringify(val) : String(val), 80) }}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Timeline Analysis Result -->
+        <!-- AI Timeline Analysis Result -->
         <div v-if="analysisResult" class="analysis-panel">
           <div class="analysis-title">AI时序分析结果</div>
-          <div class="structured-result">
-            <div v-for="(val, key) in analysisResult" :key="key" class="result-item">
-              <div class="item-label">{{ labelMap[key] || key }}</div>
-              <div class="item-value" v-html="renderTimelineField(val)"></div>
+          <div class="structured-result" style="background:#f8fafc;padding:12px;border-radius:8px;font-size:13px;">
+            <div v-for="(val, key) in analysisResult" :key="key" style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);">
+              <div style="font-weight:600;color:var(--primary);margin-bottom:4px;font-size:13px;">{{ labelMap[key] || key }}</div>
+              <div style="color:var(--text-secondary);line-height:1.6;" v-html="renderTimelineField(val)"></div>
             </div>
           </div>
         </div>
@@ -258,7 +411,7 @@
       </div>
     </div>
 
-    <!-- Tab: Chat Modules (record/lab/treatment/qc) -->
+    <!-- ========== Chat Modules (record/lab/treatment/qc) ========== -->
     <template v-else>
       <div class="messages" ref="messagesContainer">
         <div v-if="messages.length === 0" class="empty-state">
@@ -276,27 +429,35 @@
             </div>
           </div>
         </div>
-
         <div v-for="(msg, idx) in messages" :key="idx" class="msg" :class="msg.role">
           <div class="msg-avatar">{{ msg.role === 'user' ? '问' : 'AI' }}</div>
           <div class="msg-body" v-if="msg.role === 'user'" style="white-space:pre-wrap;">{{ truncateUser(msg.content) }}</div>
           <div class="msg-body" v-else v-html="formatMessage(msg)"></div>
         </div>
-
         <div v-if="loading" class="msg assistant">
           <div class="msg-avatar">AI</div>
           <div class="msg-body"><div class="typing"><span></span><span></span><span></span></div></div>
         </div>
       </div>
-
       <div class="input-area">
-        <!-- Patient select for archiving -->
         <div class="patient-select-row">
           <label>归档至患者:</label>
           <select v-model="archivePatientId">
             <option :value="null">不归档</option>
             <option v-for="p in patients" :key="p.id" :value="p.id">{{ p.name }} ({{ p.gender }}/{{ p.age }}岁)</option>
           </select>
+          <button class="btn btn-sm" @click="showQuickCreate=!showQuickCreate" style="font-size:12px;">
+            {{ showQuickCreate ? '取消' : '+新建患者' }}
+          </button>
+          <span v-if="archivePatientId" class="archive-hint">结果将自动存入该患者档案</span>
+        </div>
+        <!-- Quick create patient inline form -->
+        <div v-if="showQuickCreate" class="quick-create">
+          <input v-model="quickPatient.name" placeholder="姓名" style="width:80px;" />
+          <select v-model="quickPatient.gender"><option>男</option><option>女</option></select>
+          <input v-model.number="quickPatient.age" type="number" placeholder="年龄" style="width:55px;" />
+          <input v-model="quickPatient.phone" placeholder="手机" style="width:110px;" />
+          <button class="btn btn-sm btn-primary" @click="quickCreatePatient" :disabled="!quickPatient.name.trim()">创建并选中</button>
         </div>
         <div v-if="messages.length > 0" class="input-samples">
           <span v-for="s in currentSamples" :key="s.key" class="sample-chip" @click="loadSample(s)">{{ s.title }}</span>
@@ -326,18 +487,34 @@ createApp({
     const patients = ref([]);
     const selectedPatient = ref(null);
     const visits = ref([]);
+    const diagnoses = ref([]);
+    const medications = ref([]);
+    const vitalTrends = ref({});
+    const searchKeyword = ref('');
     const showAddPatient = ref(false);
     const newPatient = ref({ name: '', gender: '男', age: null, phone: '', notes: '' });
     const archivePatientId = ref(null);
     const analysisResult = ref(null);
     const analysisError = ref(null);
     const timelineLoading = ref(false);
+    const vitalMetricsDef = ref({});
+    const newVital = ref({ metric: '', value: null, date: new Date().toISOString().slice(0,10) });
+    const newMed = ref({ name: '', dosage: '', freq: '' });
+    const newDiag = ref({ name: '', chronic: false });
+    const showQuickCreate = ref(false);
+    const quickPatient = ref({ name: '', gender: '男', age: null, phone: '' });
+
+    // Chart constants
+    const chartW = 360;
+    const chartH = 100;
+    const chartPad = 30;
+    const chartColors = ['#0f766e','#3b82f6','#ef4444','#f59e0b','#8b5cf6','#ec4899','#10b981','#06b6d4','#f97316','#6366f1'];
 
     const tabs = [
-      { key: 'record', label: '病历生成', icon: '📋', desc: '输入患者症状描述，自动生成规范门诊病历', placeholder: '请输入患者症状描述，如：55岁男性，反复咳嗽1月余...' },
-      { key: 'lab', label: '检验解读', icon: '🔬', desc: '输入检验报告数据，智能解读各项指标临床意义', placeholder: '请粘贴检验报告数据，如：白细胞5.2，血红蛋白110...' },
-      { key: 'treatment', label: '诊疗推荐', icon: '💊', desc: '根据症状推荐检查项目、用药方案和注意事项', placeholder: '请输入症状或诊断，如：反复咳嗽伴胸闷...' },
-      { key: 'qc', label: '病历质控', icon: '✅', desc: '对门诊病历进行规范性质控校验，指出缺项与不当', placeholder: '请粘贴待质控的门诊病历文本...' },
+      { key: 'record', label: '病历生成', icon: '📋', desc: '输入患者症状描述，自动生成规范门诊病历', placeholder: '请输入患者症状描述...' },
+      { key: 'lab', label: '检验解读', icon: '🔬', desc: '输入检验报告数据，智能解读各项指标临床意义', placeholder: '请粘贴检验报告数据...' },
+      { key: 'treatment', label: '诊疗推荐', icon: '💊', desc: '根据症状推荐检查项目、用药方案和注意事项', placeholder: '请输入症状或诊断...' },
+      { key: 'qc', label: '病历质控', icon: '✅', desc: '对门诊病历进行规范性质控校验', placeholder: '请粘贴待质控的门诊病历...' },
       { key: 'patient', label: '患者档案', icon: '📁', desc: '患者数据库与就诊时序管理', placeholder: '' },
     ];
 
@@ -357,29 +534,29 @@ createApp({
       ],
       lab: [
         { key: 'l1', title: '血常规-贫血', sub: 'Hb 95g/L，MCV降低', tagClass: 'blood', tag: '血常规',
-          text: '血常规检验报告：\n白细胞(WBC) 5.2×10^9/L [参考:4-10]\n红细胞(RBC) 3.8×10^12/L [参考:3.5-5.5]\n血红蛋白(Hb) 95 g/L [参考:115-150] ↓\n红细胞压积(HCT) 0.30 [参考:0.35-0.45] ↓\nMCV 72 fL [参考:80-100] ↓\nMCH 25 pg [参考:27-34] ↓\nMCHC 310 g/L [参考:320-360] ↓\n血小板(PLT) 210×10^9/L [参考:100-300]\n中性粒细胞% 58% [参考:50-70]\n淋巴细胞% 35% [参考:20-40]' },
+          text: '血常规：WBC 5.2×10^9/L [4-10]，RBC 3.8×10^12/L [3.5-5.5]，Hb 95 g/L [115-150]↓，MCV 72 fL [80-100]↓，MCH 25 pg [27-34]↓，PLT 210×10^9/L [100-300]，中性粒% 58% [50-70]，淋巴% 35% [20-40]' },
         { key: 'l2', title: '肝功能异常', sub: 'ALT 186U/L，AST 142U/L', tagClass: 'liver', tag: '肝功能',
-          text: '肝功能检验报告：\n谷丙转氨酶(ALT) 186 U/L [参考:0-40] ↑↑\n谷草转氨酶(AST) 142 U/L [参考:0-40] ↑↑\n总胆红素(TBIL) 28.5 μmol/L [参考:3.4-20.5] ↑\n直接胆红素(DBIL) 9.2 μmol/L [参考:0-8] ↑\n白蛋白(ALB) 38 g/L [参考:35-55]\n球蛋白(GLO) 32 g/L [参考:20-35]\n白球比(A/G) 1.19 [参考:1.2-2.0] ↓\n碱性磷酸酶(ALP) 98 U/L [参考:35-105]\n谷氨酰转肽酶(GGT) 156 U/L [参考:0-50] ↑↑' },
+          text: '肝功能：ALT 186 U/L [0-40]↑↑，AST 142 U/L [0-40]↑↑，TBIL 28.5 μmol/L [3.4-20.5]↑，ALB 38 g/L [35-55]，GGT 156 U/L [0-50]↑↑' },
         { key: 'l3', title: '肾功能+血糖', sub: 'Cr偏高，空腹血糖7.8', tagClass: 'renal', tag: '肾功能',
-          text: '肾功能及血糖检验报告：\n肌酐(Cr) 135 μmol/L [参考:44-133] ↑\n尿素氮(BUN) 8.2 mmol/L [参考:2.5-7.5] ↑\n尿酸(UA) 480 μmol/L [参考:150-420] ↑\n空腹血糖(GLU) 7.8 mmol/L [参考:3.9-6.1] ↑\n糖化血红蛋白(HbA1c) 7.2% [参考:4.0-6.0] ↑\n总胆固醇(TC) 5.9 mmol/L [参考:0-5.2] ↑\n甘油三酯(TG) 2.4 mmol/L [参考:0-1.7] ↑\nHDL-C 1.0 mmol/L [参考:1.0-1.9]\nLDL-C 3.8 mmol/L [参考:0-3.4] ↑' },
+          text: '肾功能+血糖：Cr 135 μmol/L [44-133]↑，BUN 8.2 mmol/L [2.5-7.5]↑，UA 480 μmol/L [150-420]↑，GLU 7.8 mmol/L [3.9-6.1]↑，HbA1c 7.2% [4.0-6.0]↑' },
         { key: 'l4', title: '血常规-感染', sub: 'WBC 15.8，中性粒85%', tagClass: 'blood', tag: '血常规',
-          text: '血常规检验报告：\n白细胞(WBC) 15.8×10^9/L [参考:4-10] ↑↑\n中性粒细胞% 85% [参考:50-70] ↑↑\n淋巴细胞% 10% [参考:20-40] ↓\n单核细胞% 3% [参考:3-10]\n红细胞(RBC) 4.5×10^12/L [参考:3.5-5.5]\n血红蛋白(Hb) 132 g/L [参考:115-150]\n血小板(PLT) 185×10^9/L [参考:100-300]\nC反应蛋白(CRP) 48 mg/L [参考:0-10] ↑↑\n降钙素原(PCT) 0.8 ng/mL [参考:<0.05] ↑↑' },
+          text: '血常规：WBC 15.8×10^9/L [4-10]↑↑，中性粒% 85% [50-70]↑↑，淋巴% 10% [20-40]↓，Hb 132 g/L [115-150]，PLT 185×10^9/L [100-300]，CRP 48 mg/L [0-10]↑↑' },
       ],
       treatment: [
         { key: 't1', title: '慢阻肺急性加重', sub: '咳嗽气促加重1周', tagClass: 'respiratory', tag: '呼吸科',
-          text: '患者男，65岁，慢性咳嗽咳痰10年，近1周咳嗽加重，痰量增多呈黄脓痰，活动后气促明显。吸烟40年，每日1.5包。体温37.5℃，双肺可闻干湿啰音。' },
+          text: '患者男，65岁，慢性咳嗽咳痰10年，近1周咳嗽加重，痰量增多呈黄脓痰，活动后气促明显。吸烟40年。体温37.5℃，双肺可闻干湿啰音。' },
         { key: 't2', title: '急性胃肠炎', sub: '腹泻呕吐2天', tagClass: 'digestive', tag: '消化科',
-          text: '患者女，28岁，2天前进食不洁食物后出现腹痛、腹泻，水样便6-8次/天，伴恶心呕吐3次，低热37.6℃。查体：腹软，脐周及左下腹轻压痛，肠鸣音活跃。' },
+          text: '患者女，28岁，2天前进食不洁食物后出现腹痛、腹泻，水样便6-8次/天，伴恶心呕吐3次，低热37.6℃。' },
         { key: 't3', title: '2型糖尿病初诊', sub: '空腹血糖9.2mmol/L', tagClass: 'metabolic', tag: '内分泌科',
           text: '患者男，48岁，体检发现空腹血糖9.2mmol/L，糖化血红蛋白8.1%。近3月口干多饮多尿，体重下降约5kg。BMI 27.5，父亲有糖尿病史。' },
         { key: 't4', title: '社区获得性肺炎', sub: '发热咳嗽右胸痛', tagClass: 'respiratory', tag: '呼吸科',
-          text: '患者男，42岁，发热4天，体温最高39.2℃，伴咳嗽、咳铁锈色痰、右侧胸痛，深呼吸时加重。查体：右下肺叩诊浊音，呼吸音减低，可闻及湿啰音。' },
+          text: '患者男，42岁，发热4天，体温最高39.2℃，伴咳嗽、咳铁锈色痰、右侧胸痛。右下肺叩诊浊音，可闻及湿啰音。' },
       ],
       qc: [
         { key: 'q1', title: '甲等病历样本', sub: '规范完整', tagClass: 'grade-a', tag: '甲级',
-          text: '门诊病历\n\n患者：王某，男，45岁\n就诊时间：2026年7月10日\n科别：呼吸内科\n\n主诉：反复咳嗽、咳痰2周。\n\n现病史：患者2周前受凉后出现咳嗽，伴咳白色粘痰，晨起明显，无发热、胸痛、咯血。自行服用止咳糖浆效果不佳。发病以来食欲可，睡眠正常，大小便无异常，体重无明显变化。\n\n既往史：高血压病史3年，规律服用氨氯地平5mg qd，血压控制可。否认糖尿病、冠心病史。否认肝炎、结核等传染病史。否认手术及外伤史。否认食物及药物过敏史。无吸烟饮酒史。\n\n体格检查：T 36.5℃，P 78次/分，R 18次/分，BP 130/82mmHg。神志清，精神可。咽部充血(+)，双侧扁桃体I度肿大。双肺呼吸音粗，右下肺可闻及少量湿啰音。心率78次/分，律齐，各瓣膜区未闻及杂音。腹软，无压痛及反跳痛。双下肢无水肿。\n\n初步诊断：1. 急性支气管炎；2. 高血压病（2级，中危）\n\n处理意见：1. 血常规、CRP检查；2. 胸部X线检查；3. 盐酸氨溴索口服液 10ml tid；4. 头孢克洛缓释片 0.375g bid；5. 注意休息，多饮水，避免受凉；6. 3天后复诊，如症状加重及时就诊。' },
+          text: '门诊病历\n\n患者：王某，男，45岁\n主诉：反复咳嗽、咳痰2周。\n现病史：患者2周前受凉后出现咳嗽，伴咳白色粘痰，晨起明显，无发热、胸痛、咯血。自行服用止咳糖浆效果不佳。\n既往史：高血压病史3年，规律服用氨氯地平5mg qd。否认糖尿病、冠心病史。否认手术及外伤史。否认食物及药物过敏史。\n体格检查：T 36.5℃，P 78次/分，R 18次/分，BP 130/82mmHg。双肺呼吸音粗，右下肺可闻及少量湿啰音。\n初步诊断：1. 急性支气管炎；2. 高血压病（2级，中危）\n处理意见：1. 血常规、CRP检查；2. 胸部X线检查；3. 盐酸氨溴索口服液 10ml tid；4. 头孢克洛缓释片 0.375g bid；5. 3天后复诊。' },
         { key: 'q2', title: '乙等病历样本', sub: '有部分缺陷', tagClass: 'grade-b', tag: '乙级',
-          text: '门诊病历\n\n患者：张某某，女，38岁\n就诊时间：2026年7月12日\n科别：消化内科\n\n主诉：腹痛3天。\n\n现病史：患者3天前出现肚子疼，肚脐周围为主，有时候拉稀，一天3-4次，有点恶心想吐。\n\n既往史：无特殊。\n\n体格检查：腹软，压痛(+)。\n\n诊断：急性肠炎\n\n处理：1. 左氧氟沙星 0.5g qd；2. 蒙脱石散 1袋 tid；3. 注意饮食。' },
+          text: '门诊病历\n\n患者：张某某，女，38岁\n主诉：腹痛3天。\n现病史：患者3天前出现肚子疼，肚脐周围为主，有时候拉稀，一天3-4次，有点恶心想吐。\n既往史：无特殊。\n体格检查：腹软，压痛(+)。\n诊断：急性肠炎\n处理：1. 左氧氟沙星 0.5g qd；2. 蒙脱石散 1袋 tid。' },
         { key: 'q3', title: '丙等病历样本', sub: '严重缺陷', tagClass: 'grade-c', tag: '丙级',
           text: '门诊病历\n\n张大爷，60多岁\n\n肚子不舒服好几天，吃不下饭，有点发烧。\n\n以前身体还行。\n\n查了一下肚子有点疼。\n\n肠胃炎\n\n开点药吃吃看。' },
       ],
@@ -388,61 +565,85 @@ createApp({
     const currentSamples = computed(() => sampleData[activeTab.value] || []);
 
     const labelMap = {
-      // Module: record
       patient_info: '患者信息', chief_complaint: '主诉', present_illness: '现病史',
       past_history: '既往史', physical_examination: '体格检查', preliminary_diagnosis: '初步诊断', treatment_plan: '处理意见',
-      // Module: lab
       report_type: '检验类型', key_indicators: '关键指标', overall_interpretation: '综合解读',
       clinical_correlation: '临床关联', follow_up_suggestions: '复查建议',
-      // Module: treatment
       possible_diagnoses: '可能诊断', recommended_exams: '推荐检查', medication_suggestions: '用药方案',
       precautions: '注意事项', risk_alerts: '风险提示',
-      // Module: qc
       quality_level: '质控等级', missing_items: '缺项清单', nonstandard_terms: '不规范用语',
       logic_issues: '逻辑矛盾', modification_suggestions: '修改建议', overall_score: '综合评分',
-      // Module: timeline
       patient_summary: '患者概况', disease_progression: '病情演变', key_changes: '关键变化点',
       treatment_effectiveness: '治疗效果', risk_assessment: '风险预警', future_recommendations: '后续建议',
       follow_up_plan: '随访计划',
-      // Lab indicator fields
       name: '指标名称', value: '检测值', reference_range: '参考范围', is_abnormal: '是否异常', clinical_significance: '临床意义',
     };
 
     function moduleLabel(m) {
       return { record: '病历生成', lab: '检验解读', treatment: '诊疗推荐', qc: '病历质控', timeline: '时序分析' }[m] || m;
     }
-
     function truncate(text, len) {
       if (!text) return '';
       return String(text).length > len ? String(text).substring(0, len) + '...' : String(text);
     }
-
     function truncateUser(text) {
-      if (text.length > 300) return text.substring(0, 300) + '...';
-      return text;
+      return text.length > 300 ? text.substring(0, 300) + '...' : text;
     }
+    function escapeHtml(text) {
+      return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // ---- Trend chart computation ----
+    const trendCharts = computed(() => {
+      const trends = vitalTrends.value;
+      if (!trends || Object.keys(trends).length === 0) return [];
+      const def = vitalMetricsDef.value;
+      let colorIdx = 0;
+      const charts = [];
+      for (const [metric, points] of Object.entries(trends)) {
+        if (points.length < 2) continue;
+        const meta = def[metric] || { label: metric, unit: '', normal_range: null };
+        const values = points.map(p => p.value);
+        const minV = Math.min(...values);
+        const maxV = Math.max(...values);
+        const range = maxV - minV || 1;
+        const padV = range * 0.15;
+        const yMin = minV - padV;
+        const yMax = maxV + padV;
+        const drawW = chartW - 2 * chartPad;
+        const drawH = chartH - 2 * chartPad;
+
+        function valToY(v) { return chartPad + drawH * (1 - (v - yMin) / (yMax - yMin)); }
+
+        const screenPoints = points.map((p, i) => ({
+          x: chartPad + (points.length > 1 ? i / (points.length - 1) : 0.5) * drawW,
+          y: valToY(p.value),
+        }));
+        const polylinePoints = screenPoints.map(p => `${p.x},${p.y}`).join(' ');
+
+        // Grid: 4 horizontal lines
+        const gridY = [];
+        for (let g = 0; g <= 3; g++) gridY.push(chartPad + g * drawH / 3);
+
+        const color = chartColors[colorIdx % chartColors.length];
+        colorIdx++;
+        charts.push({
+          metric, label: meta.label, unit: meta.unit,
+          points, normalRange: meta.normal_range,
+          valToY, screenPoints, polylinePoints, gridY, color,
+        });
+      }
+      return charts;
+    });
 
     function switchTab(key) {
       if (loading.value) return;
       activeTab.value = key;
-      if (key !== 'patient') {
-        messages.value = [];
-        inputText.value = '';
-      }
+      if (key !== 'patient') { messages.value = []; inputText.value = ''; }
     }
-
-    function loadSample(s) {
-      inputText.value = s.text;
-    }
-
+    function loadSample(s) { inputText.value = s.text; }
     function scrollToBottom() {
-      nextTick(() => {
-        if (messagesContainer.value) messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight;
-      });
-    }
-
-    function escapeHtml(text) {
-      return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      nextTick(() => { if (messagesContainer.value) messagesContainer.value.scrollTop = messagesContainer.value.scrollHeight; });
     }
 
     function renderFieldValue(val) {
@@ -454,32 +655,19 @@ createApp({
             const isAbn = item.is_abnormal === true || item.is_abnormal === 'true';
             html += '<div class="indicator-item ' + (isAbn ? 'abnormal' : 'normal') + '">';
             for (const [k, v] of Object.entries(item)) {
-              const label = labelMap[k] || k;
-              if (k === 'is_abnormal') {
-                html += '<span style="margin-right:6px;">' + (v ? '⚠' : '✓') + '</span>';
-              } else {
-                let displayVal = escapeHtml(String(v));
-                displayVal = displayVal.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                displayVal = displayVal.replace(/\n/g, '<br>');
-                html += '<strong>' + label + ':</strong> ' + displayVal + '  ';
-              }
+              const lbl = labelMap[k] || k;
+              if (k === 'is_abnormal') { html += '<span style="margin-right:6px;">' + (v ? '⚠' : '✓') + '</span>'; }
+              else { let dv = escapeHtml(String(v)); dv = dv.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); dv = dv.replace(/\n/g, '<br>'); html += '<strong>' + lbl + ':</strong> ' + dv + '  '; }
             }
             html += '</div>';
-          } else {
-            html += '<div class="indicator-item">' + escapeHtml(String(item)) + '</div>';
-          }
+          } else { html += '<div class="indicator-item">' + escapeHtml(String(item)) + '</div>'; }
         });
-        html += '</div>';
-        return html;
+        html += '</div>'; return html;
       }
       if (typeof val === 'object') {
         let html = '<div style="margin-left:8px;">';
-        for (const [k, v] of Object.entries(val)) {
-          const label = labelMap[k] || k;
-          html += '<div style="margin:2px 0;"><strong>' + escapeHtml(label) + ':</strong> ' + renderFieldValue(v) + '</div>';
-        }
-        html += '</div>';
-        return html;
+        for (const [k, v] of Object.entries(val)) { html += '<div style="margin:2px 0;"><strong>' + escapeHtml(labelMap[k]||k) + ':</strong> ' + renderFieldValue(v) + '</div>'; }
+        html += '</div>'; return html;
       }
       let t = escapeHtml(String(val));
       t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -487,7 +675,6 @@ createApp({
       t = t.replace(/\n/g, '<br>');
       return '<span class="item-value">' + t + '</span>';
     }
-
     function renderTimelineField(val) {
       if (val === null || val === undefined) return '-';
       let t = escapeHtml(String(val));
@@ -496,18 +683,15 @@ createApp({
       t = t.replace(/\n/g, '<br>');
       return t;
     }
-
     function formatMessage(msg) {
       if (msg.isObject && typeof msg.content === 'object' && msg.content !== null && !Array.isArray(msg.content)) {
         let html = '<div class="structured-result">';
         for (const [key, val] of Object.entries(msg.content)) {
-          const label = labelMap[key] || key;
-          html += '<div class="result-item"><div class="item-label">' + escapeHtml(label) + '</div>';
-          html += renderFieldValue(val);
-          html += '</div>';
+          const lbl = labelMap[key] || key;
+          html += '<div class="result-item"><div class="item-label">' + escapeHtml(lbl) + '</div>';
+          html += renderFieldValue(val); html += '</div>';
         }
-        html += '</div>';
-        return html;
+        html += '</div>'; return html;
       }
       let text = String(msg.content);
       text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -517,111 +701,125 @@ createApp({
       return text;
     }
 
+    // ---- API calls ----
     async function checkHealth() {
-      try {
-        const res = await fetch(`${API_BASE}/health`);
-        const data = await res.json();
-        apiHealthy.value = data.status === 'ok';
-      } catch { apiHealthy.value = false; }
+      try { const res = await fetch(`${API_BASE}/health`); const data = await res.json(); apiHealthy.value = data.status === 'ok'; }
+      catch { apiHealthy.value = false; }
     }
-
     async function fetchPatients() {
-      try {
-        const res = await fetch(`${API_BASE}/patients`);
-        if (res.ok) patients.value = await res.json();
-      } catch { /* ignore */ }
+      try { const kw = searchKeyword.value ? `?keyword=${encodeURIComponent(searchKeyword.value)}` : ''; const res = await fetch(`${API_BASE}/patients${kw}`); if (res.ok) patients.value = await res.json(); }
+      catch { /* ignore */ }
     }
-
+    async function fetchVitalMetrics() {
+      try { const res = await fetch(`${API_BASE}/patients/vital-metrics`); if (res.ok) vitalMetricsDef.value = await res.json(); }
+      catch { /* ignore */ }
+    }
     async function createPatient() {
-      const p = newPatient.value;
-      if (!p.name.trim()) return;
+      const p = newPatient.value; if (!p.name.trim()) return;
       try {
-        const res = await fetch(`${API_BASE}/patients`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(p),
-        });
-        if (res.ok) {
-          newPatient.value = { name: '', gender: '男', age: null, phone: '', notes: '' };
-          showAddPatient.value = false;
-          await fetchPatients();
-        }
+        const res = await fetch(`${API_BASE}/patients`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(p) });
+        if (res.ok) { newPatient.value = { name:'', gender:'男', age:null, phone:'', notes:'' }; showAddPatient.value = false; await fetchPatients(); }
       } catch { /* ignore */ }
     }
-
     async function selectPatient(p) {
       selectedPatient.value = p;
-      analysisResult.value = null;
-      analysisError.value = null;
+      analysisResult.value = null; analysisError.value = null;
+      const pid = p.id;
       try {
-        const res = await fetch(`${API_BASE}/patients/${p.id}/visits`);
-        if (res.ok) visits.value = await res.json();
-      } catch { visits.value = []; }
+        const [vRes, dRes, mRes, tRes] = await Promise.all([
+          fetch(`${API_BASE}/patients/${pid}/visits`),
+          fetch(`${API_BASE}/patients/${pid}/diagnoses?active_only=true`),
+          fetch(`${API_BASE}/patients/${pid}/medications?current_only=true`),
+          fetch(`${API_BASE}/patients/${pid}/vital-trends`),
+        ]);
+        if (vRes.ok) visits.value = await vRes.json();
+        if (dRes.ok) diagnoses.value = await dRes.json();
+        if (mRes.ok) medications.value = await mRes.json();
+        if (tRes.ok) vitalTrends.value = await tRes.json();
+      } catch { visits.value = []; diagnoses.value = []; medications.value = []; vitalTrends.value = {}; }
     }
-
+    function goBackList() {
+      selectedPatient.value = null; visits.value = []; diagnoses.value = []; medications.value = []; vitalTrends.value = {}; analysisResult.value = null; analysisError.value = null;
+      fetchPatients();
+    }
     async function runTimelineAnalysis() {
       if (!selectedPatient.value || timelineLoading.value) return;
-      timelineLoading.value = true;
-      analysisResult.value = null;
-      analysisError.value = null;
+      timelineLoading.value = true; analysisResult.value = null; analysisError.value = null;
       try {
-        const res = await fetch(`${API_BASE}/patients/timeline-analysis`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ patient_id: selectedPatient.value.id }),
-        });
+        const res = await fetch(`${API_BASE}/patients/timeline-analysis`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ patient_id: selectedPatient.value.id }) });
         const data = await res.json();
-        if (!res.ok) {
-          analysisError.value = data.detail || `分析失败（${res.status}）`;
-        } else if (data.analysis && data.analysis.error) {
-          analysisError.value = data.analysis.error;
-        } else if (data.analysis && data.analysis.answer) {
+        if (!res.ok) { analysisError.value = data.detail || `分析失败（${res.status}）`; }
+        else if (data.analysis && data.analysis.error) { analysisError.value = data.analysis.error; }
+        else if (data.analysis && data.analysis.answer) {
           analysisResult.value = typeof data.analysis.answer === 'object' ? data.analysis.answer : { 结果: String(data.analysis.answer) };
-          // Refresh visits since timeline analysis may have been archived
           await selectPatient(selectedPatient.value);
         }
-      } catch (e) {
-        analysisError.value = `请求失败：${e.message}`;
-      }
+      } catch (e) { analysisError.value = `请求失败：${e.message}`; }
       timelineLoading.value = false;
     }
-
+    async function addVitalSign() {
+      const nv = newVital.value; if (!nv.metric || nv.value === null || nv.value === '') return;
+      try {
+        await fetch(`${API_BASE}/patients/vitals`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ patient_id: selectedPatient.value.id, metric: nv.metric, value: Number(nv.value), measure_date: nv.date || '' }) });
+        newVital.value = { metric: '', value: null, date: new Date().toISOString().slice(0,10) };
+        // Refresh trends
+        const tRes = await fetch(`${API_BASE}/patients/${selectedPatient.value.id}/vital-trends`);
+        if (tRes.ok) vitalTrends.value = await tRes.json();
+      } catch { /* ignore */ }
+    }
+    async function addMedication() {
+      const nm = newMed.value; if (!nm.name.trim()) return;
+      try {
+        await fetch(`${API_BASE}/patients/medications`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ patient_id: selectedPatient.value.id, drug_name: nm.name, dosage: nm.dosage, frequency: nm.freq }) });
+        newMed.value = { name: '', dosage: '', freq: '' };
+        const mRes = await fetch(`${API_BASE}/patients/${selectedPatient.value.id}/medications?current_only=true`);
+        if (mRes.ok) medications.value = await mRes.json();
+        await fetchPatients();
+      } catch { /* ignore */ }
+    }
+    async function addDiagnosis() {
+      const nd = newDiag.value; if (!nd.name.trim()) return;
+      try {
+        await fetch(`${API_BASE}/patients/diagnoses`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ patient_id: selectedPatient.value.id, diagnosis_name: nd.name, is_chronic: nd.chronic }) });
+        newDiag.value = { name: '', chronic: false };
+        const dRes = await fetch(`${API_BASE}/patients/${selectedPatient.value.id}/diagnose?active_only=true`);
+        if (dRes.ok) diagnoses.value = await dRes.json();
+        await fetchPatients();
+      } catch { /* ignore */ }
+    }
+    async function quickCreatePatient() {
+      const qp = quickPatient.value; if (!qp.name.trim()) return;
+      try {
+        const res = await fetch(`${API_BASE}/patients`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ name: qp.name, gender: qp.gender, age: qp.age || null, phone: qp.phone || '' }) });
+        if (res.ok) {
+          const newP = await res.json();
+          await fetchPatients();
+          archivePatientId.value = newP.id;
+          quickPatient.value = { name: '', gender: '男', age: null, phone: '' };
+          showQuickCreate.value = false;
+        }
+      } catch { /* ignore */ }
+    }
     async function sendMessage() {
-      const text = inputText.value.trim();
-      if (!text || loading.value) return;
-      messages.value.push({ role: 'user', content: text });
-      inputText.value = '';
-      loading.value = true;
-      scrollToBottom();
+      const text = inputText.value.trim(); if (!text || loading.value) return;
+      messages.value.push({ role: 'user', content: text }); inputText.value = ''; loading.value = true; scrollToBottom();
       try {
         const body = { question: text, module: activeTab.value };
         if (archivePatientId.value) body.patient_id = archivePatientId.value;
-        const res = await fetch(`${API_BASE}/chat`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
+        const res = await fetch(`${API_BASE}/chat`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
         const data = await res.json();
-        if (!res.ok) {
-          messages.value.push({ role: 'assistant', content: data.detail || `服务错误（${res.status}）`, isObject: false });
-        } else if (data.error) {
-          messages.value.push({ role: 'assistant', content: data.error, isObject: false });
-        } else {
-          const isObj = typeof data.answer === 'object' && data.answer !== null;
-          messages.value.push({ role: 'assistant', content: isObj ? data.answer : String(data.answer ?? ''), isObject: isObj });
-        }
-        // Refresh patient list if archiving
+        if (!res.ok) { messages.value.push({ role: 'assistant', content: data.detail || `服务错误（${res.status}）`, isObject: false }); }
+        else if (data.error) { messages.value.push({ role: 'assistant', content: data.error, isObject: false }); }
+        else { const isObj = typeof data.answer === 'object' && data.answer !== null; messages.value.push({ role: 'assistant', content: isObj ? data.answer : String(data.answer ?? ''), isObject: isObj }); }
         if (archivePatientId.value) await fetchPatients();
-      } catch (e) {
-        messages.value.push({ role: 'assistant', content: `请求失败：${e.message}`, isObject: false });
-      }
-      loading.value = false;
-      scrollToBottom();
+      } catch (e) { messages.value.push({ role: 'assistant', content: `请求失败：${e.message}`, isObject: false }); }
+      loading.value = false; scrollToBottom();
     }
 
     onMounted(async () => {
       await checkHealth();
       await fetchPatients();
+      await fetchVitalMetrics();
     });
 
     return {
@@ -629,10 +827,16 @@ createApp({
       activeTab, tabs, currentTab, currentSamples,
       switchTab, loadSample, sendMessage, formatMessage, truncateUser,
       // Patient state
-      patients, selectedPatient, visits, showAddPatient, newPatient,
-      archivePatientId, analysisResult, analysisError, timelineLoading,
-      createPatient, selectPatient, runTimelineAnalysis, moduleLabel, truncate,
-      renderTimelineField, labelMap,
+      patients, selectedPatient, visits, diagnoses, medications, vitalTrends,
+      searchKeyword, showAddPatient, newPatient, archivePatientId,
+      analysisResult, analysisError, timelineLoading,
+      vitalMetricsDef, newVital, newMed, newDiag,
+      createPatient, selectPatient, goBackList, runTimelineAnalysis,
+      addVitalSign, addMedication, addDiagnosis, quickCreatePatient,
+      moduleLabel, truncate, renderTimelineField, labelMap,
+      showQuickCreate, quickPatient,
+      // Chart
+      trendCharts, chartW, chartH, chartPad,
     };
   }
 }).mount('#app');
