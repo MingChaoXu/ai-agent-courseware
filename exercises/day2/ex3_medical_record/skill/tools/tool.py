@@ -1,7 +1,11 @@
 """
-基层门诊AI辅助诊疗 Skill Tool - 4 Modules
+基层门诊AI辅助诊疗 Skill Tool - 5 Modules
 Usage:
-    from tools.tool import medical_generate_record, medical_interpret_lab, medical_recommend_treatment, medical_quality_control
+    from tools.tool import (
+        medical_generate_record, medical_interpret_lab,
+        medical_recommend_treatment, medical_quality_control,
+        medical_timeline_analysis, medical_health_check
+    )
 """
 
 import os
@@ -21,7 +25,7 @@ load_dotenv(_PROJECT_ROOT / ".env")
 from config import Settings
 from agent.agent import create_agent, analyze
 
-VALID_MODULES = ["record", "lab", "treatment", "qc"]
+VALID_MODULES = ["record", "lab", "treatment", "qc", "timeline"]
 
 
 class Tool:
@@ -88,6 +92,11 @@ def medical_quality_control(input_text: str) -> str:
     return get_tool().run("qc", input_text)
 
 
+def medical_timeline_analysis(input_text: str) -> str:
+    """时序病情分析：根据患者多次就诊记录，分析病情演变趋势、治疗效果、风险预警，并给出后续管理建议。"""
+    return get_tool().run("timeline", input_text)
+
+
 def medical_health_check() -> str:
     """检查助手健康状态及可用模块。"""
     tool = get_tool()
@@ -97,7 +106,7 @@ def medical_health_check() -> str:
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="基层门诊AI辅助诊疗 Skill Tool")
-    parser.add_argument("action", choices=["record", "lab", "treatment", "qc", "health"], help="Module to use")
+    parser.add_argument("action", choices=["record", "lab", "treatment", "qc", "timeline", "health"], help="Module to use")
     parser.add_argument("-q", "--question", help="Input text")
     args = parser.parse_args()
 

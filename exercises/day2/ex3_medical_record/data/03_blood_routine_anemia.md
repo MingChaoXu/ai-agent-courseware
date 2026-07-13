@@ -1,3 +1,14 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '79fced2e-4a05-41df-a447-6643be08e006'
+  PropagateID: '79fced2e-4a05-41df-a447-6643be08e006'
+  ReservedCode1: 'fcd1cb07-4644-4407-9494-45a824669688'
+  ReservedCode2: 'fcd1cb07-4644-4407-9494-45a824669688'
+---
+
 # 检验报告样本1 - 血常规（贫血）
 
 ## 检验数据

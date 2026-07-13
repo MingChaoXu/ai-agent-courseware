@@ -1,3 +1,14 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '0b501881-722c-471c-9841-470cbfb5191b'
+  PropagateID: '0b501881-722c-471c-9841-470cbfb5191b'
+  ReservedCode1: '24bb4d34-cd1c-490e-9959-280cfcef8109'
+  ReservedCode2: '24bb4d34-cd1c-490e-9959-280cfcef8109'
+---
+
 # 诊疗方案样本1 - 慢阻肺急性加重
 
 ## 症状描述

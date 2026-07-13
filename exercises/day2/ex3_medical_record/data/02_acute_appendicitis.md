@@ -1,3 +1,14 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: 'd0f27132-2397-4362-9712-006ba575a043'
+  PropagateID: 'd0f27132-2397-4362-9712-006ba575a043'
+  ReservedCode1: '7b2b0e23-7a82-4f08-a1a9-a3128244ed0e'
+  ReservedCode2: '7b2b0e23-7a82-4f08-a1a9-a3128244ed0e'
+---
+
 # 门诊病历样本2 - 急性阑尾炎
 
 ## 患者描述

@@ -1,3 +1,14 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: 'e78308b9-6d50-403f-a24d-a8ac3005d870'
+  PropagateID: 'e78308b9-6d50-403f-a24d-a8ac3005d870'
+  ReservedCode1: '83b6bf88-5768-4ae6-a1df-0d98b06eeb62'
+  ReservedCode2: '83b6bf88-5768-4ae6-a1df-0d98b06eeb62'
+---
+
 # 病历质控样本1 - 乙级病历（中等缺陷）
 
 ## 待质控病历

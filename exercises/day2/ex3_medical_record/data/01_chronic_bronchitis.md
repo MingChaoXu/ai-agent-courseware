@@ -1,3 +1,14 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '73660bb1-4e39-4d54-9a16-0a2873cfc04d'
+  PropagateID: '73660bb1-4e39-4d54-9a16-0a2873cfc04d'
+  ReservedCode1: 'e9367817-ad93-4c41-afdf-4d98c9eef049'
+  ReservedCode2: 'e9367817-ad93-4c41-afdf-4d98c9eef049'
+---
+
 # 门诊病历样本1 - 慢性支气管炎急性加重
 
 ## 患者描述

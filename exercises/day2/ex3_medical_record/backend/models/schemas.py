@@ -8,7 +8,8 @@ from typing import Optional, Any
 
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1, description="Input text for analysis")
-    module: Optional[str] = Field("record", description="Analysis module: record/lab/treatment/qc")
+    module: Optional[str] = Field("record", description="Analysis module: record/lab/treatment/qc/timeline")
+    patient_id: Optional[int] = Field(None, description="If set, archive result to this patient's record")
 
 
 class ChatResponse(BaseModel):

@@ -1,5 +1,6 @@
 """
 Medical AI Assistant Backend - FastAPI Main Entry Point
+5 modules: record/lab/treatment/qc/timeline + patient database
 """
 
 import sys
@@ -14,13 +15,14 @@ from fastapi.staticfiles import StaticFiles
 
 from config import settings
 from agent import agent
-from api import chat, health
+from api import chat, health, patients
+from db.database import init_db, seed_if_empty
 
 # ---- App Init ----
 app = FastAPI(
     title="Medical AI Assistant",
-    description="基层门诊AI辅助诊疗 - 4模块智能助手",
-    version="2.0.0",
+    description="基层门诊AI辅助诊疗 - 5模块智能助手 + 患者数据库",
+    version="3.0.0",
 )
 
 # CORS for frontend
@@ -39,19 +41,27 @@ chat.agent_instance = agent_instance
 
 @app.on_event("startup")
 async def startup():
-    """Initialize agent on startup."""
+    """Initialize agent and database on startup."""
     global agent_instance
+
+    # Initialize database
+    init_db()
+    seed_if_empty()
+    print("[STARTUP] Database initialized with seed data")
+
+    # Initialize agent
     if not settings.is_configured():
         print("[WARNING] LLM API not configured. Please set OPENAI_API_KEY and OPENAI_API_BASE in .env")
         return
     agent_instance = agent.create_agent()
     chat.agent_instance = agent_instance
-    print(f"[STARTUP] Agent initialized: 基层门诊AI辅助诊疗 (4 modules: record/lab/treatment/qc)")
+    print(f"[STARTUP] Agent initialized: 基层门诊AI辅助诊疗 (5 modules: record/lab/treatment/qc/timeline)")
 
 
 # ---- Register Routers ----
 app.include_router(health.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
+app.include_router(patients.router, prefix="/api")
 
 # Serve frontend static files
 frontend_dir = Path(__file__).resolve().parent.parent / "frontend"

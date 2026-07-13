@@ -2,7 +2,7 @@
 
 ## Description
 
-基层门诊AI辅助诊疗 skill for TeleAgent. Provides 4 modules: medical record generation, lab report interpretation, treatment plan recommendation, and medical record quality control.
+基层门诊AI辅助诊疗 skill for TeleAgent. Provides 5 modules: medical record generation, lab report interpretation, treatment plan recommendation, medical record quality control, and patient timeline analysis.
 
 ## Tools
 
@@ -12,6 +12,7 @@
 | `medical_interpret_lab` | Interpret lab test results with clinical significance | input_text (str) |
 | `medical_recommend_treatment` | Recommend examination and treatment plan based on symptoms | input_text (str) |
 | `medical_quality_control` | Quality control check on existing medical record | input_text (str) |
+| `medical_timeline_analysis` | Analyze patient disease progression across multiple visits | input_text (str) |
 | `medical_health_check` | Check agent health and available modules | - |
 
 ## Installation
@@ -39,6 +40,7 @@ Requires a `.env` file in the project root:
   python skill/tools/tool.py lab -q "血红蛋白95g/L，MCV 72fL"
   python skill/tools/tool.py treatment -q "慢阻肺急性加重"
   python skill/tools/tool.py qc -q "门诊病历：患者张某..."
+  python skill/tools/tool.py timeline -q "患者张建国，男55岁，3次就诊记录..."
   python skill/tools/tool.py health
 ```
 
@@ -59,3 +61,7 @@ Output: Possible diagnoses, recommended exams, medication plan, precautions, ris
 ### 4. 病历质控校验 (qc)
 Input: Complete outpatient record text
 Output: Quality grade (甲/乙/丙), missing items, nonstandard terms, logic issues, modification suggestions, score
+
+### 5. 时序病情分析 (timeline)
+Input: Patient's multiple visit records (auto-assembled by backend from database)
+Output: Patient summary, disease progression, key changes, treatment effectiveness, risk assessment, future recommendations, follow-up plan

@@ -77,6 +77,21 @@ class QualityControlResult(BaseModel):
 
 
 # ============================================================
+# Module 5: 时序病情分析
+# ============================================================
+
+class TimelineAnalysis(BaseModel):
+    """时序病情分析结构化输出"""
+    patient_summary: str = Field(description="患者概况：基本信息与主要诊断总结")
+    disease_progression: str = Field(description="病情演变轨迹：按时间线梳理各次就诊变化")
+    key_changes: str = Field(description="关键变化点：重要指标、诊断、方案的转折点")
+    treatment_effectiveness: str = Field(description="治疗效果评估：用药方案是否有效，指标是否达标")
+    risk_assessment: str = Field(description="风险预警：病情恶化信号、并发症风险、需紧急关注的指标")
+    future_recommendations: str = Field(description="后续建议：用药调整、复查计划、生活方式、转诊建议")
+    follow_up_plan: str = Field(description="随访计划：下次复诊时间、必查项目、监测指标")
+
+
+# ============================================================
 # Chain Factory
 # ============================================================
 
@@ -135,6 +150,19 @@ MODULE_CONFIGS = {
 
 评分标准：满分100分，缺主诉-15分，缺现病史-15分，缺诊断-20分，口语化用语每处-3分，逻辑矛盾每处-10分。""",
     },
+    "timeline": {
+        "model": TimelineAnalysis,
+        "system_prompt": """你是一个患者病情时序分析助手，根据患者的多次就诊记录，分析病情变化趋势并给出建议。
+
+分析规则：
+1. 按时间顺序梳理病情演变轨迹
+2. 对比各次就诊的关键指标变化（如血糖、血压、肺功能等）
+3. 评估当前治疗效果，判断是否达标
+4. 识别病情恶化或并发症风险信号
+5. 给出针对性的后续管理建议
+
+重要：分析仅供参考，临床决策由执业医师综合判断。""",
+    },
 }
 
 
@@ -161,7 +189,7 @@ def _create_chain(pydantic_model, system_prompt):
 
 
 def create_agent() -> Dict[str, Any]:
-    """Create all 4 module chains."""
+    """Create all 5 module chains."""
     if not settings.is_configured():
         return None
 
