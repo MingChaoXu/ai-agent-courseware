@@ -65,7 +65,6 @@
 
 | 编号 | 课题 | 目录 |
 |------|------|------|
-| ex8.5 | 多模态理解 | ex8_5_multimodal/ |
 | ex9 | 制造业BI分析 | ex9_manufacturing_bi/ |
 | ex10 | 营销策略生成 | ex10_marketing/ |
 | ex11 | 舆情情感分析 | ex11_sentiment/ |

@@ -1,8 +1,0 @@
-__pycache__/
-*.pyc
-.env
-faiss_index/
-*.faiss
-*.pkl
-node_modules/
-dist/
