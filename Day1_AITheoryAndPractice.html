@@ -634,28 +634,6 @@ Level 5 ── 自主Agent（未来）
      示例：完全自主的商业决策Agent
 
   本课程覆盖：Level 1 → Level 4</div>
-
-<div class="principle-card">
-<div class="pc-title">&#127968; 桌面AI Agent平台三强对比（2026）</div>
-<div class="pc-body">
-不同平台对上述能力层级的实现策略差异巨大。了解格局，才能选对工具：
-<table class="compare-table">
-<thead>
-<tr><th>维度</th><th>OpenClaw</th><th>Hermes Agent</th><th>TeleAgent</th></tr>
-</thead>
-<tbody>
-<tr><td>定位</td><td>Agent操作系统（Agent-OS）</td><td>自我改进型Agent</td><td>专属AI办公搭子</td></tr>
-<tr><td>语言/规模</td><td>TypeScript+Swift, 100万+行</td><td>Python, ~3.5万行</td><td>自研星辰大模型</td></tr>
-<tr><td>GitHub星标</td><td>33.7万+</td><td>11万+</td><td>商业产品</td></tr>
-<tr><td>记忆系统</td><td>Compaction压缩（无持久化）</td><td>五层记忆 + Honcho元认知</td><td>内置记忆系统</td></tr>
-<tr><td>安全沙箱</td><td>Docker/OpenShell/SSH可插拔</td><td>7种终端后端</td><td>容器化隔离 + NLP语义拦截</td></tr>
-<tr><td>自进化</td><td>无</td><td>闭环学习回路 + agentskills.io</td><td>内置技能系统</td></tr>
-<tr><td>适合场景</td><td>极客/开发者自主组装</td><td>需要长期记忆+自改进</td><td>政企/电信场景开箱即用</td></tr>
-</tbody>
-</table>
-<p style="margin-top:8px;font-size:0.85em;color:#64748b">OpenClaw和Hermes是开源社区的力量；TeleAgent是中国电信的本土化方案。三者生态共存而非简单竞争——天翼AI云电脑预装多款智能体，Token套餐支持跨平台调用。</p>
-</div>
-</div>
 </div>
 
 <div class="topic-card" id="s3-4">
@@ -750,33 +728,6 @@ CMU/Yale/Amazon联合发表的综述论文<strong>《Agent Harness Engineering: 
 <div class="ec-name">Governance</div>
 <div class="ec-desc">安全治理<br>合规/红线/熔断</div>
 </div>
-</div>
-
-<div class="principle-card">
-<div class="pc-title">&#128736; ETCLOVG七层：三大桌面Agent平台怎么实现？</div>
-<div class="pc-body">
-<table class="compare-table">
-<thead>
-<tr><th>ETCLOVG层</th><th>OpenClaw</th><th>Hermes Agent</th><th>TeleAgent</th></tr>
-</thead>
-<tbody>
-<tr><td><strong>E</strong> 执行环境</td><td>Docker + OpenShell/SSH可插拔后端</td><td>7种终端后端 + code_execution</td><td>容器化隔离 + 私有化部署</td></tr>
-<tr><td><strong>T</strong> 工具协议</td><td>Plugin SDK + ClawHub分发</td><td>40+内置工具 + toolset精细控制</td><td>内置技能系统 + MCP兼容</td></tr>
-<tr><td><strong>C</strong> 上下文</td><td>Compaction压缩（有损）</td><td>三层Prompt分层 + 五层记忆</td><td>内置记忆 + 场景化上下文</td></tr>
-<tr><td><strong>L</strong> 编排调度</td><td>ReAct Loop + max_iterations</td><td>Agent Loop核心&lt;10行 + 8 worker并行</td><td>ReAct + 工作流编排</td></tr>
-<tr><td><strong>O</strong> 可观测</td><td>WebSocket事件流</td><td>对话历史SQLite(FTS5)</td><td>内部监控</td></tr>
-<tr><td><strong>V</strong> 验证评估</td><td>budget_grace_call机制</td><td>Nudge Engine经验沉淀</td><td>场景化校验</td></tr>
-<tr><td><strong>G</strong> 安全治理</td><td>v3.22封堵10+漏洞 + 沙箱可插拔</td><td>.env加密 + 精确版本锁定</td><td>NLP语义拦截 + 最小权限</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="tips-box">
-<div class="tips-title">&#128268; T层焦点：MCP协议 — AI Agent的"USB-C"</div>
-<p><strong>MCP（Model Context Protocol）</strong>由Anthropic于2024年11月开源，已成为Agent连接外部工具的事实标准。采用 <strong>Host-Client-Server</strong> 三层架构，底层基于JSON-RPC 2.0，定义三类核心原语：<strong>Tools</strong>（可调用函数）、<strong>Resources</strong>（可读取数据）、<strong>Prompts</strong>（可复用提示词模板）。</p>
-<p>关键区分：<strong>Function Calling</strong> 是LLM的推理能力（"何时调用"），<strong>MCP</strong> 是工具的连接标准（"如何发现、注册、调用"）。就像USB-C统一了充电口，MCP统一了Agent与工具的通信协议。Google、Microsoft均已支持。</p>
-<p style="font-size:0.85em;color:#64748b">Day4将深入MCP协议实战。</p>
 </div>
 
 <div class="example-box">
