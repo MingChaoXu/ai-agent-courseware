@@ -201,10 +201,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <a class="nav-item" href="#s6-5" onclick="navClick(this)">├ GraphRAG知识图谱增强</a>
 <a class="nav-item" href="#s6-6" onclick="navClick(this)">├ CAG与LLM Wiki</a>
 <a class="nav-item" href="#s6-7" onclick="navClick(this)">└ 企业选型与落地</a>
-<a class="nav-item" href="#s7" onclick="navClick(this)">2.4 TeleAgent平台概览<span class="time-badge">30min</span></a>
-<a class="nav-item" href="#s7-1" onclick="navClick(this)">├ API架构与客户端</a>
-<a class="nav-item" href="#s7-2" onclick="navClick(this)">├ 智能体创建流程</a>
-<a class="nav-item" href="#s7-3" onclick="navClick(this)">└ 5天课程全景图</a>
+<a class="nav-item" href="#s7" onclick="navClick(this)">2.4 课程全景与Day2预告<span class="time-badge">10min</span></a>
 </div>
 <div class="nav-group">
 <div class="nav-group-title">Day 1 总结</div>
@@ -1618,135 +1615,14 @@ LLM Wiki替代的不是RAG的全部，而是<strong>"对原始文档做chunk+嵌
 </div>
 
 <!-- ============================================================ -->
-<!-- SECTION 7: TeleAgent平台概览 -->
+<!-- 2.4 课程全景与Day2预告 -->
 <!-- ============================================================ -->
 <div class="section" id="s7">
 <div class="section-header">
 <span class="section-tag afternoon">下午 · 2.4</span>
-<h2>智能体平台与开发流程</h2>
-<p>平台架构、API调用流程、5天课程全景图 · 30分钟</p>
+<h2>课程全景与Day2预告</h2>
+<p>5天能力进阶路线 · 10分钟</p>
 </div>
-
-<div class="topic-card" id="s7-1">
-<h3>智能体平台架构与API调用</h3>
-
-<div class="flow-diagram">
-智能体平台架构（通用模型）：
-
-┌──────────┐   REST API    ┌──────────────┐
-│  Python  │ ◄────────────►│  智能体       │
-│  代码调用 │   JSON/HTTP   │   服务平台    │
-└──────────┘               └──────────────┘
-    │                           │
-    │ HTTP请求封装              │ 管理
-    ▼                           ▼
- ┌──────────────────────────────────────┐
- │  核心API：                           │
- │  • POST /agents       创建智能体     │
- │  • POST /agents/:id/chat  对话      │
- │  • POST /knowledge_bases  创建KB     │
- │  • POST /kb/:id/documents 上传文档   │
- │  • POST /skills       创建技能       │
- │  • POST /agents/:id/skills 绑定技能  │
- │  • POST /workflows    创建工作流     │
- │  • POST /workflows/:id/run 运行工作流│
- └──────────────────────────────────────┘
-
-注：不同平台（TeleAI开放平台、LangChain、Dify等）
-API路径和参数格式不同，但核心流程一致</div>
-
-<div class="code-block">
-<div class="code-header">
-<span class="lang-badge">Python · 智能体平台API调用示意</span>
-<button class="copy-btn" onclick="copyCode(this)">复制</button>
-</div>
-<div class="code-body"><span class="com"># 以下为通用Agent平台API调用流程示意</span>
-<span class="com"># 实际使用时替换为对应平台的SDK（如TeleAI开放平台SDK）</span>
-
-<span class="kw">import</span> requests
-
-BASE_URL = <span class="str">"https://api.example.com/v1"</span>  <span class="com"># 替换为实际平台地址</span>
-HEADERS = {<span class="str">"Authorization"</span>: <span class="str">"Bearer YOUR_API_KEY"</span>}
-
-<span class="com"># ① 测试连接 —— 列出已有智能体</span>
-resp = requests.get(<span class="fstr">f"{BASE_URL}/agents"</span>, headers=HEADERS)
-<span class="fn">print</span>(<span class="fstr">f"连接成功！当前智能体数量: {len(resp.json())}"</span>)
-
-<span class="com"># ② 创建智能体</span>
-agent = requests.post(<span class="fstr">f"{BASE_URL}/agents"</span>, headers=HEADERS, json={
-    <span class="str">"name"</span>: <span class="str">"政务问答助手"</span>,
-    <span class="str">"description"</span>: <span class="str">"政务服务智能问答"</span>,
-    <span class="str">"system_prompt"</span>: <span class="str">"你是政务问答助手..."</span>,
-    <span class="str">"model"</span>: <span class="str">"default"</span>
-}).json()
-agent_id = agent[<span class="str">"id"</span>]
-
-<span class="com"># ③ 与智能体对话</span>
-result = requests.post(<span class="fstr">f"{BASE_URL}/agents/{agent_id}/chat"</span>,
-    headers=HEADERS, json={<span class="str">"message"</span>: <span class="str">"公积金提取需要什么材料？"</span>}).json()
-<span class="fn">print</span>(result[<span class="str">"content"</span>])
-
-<span class="com"># ④ 创建知识库</span>
-kb = requests.post(<span class="fstr">f"{BASE_URL}/knowledge_bases"</span>, headers=HEADERS, json={
-    <span class="str">"name"</span>: <span class="str">"政务FAQ知识库"</span>,
-    <span class="str">"description"</span>: <span class="str">"户籍、社保、公积金等FAQ"</span>
-}).json()
-kb_id = kb[<span class="str">"id"</span>]
-
-<span class="com"># ⑤ 上传文档到知识库</span>
-requests.post(<span class="fstr">f"{BASE_URL}/knowledge_bases/{kb_id}/documents"</span>,
-    headers=HEADERS, json={
-        <span class="str">"title"</span>: <span class="str">"公积金提取FAQ"</span>,
-        <span class="str">"content"</span>: <span class="str">"购房提取需提供：购房合同、身份证..."</span>
-    })
-
-<span class="com"># ⑥ 创建RAG技能并绑定到智能体</span>
-skill = requests.post(<span class="fstr">f"{BASE_URL}/skills"</span>, headers=HEADERS, json={
-    <span class="str">"name"</span>: <span class="str">"政务问答"</span>,
-    <span class="str">"type"</span>: <span class="str">"rag"</span>,
-    <span class="str">"config"</span>: {
-        <span class="str">"knowledge_base_id"</span>: kb_id,
-        <span class="str">"retrieval_top_k"</span>: <span class="num">3</span>,
-        <span class="str">"temperature"</span>: <span class="num">0.3</span>
-    }
-}).json()
-requests.post(<span class="fstr">f"{BASE_URL}/agents/{agent_id}/skills"</span>,
-    headers=HEADERS, json={<span class="str">"skill_id"</span>: skill[<span class="str">"id"</span>]})</div>
-</div>
-</div>
-
-<div class="topic-card" id="s7-2">
-<h3>智能体创建流程</h3>
-
-<div class="step-block">
-<span class="step-num">1</span>
-<h4>定义System Prompt（角色+职责+格式）</h4>
-<p>写清楚Agent是谁、做什么、怎么输出。这是整个流程中最重要的环节。</p>
-</div>
-<div class="step-block">
-<span class="step-num">2</span>
-<h4>调用创建智能体API发起创建请求</h4>
-<p>传入name、description、system_prompt、model参数，获得agent_id。</p>
-</div>
-<div class="step-block">
-<span class="step-num">3</span>
-<h4>创建知识库并上传文档（如需RAG）</h4>
-<p>创建KB、上传文档，平台自动完成分块→嵌入→索引。</p>
-</div>
-<div class="step-block">
-<span class="step-num">4</span>
-<h4>创建RAG技能并绑定到智能体</h4>
-<p>配置检索参数（top_k、temperature、prompt_template），绑定到Agent。</p>
-</div>
-<div class="step-block">
-<span class="step-num">5</span>
-<h4>调用对话API测试交互</h4>
-<p>多轮对话测试，覆盖正常case和边界case，验证回答质量。</p>
-</div>
-</div>
-
-<div class="topic-card" id="s7-3">
-<h3>5天课程全景图</h3>
 
 <table class="compare-table">
 <thead>
@@ -1762,25 +1638,7 @@ requests.post(<span class="fstr">f"{BASE_URL}/agents/{agent_id}/skills"</span>,
 </table>
 
 <div class="flow-diagram">
-能力进阶路线：
-
-Day1: 理解原理        Day2: 单Agent实战      Day3: 文档场景深耕
- ┃                      ┃                      ┃
- ┣ LLM原理              ┣ 政务问答(RAG)        ┣ 合同审核(HITL)
- ┣ Prompt工程            ┣ 工业知识库            ┣ 文件生成
- ┣ ReAct循环             ┣ RAG原理深入           ┣ 记忆系统
- ┗ RAG原理               ┗ 上下文压缩            ┗ Prompt消融
-
-Day4: 数据+多模态      Day5: 复杂智能体+路演
- ┃                      ┃
- ┣ BI数据分析            ┣ 5Agent协同(政务)
- ┣ 精准营销              ┣ 4Agent协同(治理)
- ┣ 多模态质检            ┣ 事件驱动Agent
- ┣ CV安全助手            ┣ 消融评估
- ┗ MCP工具协议           ┗ 综合路演
-
-演进路径：理解原理 → 单场景实战 → 场景深耕 → 多模态扩展 → 复杂协同+评估</div>
-</div>
+能力进阶路线：理解原理 → 单场景实战 → 场景深耕 → 多模态扩展 → 复杂协同+评估</div>
 </div>
 
 <!-- ============================================================ -->
