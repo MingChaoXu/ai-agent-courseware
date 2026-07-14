@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>招投标智能助手</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<style>
+/* ========== Reset & Variables ========== */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#0071e3;
+  --primary-light:#0071e322;
+  --primary-hover:#0058b0;
+  --bg:#f5f5f7;
+  --surface:#ffffff;
+  --surface-2:#fbfbfd;
+  --border:#d2d2d7;
+  --border-light:#e8e8ed;
+  --text:#1d1d1f;
+  --text-secondary:#6e6e73;
+  --text-tertiary:#aeaeb2;
+  --success:#34c759;
+  --success-bg:#e8f9ed;
+  --danger:#ff3b30;
+  --danger-bg:#fff0ef;
+  --warning:#ff9500;
+  --warning-bg:#fff5e6;
+  --info:#5ac8fa;
+  --info-bg:#e8f7fe;
+  --purple:#af52de;
+  --purple-bg:#f5edfe;
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:14px;
+  --radius-xl:18px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.1);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.12);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Roboto,sans-serif;
+  --mono:"SF Mono",SFMono-Regular,"JetBrains Mono",Menlo,Consolas,monospace;
+  --topbar-h:48px;
+  --sidebar-w:200px;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+
+/* ========== Scrollbar ========== */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#c1c1c6;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#a1a1a6}
+
+/* ========== Top Bar ========== */
+.topbar{height:var(--topbar-h);background:#1d1d1f;color:#fff;display:flex;align-items:center;padding:0 20px;gap:16px;position:relative;z-index:100}
+.topbar h1{font-size:16px;font-weight:600;letter-spacing:-0.2px}
+.topbar .health-badge{display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,0.12);transition:all 0.3s}
+.topbar .health-badge.ok{background:rgba(52,199,89,0.25);color:#34c759}
+.topbar .health-badge.err{background:rgba(255,59,48,0.25);color:#ff453a}
+.topbar .health-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.topbar .spacer{flex:1}
+.topbar .topbar-info{font-size:12px;color:rgba(255,255,255,0.6)}
+
+/* ========== Layout ========== */
+.layout{display:grid;grid-template-columns:var(--sidebar-w) 1fr;height:calc(100vh - var(--topbar-h))}
+
+/* ========== Sidebar ========== */
+.sidebar{background:var(--surface);border-right:1px solid var(--border-light);padding:12px 0;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:13px;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;border-left:3px solid transparent;user-select:none}
+.nav-item:hover{background:var(--surface-2);color:var(--text)}
+.nav-item.active{background:var(--primary-light);color:var(--primary);border-left-color:var(--primary);font-weight:600}
+.nav-item .nav-icon{width:20px;text-align:center;font-size:15px}
+.nav-item .nav-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:8px;background:var(--danger);color:#fff;font-weight:600}
+.sidebar-footer{margin-top:auto;padding:12px 16px;font-size:11px;color:var(--text-tertiary);border-top:1px solid var(--border-light)}
+
+/* ========== Main Content ========== */
+.content{overflow-y:auto;padding:24px;position:relative}
+.content-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.content-header h2{font-size:22px;font-weight:700;letter-spacing:-0.3px}
+.content-header .subtitle{font-size:13px;color:var(--text-secondary);margin-left:8px}
+
+/* ========== Cards ========== */
+.card{background:var(--surface);border:1px solid var(--border-light);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.card-header{padding:14px 18px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;gap:8px}
+.card-header h3{font-size:15px;font-weight:600}
+.card-body{padding:18px}
+.card-footer{padding:12px 18px;border-top:1px solid var(--border-light);display:flex;justify-content:flex-end;gap:8px}
+
+/* ========== Buttons ========== */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--radius-md);font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all 0.2s;font-family:var(--font);white-space:nowrap}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface-2);border-color:var(--text-tertiary)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#d70015}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{background:#2bb24c}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-lg{padding:10px 24px;font-size:14px}
+.btn-icon{padding:5px 8px}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-group{display:flex;gap:6px}
+
+/* ========== Forms ========== */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px}
+.form-input,.form-select,.form-textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-md);font-size:13px;font-family:var(--font);background:var(--surface);color:var(--text);transition:border-color 0.2s;outline:none}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.form-textarea{resize:vertical;min-height:60px}
+.form-hint{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.form-row{display:flex;gap:12px}
+.form-row .form-group{flex:1}
+
+/* Toggle Switch */
+.toggle{position:relative;display:inline-block;width:44px;height:26px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#e5e5ea;border-radius:13px;transition:0.3s}
+.toggle-slider:before{position:absolute;content:"";height:22px;width:22px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:0.3s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle input:checked + .toggle-slider{background:var(--success)}
+.toggle input:checked + .toggle-slider:before{transform:translateX(18px)}
+
+/* ========== Badges ========== */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:var(--radius-sm);font-size:11px;font-weight:600}
+.badge-running{background:var(--info-bg);color:var(--info)}
+.badge-done{background:var(--success-bg);color:var(--success)}
+.badge-failed{background:var(--danger-bg);color:var(--danger)}
+.badge-stopped{background:#f0f0f2;color:var(--text-secondary)}
+.badge-pending{background:var(--warning-bg);color:var(--warning)}
+.badge-phase1{background:var(--info-bg);color:var(--info)}
+.badge-phase2{background:var(--purple-bg);color:var(--purple)}
+
+/* ========== Execute View ========== */
+.execute-grid{display:grid;grid-template-columns:380px 1fr;gap:20px;height:calc(100vh - var(--topbar-h) - 48px - 40px)}
+.execute-left{display:flex;flex-direction:column;gap:16px;overflow:hidden}
+.execute-right{display:flex;flex-direction:column;gap:16px;overflow:hidden}
+
+.task-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.task-type-btn{padding:10px;border:1.5px solid var(--border-light);border-radius:var(--radius-md);cursor:pointer;transition:all 0.2s;text-align:left;background:var(--surface)}
+.task-type-btn:hover{border-color:var(--primary);background:var(--primary-light)}
+.task-type-btn.active{border-color:var(--primary);background:var(--primary-light);box-shadow:0 0 0 2px var(--primary-light)}
+.task-type-btn .tt-title{font-size:13px;font-weight:600;color:var(--text)}
+.task-type-btn .tt-desc{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.task-type-btn.active .tt-title{color:var(--primary)}
+
+.task-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.task-item{padding:10px 14px;border:1px solid var(--border-light);border-radius:var(--radius-md);cursor:pointer;transition:all 0.15s;background:var(--surface)}
+.task-item:hover{border-color:var(--primary);background:var(--surface-2)}
+.task-item.active{border-color:var(--primary);background:var(--primary-light)}
+.task-item-row{display:flex;align-items:center;gap:8px}
+.task-item-type{font-size:13px;font-weight:600}
+.task-item-id{font-size:11px;color:var(--text-tertiary);font-family:var(--mono)}
+.task-item-time{font-size:11px;color:var(--text-secondary);margin-top:4px}
+
+/* Task Detail */
+.task-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.meta-item{padding:8px 12px;background:var(--surface-2);border-radius:var(--radius-md)}
+.meta-label{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.5px}
+.meta-value{font-size:13px;font-weight:600;margin-top:2px}
+
+.task-report{background:var(--surface-2);border:1px solid var(--border-light);border-radius:var(--radius-md);padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-height:200px;overflow-y:auto;margin-bottom:12px}
+
+/* Log Viewer */
+.log-toolbar{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--border-light);background:var(--surface-2)}
+.log-toolbar .log-count{font-size:12px;color:var(--text-secondary);margin-left:auto}
+.log-viewer{flex:1;overflow-y:auto;padding:12px 14px;font-family:var(--mono);font-size:12px;line-height:1.6;background:#1e1e1e;color:#d4d4d4;min-height:200px}
+.log-line{display:flex;gap:8px;padding:1px 0}
+.log-time{color:#858585;flex-shrink:0}
+.log-level{flex-shrink:0;width:44px;font-weight:600}
+.log-level.ERROR{color:#ff6b6b}
+.log-level.WARNING{color:#ffd93d}
+.log-level.INFO{color:#6bcb77}
+.log-level.DEBUG{color:#7c93c3}
+.log-msg{word-break:break-word}
+.log-empty{color:#858585;text-align:center;padding:40px 0}
+
+/* ========== File Views ========== */
+.file-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.file-list-body{padding:8px;max-height:calc(100vh - var(--topbar-h) - 120px - 100px);overflow-y:auto}
+.file-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-md);transition:background 0.15s;cursor:default}
+.file-item:hover{background:var(--surface-2)}
+.file-item.selected{background:var(--primary-light)}
+.file-checkbox{width:18px;height:18px;cursor:pointer;flex-shrink:0}
+.file-icon{font-size:20px;flex-shrink:0}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.file-actions{display:flex;gap:4px;flex-shrink:0}
+
+.merge-section{margin-top:16px;padding:14px;background:var(--surface-2);border-radius:var(--radius-md);border:1px solid var(--border-light)}
+.merge-section h4{font-size:14px;font-weight:600;margin-bottom:10px}
+.merge-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+
+/* Upload zone */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:12px}
+.upload-zone:hover{border-color:var(--primary);background:var(--primary-light)}
+.upload-zone.dragover{border-color:var(--primary);background:var(--primary-light)}
+.upload-zone .upload-icon{font-size:32px;margin-bottom:8px}
+.upload-zone .upload-text{font-size:13px;color:var(--text-secondary)}
+
+/* ========== Scheduled Tasks ========== */
+.schedule-list{display:flex;flex-direction:column;gap:8px}
+.schedule-item{padding:14px;border:1px solid var(--border-light);border-radius:var(--radius-md);display:flex;align-items:center;gap:12px;transition:all 0.15s}
+.schedule-item:hover{border-color:var(--border);box-shadow:var(--shadow-sm)}
+.schedule-info{flex:1}
+.schedule-name{font-size:14px;font-weight:600}
+.schedule-meta{font-size:12px;color:var(--text-secondary);margin-top:2px}
+.schedule-cron{font-family:var(--mono);font-size:12px;background:var(--surface-2);padding:1px 6px;border-radius:4px}
+
+/* ========== Search View ========== */
+.search-box{position:relative;margin-bottom:20px}
+.search-input{width:100%;padding:12px 16px 12px 40px;border:1px solid var(--border);border-radius:var(--radius-lg);font-size:15px;outline:none;transition:all 0.2s}
+.search-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--text-tertiary)}
+
+.search-results{display:flex;flex-direction:column;gap:10px}
+.search-result{padding:14px;border:1px solid var(--border-light);border-radius:var(--radius-md);cursor:pointer;transition:all 0.15s}
+.search-result:hover{border-color:var(--primary);background:var(--surface-2)}
+.search-result-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.search-result-snippet{font-size:13px;color:var(--text-secondary);line-height:1.5}
+.search-result-snippet .highlight{background:#fff3cd;padding:0 2px;border-radius:2px}
+.search-result-meta{font-size:11px;color:var(--text-tertiary);margin-top:6px;display:flex;gap:12px}
+
+/* ========== Config View ========== */
+.config-item{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border-light)}
+.config-item:last-child{border-bottom:none}
+.config-info h4{font-size:14px;font-weight:600}
+.config-info p{font-size:12px;color:var(--text-secondary);margin-top:2px}
+.config-slider{width:200px}
+.config-value{font-size:14px;font-weight:600;color:var(--primary);width:50px;text-align:right}
+
+/* ========== Modal ========== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);width:90%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;animation:slideUp 0.25s}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border-light);display:flex;align-items:center}
+.modal-header h3{font-size:16px;font-weight:600;flex:1}
+.modal-close{width:28px;height:28px;border-radius:50%;border:none;background:var(--surface-2);cursor:pointer;font-size:16px;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.modal-close:hover{background:var(--danger-bg);color:var(--danger)}
+.modal-body{padding:20px;overflow-y:auto;flex:1}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border-light);display:flex;justify-content:flex-end;gap:8px}
+
+/* Preview modal */
+.preview-content{background:#1e1e1e;color:#d4d4d4;padding:16px;border-radius:var(--radius-md);font-family:var(--mono);font-size:12px;line-height:1.6;overflow:auto;max-height:400px;white-space:pre-wrap;word-break:break-word}
+
+/* ========== Toast ========== */
+.toast-container{position:fixed;top:60px;right:20px;z-index:2000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 18px;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;animation:toastIn 0.3s;pointer-events:auto;max-width:380px}
+@keyframes toastIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.toast.success{background:var(--success);color:#fff}
+.toast.error{background:var(--danger);color:#fff}
+.toast.info{background:var(--primary);color:#fff}
+.toast.warning{background:var(--warning);color:#fff}
+
+/* ========== Empty States ========== */
+.empty{text-align:center;padding:48px 20px;color:var(--text-tertiary)}
+.empty .empty-icon{font-size:40px;margin-bottom:12px;opacity:0.4}
+.empty .empty-text{font-size:14px}
+.empty .empty-sub{font-size:12px;margin-top:4px;color:var(--text-tertiary)}
+
+/* ========== Misc ========== */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-dark{border-color:rgba(0,0,0,0.15);border-top-color:var(--primary)}
+.divider{height:1px;background:var(--border-light);margin:16px 0}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:500}
+.flex{display:flex}
+.flex-col{display:flex;flex-direction:column}
+.gap-8{gap:8px}
+.gap-12{gap:12px}
+.mt-8{margin-top:8px}
+.mt-12{margin-top:12px}
+.mt-16{margin-top:16px}
+.mt-20{margin-top:20px}
+.mb-8{margin-bottom:8px}
+.mb-12{margin-bottom:12px}
+.mb-16{margin-bottom:16px}
+.text-secondary{color:var(--text-secondary)}
+.text-sm{font-size:12px}
+.text-xs{font-size:11px}
+.text-center{text-align:center}
+.text-right{text-align:right}
+.font-mono{font-family:var(--mono)}
+.w-full{width:100%}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.cursor-pointer{cursor:pointer}
+.select-all-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border-light);background:var(--surface-2)}
+.select-all-bar .select-all-label{font-size:12px;color:var(--text-secondary);margin-left:6px}
+
+/* ========== Responsive ========== */
+@media(max-width:1200px){
+  .execute-grid{grid-template-columns:320px 1fr}
+  .file-grid{grid-template-columns:1fr}
+}
+@media(max-width:900px){
+  :root{--sidebar-w:60px}
+  .nav-item span:not(.nav-icon){display:none}
+  .nav-item{justify-content:center;padding:12px 0}
+  .execute-grid{grid-template-columns:1fr;height:auto}
+  .content{padding:16px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ===== Top Bar ===== -->
+<div class="topbar">
+  <h1>招投标智能助手</h1>
+  <div class="health-badge" :class="apiHealthy ? 'ok' : 'err'" @click="checkHealth">
+    <span class="health-dot"></span>
+    {{ apiHealthy ? '服务正常' : '服务离线' }}
+  </div>
+  <div class="spacer"></div>
+  <span class="topbar-info" v-if="activeTaskId">当前任务: {{ activeTaskId.substring(0,8) }}</span>
+</div>
+
+<!-- ===== Main Layout ===== -->
+<div class="layout">
+
+  <!-- ===== Sidebar ===== -->
+  <div class="sidebar">
+    <div v-for="nav in navItems" :key="nav.key"
+         class="nav-item" :class="{active: currentView === nav.key}"
+         @click="switchView(nav.key)">
+      <span class="nav-icon">{{ nav.icon }}</span>
+      <span>{{ nav.label }}</span>
+      <span v-if="nav.badge" class="nav-badge">{{ nav.badge }}</span>
+    </div>
+    <div class="sidebar-footer">
+      <div>v1.0 · Phase1+Phase2</div>
+      <div style="margin-top:4px">{{ currentTime }}</div>
+    </div>
+  </div>
+
+  <!-- ===== Content ===== -->
+  <div class="content">
+
+    <!-- ========== View: Execute ========== -->
+    <template v-if="currentView === 'execute'">
+      <div class="content-header">
+        <h2>任务执行</h2>
+        <span class="subtitle">创建和管理招投标数据采集任务</span>
+      </div>
+
+      <div class="execute-grid">
+        <!-- Left: Create + Task List -->
+        <div class="execute-left">
+          <!-- Create Task -->
+          <div class="card">
+            <div class="card-header"><h3>新建任务</h3></div>
+            <div class="card-body">
+              <div class="task-type-grid mb-12">
+                <div v-for="tt in taskTypes" :key="tt.value"
+                     class="task-type-btn" :class="{active: newTaskType === tt.value}"
+                     @click="newTaskType = tt.value">
+                  <div class="tt-title">{{ tt.label }}</div>
+                  <div class="tt-desc">{{ tt.desc }}</div>
+                </div>
+              </div>
+              <button class="btn btn-primary w-full" @click="createTask" :disabled="creating">
+                <span v-if="creating" class="spinner"></span>
+                {{ creating ? '创建中...' : '创建任务' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Task List -->
+          <div class="card" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+            <div class="card-header">
+              <h3>任务列表</h3>
+              <button class="btn btn-sm btn-secondary" style="margin-left:auto" @click="loadTasks">刷新</button>
+            </div>
+            <div class="task-list">
+              <div v-if="tasks.length === 0" class="empty">
+                <div class="empty-icon">📋</div>
+                <div class="empty-text">暂无任务</div>
+              </div>
+              <div v-for="task in tasks" :key="task.id"
+                   class="task-item" :class="{active: activeTaskId === task.id}"
+                   @click="selectTask(task.id)">
+                <div class="task-item-row">
+                  <span class="task-item-type">{{ taskTypeLabel(task.type) }}</span>
+                  <span class="badge" :class="statusBadgeClass(task.status)">{{ statusLabel(task.status) }}</span>
+                </div>
+                <div class="task-item-row">
+                  <span class="task-item-id">{{ task.id.substring(0,8) }}</span>
+                  <span class="task-item-time" style="margin-left:auto">{{ formatTime(task.created_at) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Task Detail + Logs -->
+        <div class="execute-right">
+          <div v-if="!activeTask" class="card" style="flex:1;display:flex;align-items:center;justify-content:center">
+            <div class="empty">
+              <div class="empty-icon">👈</div>
+              <div class="empty-text">从左侧选择一个任务查看详情</div>
+            </div>
+          </div>
+          <template v-else>
+            <!-- Task Detail -->
+            <div class="card">
+              <div class="card-header">
+                <h3>任务详情</h3>
+                <span class="badge" :class="statusBadgeClass(activeTask.status)" style="margin-left:auto">{{ statusLabel(activeTask.status) }}</span>
+                <div class="btn-group" style="margin-left:8px">
+                  <button v-if="activeTask.status === 'running'" class="btn btn-sm btn-danger" @click="stopTask">停止</button>
+                  <button class="btn btn-sm btn-secondary" @click="confirmDelete">删除</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="task-meta">
+                  <div class="meta-item">
+                    <div class="meta-label">任务类型</div>
+                    <div class="meta-value">{{ taskTypeLabel(activeTask.type) }}</div>
+                  </div>
+                  <div class="meta-item">
+                    <div class="meta-label">任务ID</div>
+                    <div class="meta-value font-mono" style="font-size:11px">{{ activeTask.id }}</div>
+                  </div>
+                  <div class="meta-item">
+                    <div class="meta-label">创建时间</div>
+                    <div class="meta-value">{{ formatTime(activeTask.created_at) }}</div>
+                  </div>
+                  <div class="meta-item">
+                    <div class="meta-label">完成时间</div>
+                    <div class="meta-value">{{ activeTask.finished_at ? formatTime(activeTask.finished_at) : '—' }}</div>
+                  </div>
+                </div>
+                <div v-if="activeTask.report" class="mt-12">
+                  <div class="form-label">执行报告</div>
+                  <div class="task-report">{{ activeTask.report }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Logs -->
+            <div class="card" style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+              <div class="card-header">
+                <h3>执行日志</h3>
+                <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+                  <label class="text-sm text-secondary">级别:</label>
+                  <select v-model="logLevel" class="form-select" style="width:auto;padding:4px 8px;font-size:12px" @change="onLogLevelChange">
+                    <option value="all">全部</option>
+                    <option value="error">仅错误</option>
+                    <option value="warning">错误+警告</option>
+                  </select>
+                  <button v-if="activeTask.status === 'running'" class="btn btn-sm btn-secondary" @click="stopLogPoll">暂停轮询</button>
+                  <button v-else class="btn btn-sm btn-secondary" @click="startLogPoll">继续轮询</button>
+                </div>
+              </div>
+              <div class="log-toolbar">
+                <span class="text-sm text-secondary">{{ logPolling ? '实时拉取中...' : '已暂停' }}</span>
+                <span class="log-count">共 {{ filteredLogs.length }} 条</span>
+              </div>
+              <div class="log-viewer" ref="logContainer">
+                <div v-if="filteredLogs.length === 0" class="log-empty">暂无日志</div>
+                <div v-for="(log, i) in filteredLogs" :key="i" class="log-line">
+                  <span class="log-time">{{ formatLogTime(log.timestamp) }}</span>
+                  <span class="log-level" :class="log.level">{{ log.level }}</span>
+                  <span class="log-msg">{{ log.message }}</span>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </template>
+
+    <!-- ========== View: Collect Files (Phase1) ========== -->
+    <template v-if="currentView === 'collect'">
+      <div class="content-header">
+        <h2>采集文件管理</h2>
+        <span class="subtitle">Phase1 采集数据文件 (JSON)</span>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h3>文件列表</h3>
+          <span class="text-sm text-secondary" style="margin-left:8px">共 {{ phase1Files.length }} 个文件</span>
+          <button class="btn btn-sm btn-secondary" style="margin-left:auto" @click="loadPhase1Files">刷新</button>
+        </div>
+        <div class="card-body" style="padding:12px">
+          <div class="upload-zone" @click="$refs.phase1Upload.click()" @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="onPhase1Drop" :class="{dragover: dragOver}">
+            <div class="upload-icon">📤</div>
+            <div class="upload-text">点击或拖拽上传 JSON 文件</div>
+            <input type="file" ref="phase1Upload" accept=".json" style="display:none" @change="onPhase1UploadChange" multiple>
+          </div>
+        </div>
+        <div class="file-list-body">
+          <div v-if="phase1Files.length === 0" class="empty">
+            <div class="empty-icon">📄</div>
+            <div class="empty-text">暂无采集文件</div>
+          </div>
+          <div v-for="f in phase1Files" :key="f.name" class="file-item">
+            <span class="file-icon">📊</span>
+            <div class="file-info">
+              <div class="file-name">{{ f.name }}</div>
+              <div class="file-meta">{{ formatFileSize(f.size) }} · {{ formatTime(f.modified) }}</div>
+            </div>
+            <div class="file-actions">
+              <button class="btn btn-sm btn-secondary" @click="previewPhase1File(f.name)">预览</button>
+              <button class="btn btn-sm btn-secondary" @click="downloadFile('phase1', f.name)">下载</button>
+              <button class="btn btn-sm btn-danger" @click="deleteFile('phase1', f.name)">删除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ========== View: Process Files (Phase2) ========== -->
+    <template v-if="currentView === 'process'">
+      <div class="content-header">
+        <h2>处理文件管理</h2>
+        <span class="subtitle">Phase2 处理数据文件 (Excel) + 文件合并</span>
+      </div>
+
+      <div class="file-grid">
+        <!-- Phase1 source files for processing -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Phase1 源文件</h3>
+            <span class="badge badge-phase1" style="margin-left:auto">{{ selectedPhase1Files.length }}/{{ phase1Files.length }}</span>
+          </div>
+          <div class="select-all-bar">
+            <input type="checkbox" class="file-checkbox" :checked="phase1AllSelected" @change="toggleSelectAllPhase1">
+            <span class="select-all-label">全选</span>
+            <button class="btn btn-sm btn-success" style="margin-left:auto" @click="processPhase2" :disabled="processing || selectedPhase1Files.length === 0">
+              <span v-if="processing" class="spinner"></span>
+              {{ processing ? '处理中...' : '处理选中文件 → Phase2' }}
+            </button>
+          </div>
+          <div class="file-list-body" style="max-height:400px">
+            <div v-if="phase1Files.length === 0" class="empty">
+              <div class="empty-icon">📄</div>
+              <div class="empty-text">暂无源文件</div>
+            </div>
+            <div v-for="f in phase1Files" :key="f.name" class="file-item" :class="{selected: selectedPhase1Files.includes(f.name)}">
+              <input type="checkbox" class="file-checkbox" :value="f.name" v-model="selectedPhase1Files">
+              <span class="file-icon">📊</span>
+              <div class="file-info">
+                <div class="file-name">{{ f.name }}</div>
+                <div class="file-meta">{{ formatFileSize(f.size) }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phase2 result files -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Phase2 结果文件</h3>
+            <span class="badge badge-phase2" style="margin-left:auto">{{ phase2Files.length }} 个</span>
+            <button class="btn btn-sm btn-secondary" @click="loadPhase2Files">刷新</button>
+          </div>
+          <div class="file-list-body" style="max-height:400px">
+            <div v-if="phase2Files.length === 0" class="empty">
+              <div class="empty-icon">📑</div>
+              <div class="empty-text">暂无结果文件</div>
+            </div>
+            <div v-for="f in phase2Files" :key="f.name" class="file-item">
+              <input type="checkbox" class="file-checkbox" :value="f.name" v-model="selectedPhase2Files">
+              <span class="file-icon">📑</span>
+              <div class="file-info">
+                <div class="file-name">{{ f.name }}</div>
+                <div class="file-meta">{{ formatFileSize(f.size) }} · {{ formatTime(f.modified) }}</div>
+              </div>
+              <div class="file-actions">
+                <button class="btn btn-sm btn-secondary" @click="downloadFile('phase2', f.name)">下载</button>
+                <button class="btn btn-sm btn-danger" @click="deleteFile('phase2', f.name)">删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Merge Section -->
+      <div class="card mt-20">
+        <div class="card-header"><h3>文件合并</h3></div>
+        <div class="card-body">
+          <div class="merge-section">
+            <h4>按选中文件合并</h4>
+            <div class="merge-row">
+              <div class="form-group" style="flex:1;margin-bottom:0">
+                <select v-model="mergePhase" class="form-select">
+                  <option value="phase1">Phase1 文件</option>
+                  <option value="phase2">Phase2 文件</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" @click="mergeSelected" :disabled="merging">
+                <span v-if="merging" class="spinner"></span>
+                {{ merging ? '合并中...' : `合并选中 (${mergePhase === 'phase1' ? selectedPhase1Files.length : selectedPhase2Files.length} 个)` }}
+              </button>
+            </div>
+          </div>
+          <div class="merge-section">
+            <h4>按时间范围合并</h4>
+            <div class="merge-row">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">起始日期</label>
+                <input type="date" v-model="mergeDateStart" class="form-input">
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">结束日期</label>
+                <input type="date" v-model="mergeDateEnd" class="form-input">
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">文件类型</label>
+                <select v-model="mergePhase" class="form-select">
+                  <option value="phase1">Phase1</option>
+                  <option value="phase2">Phase2</option>
+                </select>
+              </div>
+              <button class="btn btn-primary" @click="mergeByDate" :disabled="merging">
+                <span v-if="merging" class="spinner"></span>
+                {{ merging ? '合并中...' : '按时间合并' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ========== View: Scheduled Tasks ========== -->
+    <template v-if="currentView === 'schedule'">
+      <div class="content-header">
+        <h2>定时任务</h2>
+        <span class="subtitle">自动化采集任务调度</span>
+        <button class="btn btn-primary" style="margin-left:auto" @click="openScheduleModal()">+ 新建定时任务</button>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div v-if="schedules.length === 0" class="empty">
+            <div class="empty-icon">⏰</div>
+            <div class="empty-text">暂无定时任务</div>
+            <div class="empty-sub">点击右上角按钮创建</div>
+          </div>
+          <div class="schedule-list">
+            <div v-for="s in schedules" :key="s.id" class="schedule-item">
+              <div class="schedule-info">
+                <div class="schedule-name">{{ s.name }}</div>
+                <div class="schedule-meta">
+                  类型: {{ taskTypeLabel(s.task_type) }} ·
+                  <span class="schedule-cron">{{ s.cron }}</span> ·
+                  上次运行: {{ s.last_run ? formatTime(s.last_run) : '未运行' }}
+                </div>
+              </div>
+              <label class="toggle">
+                <input type="checkbox" :checked="s.enabled" @change="toggleSchedule(s)">
+                <span class="toggle-slider"></span>
+              </label>
+              <div class="btn-group">
+                <button class="btn btn-sm btn-secondary" @click="openScheduleModal(s)">编辑</button>
+                <button class="btn btn-sm btn-secondary" @click="runScheduleNow(s)">立即执行</button>
+                <button class="btn btn-sm btn-danger" @click="deleteSchedule(s)">删除</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- ========== View: Search ========== -->
+    <template v-if="currentView === 'search'">
+      <div class="content-header">
+        <h2>关键词查询</h2>
+        <span class="subtitle">搜索已采集的招投标数据</span>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" v-model="searchKeyword" class="search-input"
+               placeholder="输入关键词搜索..."
+               @keydown.enter="doSearch">
+      </div>
+      <div v-if="searching" class="text-center text-secondary mt-20">
+        <span class="spinner spinner-dark"></span> 搜索中...
+      </div>
+      <div v-else-if="searchResults.length > 0" class="search-results">
+        <div class="text-sm text-secondary mb-12">找到 {{ searchResults.length }} 条结果</div>
+        <div v-for="(r, i) in searchResults" :key="i" class="search-result" @click="openSearchResult(r)">
+          <div class="search-result-title">{{ r.title }}</div>
+          <div class="search-result-snippet" v-html="r.snippet"></div>
+          <div class="search-result-meta">
+            <span>📅 {{ r.date || '未知日期' }}</span>
+            <span>📂 {{ r.source_file }}</span>
+            <span v-if="r.url">🔗 {{ r.url.substring(0,50) }}...</span>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="searchDone" class="empty">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">未找到匹配结果</div>
+      </div>
+      <div v-else class="empty">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">输入关键词开始搜索</div>
+        <div class="empty-sub">支持标题、正文内容全文检索</div>
+      </div>
+    </template>
+
+    <!-- ========== View: Config ========== -->
+    <template v-if="currentView === 'config'">
+      <div class="content-header">
+        <h2>系统配置</h2>
+        <span class="subtitle">任务参数与功能开关</span>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="config-item">
+            <div class="config-info">
+              <h4>匹配阈值</h4>
+              <p>关键词匹配的最低相似度分数 (0.0 - 1.0)</p>
+            </div>
+            <div class="flex items-center gap-12">
+              <input type="range" min="0" max="100" v-model.number="configThreshold" class="config-slider">
+              <span class="config-value">{{ (configThreshold / 100).toFixed(2) }}</span>
+            </div>
+          </div>
+          <div class="config-item">
+            <div class="config-info">
+              <h4>定时任务开关</h4>
+              <p>启用或禁用所有定时采集任务的全局开关</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" v-model="configScheduleEnabled">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="config-item">
+            <div class="config-info">
+              <h4>AI 核对开关</h4>
+              <p>处理阶段使用 AI 对采集数据进行智能核对和纠错</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" v-model="configAiCheck">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-secondary" @click="loadConfig">重置</button>
+          <button class="btn btn-primary" @click="saveConfig" :disabled="savingConfig">
+            <span v-if="savingConfig" class="spinner"></span>
+            {{ savingConfig ? '保存中...' : '保存配置' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="card mt-20">
+        <div class="card-header"><h3>系统信息</h3></div>
+        <div class="card-body">
+          <div class="task-meta">
+            <div class="meta-item">
+              <div class="meta-label">服务状态</div>
+              <div class="meta-value" :style="{color: apiHealthy ? 'var(--success)' : 'var(--danger)'}">
+                {{ apiHealthy ? '在线' : '离线' }}
+              </div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Phase1 文件数</div>
+              <div class="meta-value">{{ phase1Files.length }}</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Phase2 文件数</div>
+              <div class="meta-value">{{ phase2Files.length }}</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">定时任务数</div>
+              <div class="meta-value">{{ schedules.length }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+  </div><!-- /content -->
+</div><!-- /layout -->
+
+<!-- ===== Modal ===== -->
+<div v-if="modal.show" class="modal-overlay" @click.self="closeModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>{{ modal.title }}</h3>
+      <button class="modal-close" @click="closeModal">×</button>
+    </div>
+    <div class="modal-body">
+      <!-- Confirm modal -->
+      <div v-if="modal.type === 'confirm'">
+        <p style="font-size:14px;line-height:1.6">{{ modal.message }}</p>
+      </div>
+      <!-- Schedule form modal -->
+      <div v-if="modal.type === 'schedule'">
+        <div class="form-group">
+          <label class="form-label">任务名称</label>
+          <input type="text" v-model="modal.data.name" class="form-input" placeholder="如：每日苏州采购采集">
+        </div>
+        <div class="form-group">
+          <label class="form-label">任务类型</label>
+          <select v-model="modal.data.task_type" class="form-select">
+            <option v-for="tt in taskTypes" :key="tt.value" :value="tt.value">{{ tt.label }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cron 表达式</label>
+          <input type="text" v-model="modal.data.cron" class="form-input font-mono" placeholder="如：0 8 * * * (每天8点)">
+          <div class="form-hint">格式：分 时 日 月 周 · 示例：0 8 * * * = 每天8:00</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">启用状态</label>
+          <label class="toggle">
+            <input type="checkbox" v-model="modal.data.enabled">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <!-- Preview modal -->
+      <div v-if="modal.type === 'preview'">
+        <div class="preview-content">{{ modal.data.content }}</div>
+      </div>
+      <!-- Search result detail modal -->
+      <div v-if="modal.type === 'searchResult'">
+        <h4 style="font-size:16px;margin-bottom:12px">{{ modal.data.title }}</h4>
+        <div class="text-xs text-secondary mb-12">
+          <span>📅 {{ modal.data.date || '未知' }}</span> · 
+          <span>📂 {{ modal.data.source_file }}</span>
+        </div>
+        <div v-if="modal.data.url" class="mb-12">
+          <a :href="modal.data.url" target="_blank" style="font-size:12px;color:var(--primary)">{{ modal.data.url }}</a>
+        </div>
+        <div class="preview-content">{{ modal.data.content || modal.data.full_content || '无详细内容' }}</div>
+      </div>
+    </div>
+    <div class="modal-footer" v-if="modal.type === 'confirm'">
+      <button class="btn btn-secondary" @click="closeModal">取消</button>
+      <button class="btn btn-danger" @click="modal.confirmAction">确认</button>
+    </div>
+    <div class="modal-footer" v-if="modal.type === 'schedule'">
+      <button class="btn btn-secondary" @click="closeModal">取消</button>
+      <button class="btn btn-primary" @click="saveSchedule">保存</button>
+    </div>
+    <div class="modal-footer" v-if="modal.type === 'preview' || modal.type === 'searchResult'">
+      <button class="btn btn-primary" @click="closeModal">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Toast Container ===== -->
+<div class="toast-container">
+  <div v-for="t in toasts" :key="t.id" class="toast" :class="t.type">
+    <span>{{ t.icon }}</span>
+    <span>{{ t.message }}</span>
+  </div>
+</div>
+
+</div><!-- /#app -->
+
+<script>
+const { createApp, ref, reactive, computed, onMounted, onUnmounted, watch, nextTick } = Vue;
+
+createApp({
+  setup() {
+    /* ========== API Endpoints ========== */
+    const API = {
+      health:         ()       => `/api/health`,
+      tasks:          (type)   => `/api/tasks/${type}`,
+      taskList:       ()       => `/api/tasks`,
+      taskDetail:     (id)     => `/api/tasks/${id}`,
+      taskStop:       (id)     => `/api/tasks/${id}/stop`,
+      taskDelete:     (id)     => `/api/tasks/${id}`,
+      taskLogs:       (id)     => `/api/tasks/${id}/logs`,
+      phase1Files:    ()       => `/api/files/phase1`,
+      phase2Files:    ()       => `/api/files/phase2`,
+      phase1Upload:   ()       => `/api/files/phase1/upload`,
+      phase2Upload:   ()       => `/api/files/phase2/upload`,
+      phase1Download: (f)      => `/api/files/phase1/${encodeURIComponent(f)}`,
+      phase2Download: (f)      => `/api/files/phase2/${encodeURIComponent(f)}`,
+      phase1Delete:   (f)      => `/api/files/phase1/${encodeURIComponent(f)}`,
+      phase2Delete:   (f)      => `/api/files/phase2/${encodeURIComponent(f)}`,
+      phase1Preview:  (f)      => `/api/files/phase1/${encodeURIComponent(f)}/preview`,
+      phase2Process:  ()       => `/api/files/phase2/process`,
+      merge:          ()       => `/api/files/merge`,
+      schedules:      ()       => `/api/schedules`,
+      schedule:       (id)     => `/api/schedules/${id}`,
+      scheduleToggle: (id)     => `/api/schedules/${id}/toggle`,
+      scheduleRun:    (id)     => `/api/schedules/${id}/run`,
+      search:         ()       => `/api/search`,
+      config:         ()       => `/api/config`,
+    };
+
+    /* ========== State ========== */
+    const currentView = ref('execute');
+    const apiHealthy = ref(false);
+    const currentTime = ref('');
+    const clockTimer = ref(null);
+
+    const tasks = ref([]);
+    const activeTaskId = ref(null);
+    const activeTask = ref(null);
+    const newTaskType = ref('full');
+    const creating = ref(false);
+
+    const logs = ref([]);
+    const logSinceIdx = ref(0);
+    const logLevel = ref('all');
+    const logPolling = ref(false);
+    const logPollTimer = ref(null);
+    const logContainer = ref(null);
+
+    const phase1Files = ref([]);
+    const phase2Files = ref([]);
+    const selectedPhase1Files = ref([]);
+    const selectedPhase2Files = ref([]);
+    const processing = ref(false);
+    const merging = ref(false);
+    const mergePhase = ref('phase1');
+    const mergeDateStart = ref('');
+    const mergeDateEnd = ref('');
+    const dragOver = ref(false);
+    const phase1Upload = ref(null);
+
+    const schedules = ref([]);
+
+    const searchKeyword = ref('');
+    const searchResults = ref([]);
+    const searching = ref(false);
+    const searchDone = ref(false);
+
+    const configThreshold = ref(70);
+    const configScheduleEnabled = ref(true);
+    const configAiCheck = ref(false);
+    const savingConfig = ref(false);
+
+    const toasts = ref([]);
+    const toastId = ref(0);
+
+    const modal = reactive({
+      show: false,
+      type: '',
+      title: '',
+      message: '',
+      data: {},
+      confirmAction: null,
+    });
+
+    /* ========== Constants ========== */
+    const navItems = computed(() => [
+      { key: 'execute',  icon: '▶️', label: '执行',     badge: tasks.value.filter(t => t.status === 'running').length || '' },
+      { key: 'collect',  icon: '📥', label: '采集文件' },
+      { key: 'process',  icon: '⚙️', label: '处理文件' },
+      { key: 'schedule', icon: '⏰', label: '定时任务' },
+      { key: 'search',   icon: '🔍', label: '关键词查询' },
+      { key: 'config',   icon: '🔧', label: '配置' },
+    ]);
+
+    const taskTypes = [
+      { value: 'full',              label: '完整流程',     desc: '采集 + 处理' },
+      { value: 'phase1',            label: '仅采集',       desc: 'Phase1 采集' },
+      { value: 'phase2',            label: '仅处理',       desc: 'Phase2 处理' },
+      { value: 'phase2_incremental',label: '增量处理',     desc: '仅处理新增' },
+      { value: 'full_incremental',  label: '增量完整',     desc: '增量采集+处理' },
+    ];
+
+    /* ========== Computed ========== */
+    const filteredLogs = computed(() => {
+      if (logLevel.value === 'all') return logs.value;
+      if (logLevel.value === 'error') return logs.value.filter(l => l.level === 'ERROR');
+      if (logLevel.value === 'warning') return logs.value.filter(l => l.level === 'ERROR' || l.level === 'WARNING');
+      return logs.value;
+    });
+
+    const phase1AllSelected = computed(() =>
+      phase1Files.value.length > 0 && selectedPhase1Files.value.length === phase1Files.value.length
+    );
+
+    /* ========== Utility Functions ========== */
+    function showToast(message, type = 'info') {
+      const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+      const id = ++toastId.value;
+      toasts.value.push({ id, message, type, icon: icons[type] || 'ℹ️' });
+      setTimeout(() => {
+        toasts.value = toasts.value.filter(t => t.id !== id);
+      }, 3500);
+    }
+
+    async function api(url, options = {}) {
+      const res = await fetch(url, {
+        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+        ...options,
+      });
+      if (!res.ok) {
+        let errMsg = `HTTP ${res.status}`;
+        try {
+          const errData = await res.json();
+          errMsg = errData.detail || errData.error || errMsg;
+        } catch {}
+        throw new Error(errMsg);
+      }
+      const ct = res.headers.get('content-type') || '';
+      if (ct.includes('application/json')) return res.json();
+      return res;
+    }
+
+    function taskTypeLabel(type) {
+      const found = taskTypes.find(t => t.value === type);
+      return found ? found.label : type;
+    }
+
+    function statusLabel(status) {
+      const map = { running: '运行中', done: '完成', failed: '失败', stopped: '已停止', pending: '等待中' };
+      return map[status] || status;
+    }
+
+    function statusBadgeClass(status) {
+      const map = { running: 'badge-running', done: 'badge-done', failed: 'badge-failed', stopped: 'badge-stopped', pending: 'badge-pending' };
+      return map[status] || 'badge-stopped';
+    }
+
+    function esc(s) {
+      if (s == null) return '';
+      return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function formatTime(ts) {
+      if (!ts) return '—';
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return ts;
+      return d.toLocaleString('zh-CN', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    }
+
+    function formatLogTime(ts) {
+      if (!ts) return '';
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return ts;
+      return d.toLocaleTimeString('zh-CN', { hour12:false }) + '.' + String(d.getMilliseconds()).padStart(3,'0');
+    }
+
+    function formatFileSize(bytes) {
+      if (!bytes && bytes !== 0) return '—';
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    /* ========== Health Check ========== */
+    async function checkHealth() {
+      try {
+        const data = await api(API.health());
+        apiHealthy.value = data.status === 'ok' || data.status === 'degraded';
+      } catch {
+        apiHealthy.value = false;
+      }
+    }
+
+    /* ========== View Switching ========== */
+    function switchView(view) {
+      currentView.value = view;
+      if (view === 'execute') loadTasks();
+      if (view === 'collect') loadPhase1Files();
+      if (view === 'process') { loadPhase1Files(); loadPhase2Files(); }
+      if (view === 'schedule') loadSchedules();
+      if (view === 'config') loadConfig();
+    }
+
+    /* ========== Task Management ========== */
+    async function loadTasks() {
+      try {
+        const data = await api(API.taskList());
+        tasks.value = Array.isArray(data) ? data : (data.tasks || []);
+      } catch (e) {
+        showToast('加载任务列表失败: ' + e.message, 'error');
+      }
+    }
+
+    async function createTask() {
+      creating.value = true;
+      try {
+        const data = await api(API.tasks(newTaskType.value), { method: 'POST' });
+        showToast('任务已创建: ' + (data.task_id || data.id || ''), 'success');
+        await loadTasks();
+        selectTask(data.task_id || data.id);
+      } catch (e) {
+        showToast('创建任务失败: ' + e.message, 'error');
+      } finally {
+        creating.value = false;
+      }
+    }
+
+    async function selectTask(taskId) {
+      activeTaskId.value = taskId;
+      logs.value = [];
+      logSinceIdx.value = 0;
+      await loadTaskDetail();
+      startLogPoll();
+    }
+
+    async function loadTaskDetail() {
+      if (!activeTaskId.value) return;
+      try {
+        const data = await api(API.taskDetail(activeTaskId.value));
+        activeTask.value = data;
+      } catch (e) {
+        showToast('加载任务详情失败: ' + e.message, 'error');
+      }
+    }
+
+    async function stopTask() {
+      if (!activeTaskId.value) return;
+      try {
+        await api(API.taskStop(activeTaskId.value), { method: 'POST' });
+        showToast('任务已停止', 'success');
+        await loadTaskDetail();
+        await loadTasks();
+      } catch (e) {
+        showToast('停止任务失败: ' + e.message, 'error');
+      }
+    }
+
+    function confirmDelete() {
+      modal.show = true;
+      modal.type = 'confirm';
+      modal.title = '确认删除';
+      modal.message = `确定要删除任务 ${activeTaskId.value.substring(0,8)} 吗？此操作不可恢复。`;
+      modal.confirmAction = deleteTask;
+    }
+
+    async function deleteTask() {
+      if (!activeTaskId.value) return;
+      try {
+        await api(API.taskDelete(activeTaskId.value), { method: 'DELETE' });
+        showToast('任务已删除', 'success');
+        stopLogPoll();
+        activeTaskId.value = null;
+        activeTask.value = null;
+        logs.value = [];
+        closeModal();
+        await loadTasks();
+      } catch (e) {
+        showToast('删除任务失败: ' + e.message, 'error');
+      }
+    }
+
+    /* ========== Log Polling ========== */
+    function startLogPoll() {
+      stopLogPoll();
+      logPolling.value = true;
+      fetchLogs();
+      logPollTimer.value = setInterval(fetchLogs, 1500);
+    }
+
+    function stopLogPoll() {
+      logPolling.value = false;
+      if (logPollTimer.value) {
+        clearInterval(logPollTimer.value);
+        logPollTimer.value = null;
+      }
+    }
+
+    async function fetchLogs() {
+      if (!activeTaskId.value) return;
+      try {
+        const url = `${API.taskLogs(activeTaskId.value)}?since_idx=${logSinceIdx.value}`;
+        const data = await api(url);
+        const newLogs = data.logs || data || [];
+        if (Array.isArray(newLogs) && newLogs.length > 0) {
+          logs.value.push(...newLogs);
+          logSinceIdx.value = data.next_idx || (logSinceIdx.value + newLogs.length);
+          nextTick(() => {
+            if (logContainer.value) {
+              logContainer.value.scrollTop = logContainer.value.scrollHeight;
+            }
+          });
+        }
+        if (data.task_status && data.task_status !== activeTask.value?.status) {
+          await loadTaskDetail();
+          await loadTasks();
+        }
+        if (data.task_status && ['done', 'failed', 'stopped'].includes(data.task_status)) {
+          stopLogPoll();
+          await loadTaskDetail();
+          await loadTasks();
+        }
+      } catch (e) {
+        // silent fail for polling
+      }
+    }
+
+    function onLogLevelChange() {
+      nextTick(() => {
+        if (logContainer.value) {
+          logContainer.value.scrollTop = logContainer.value.scrollHeight;
+        }
+      });
+    }
+
+    /* ========== Phase1 File Management ========== */
+    async function loadPhase1Files() {
+      try {
+        const data = await api(API.phase1Files());
+        phase1Files.value = Array.isArray(data) ? data : (data.files || []);
+      } catch (e) {
+        showToast('加载Phase1文件失败: ' + e.message, 'error');
+      }
+    }
+
+    function onDragOver() { dragOver.value = true; }
+    function onDragLeave() { dragOver.value = false; }
+
+    async function onPhase1Drop(e) {
+      dragOver.value = false;
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        await uploadPhase1Files(files);
+      }
+    }
+
+    async function onPhase1UploadChange(e) {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        await uploadPhase1Files(files);
+      }
+      e.target.value = '';
+    }
+
+    async function uploadPhase1Files(files) {
+      for (const file of files) {
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          const res = await fetch(API.phase1Upload(), { method: 'POST', body: formData });
+          if (!res.ok) throw new Error('Upload failed');
+          showToast(`已上传: ${file.name}`, 'success');
+        } catch (e) {
+          showToast(`上传失败: ${file.name}`, 'error');
+        }
+      }
+      await loadPhase1Files();
+    }
+
+    async function previewPhase1File(filename) {
+      try {
+        const data = await api(API.phase1Preview(filename));
+        const content = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        modal.show = true;
+        modal.type = 'preview';
+        modal.title = '预览: ' + filename;
+        modal.data = { content: content.substring(0, 5000) };
+      } catch (e) {
+        showToast('预览失败: ' + e.message, 'error');
+      }
+    }
+
+    /* ========== Phase2 File Management ========== */
+    async function loadPhase2Files() {
+      try {
+        const data = await api(API.phase2Files());
+        phase2Files.value = Array.isArray(data) ? data : (data.files || []);
+      } catch (e) {
+        showToast('加载Phase2文件失败: ' + e.message, 'error');
+      }
+    }
+
+    async function downloadFile(phase, filename) {
+      try {
+        const url = phase === 'phase1' ? API.phase1Download(filename) : API.phase2Download(filename);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } catch (e) {
+        showToast('下载失败: ' + e.message, 'error');
+      }
+    }
+
+    async function deleteFile(phase, filename) {
+      const confirmed = confirm(`确定删除文件 ${filename} ?`);
+      if (!confirmed) return;
+      try {
+        const url = phase === 'phase1' ? API.phase1Delete(filename) : API.phase2Delete(filename);
+        await api(url, { method: 'DELETE' });
+        showToast('文件已删除', 'success');
+        if (phase === 'phase1') await loadPhase1Files();
+        else await loadPhase2Files();
+      } catch (e) {
+        showToast('删除失败: ' + e.message, 'error');
+      }
+    }
+
+    /* ========== Phase2 Processing ========== */
+    async function processPhase2() {
+      if (selectedPhase1Files.value.length === 0) {
+        showToast('请先选择Phase1文件', 'warning');
+        return;
+      }
+      processing.value = true;
+      try {
+        const data = await api(API.phase2Process(), {
+          method: 'POST',
+          body: JSON.stringify({ files: selectedPhase1Files.value }),
+        });
+        showToast('处理完成，已生成Phase2文件', 'success');
+        selectedPhase1Files.value = [];
+        await loadPhase2Files();
+      } catch (e) {
+        showToast('处理失败: ' + e.message, 'error');
+      } finally {
+        processing.value = false;
+      }
+    }
+
+    function toggleSelectAllPhase1() {
+      if (phase1AllSelected.value) {
+        selectedPhase1Files.value = [];
+      } else {
+        selectedPhase1Files.value = phase1Files.value.map(f => f.name);
+      }
+    }
+
+    /* ========== File Merge ========== */
+    async function mergeSelected() {
+      const files = mergePhase.value === 'phase1' ? selectedPhase1Files.value : selectedPhase2Files.value;
+      if (files.length === 0) {
+        showToast('请先选择要合并的文件', 'warning');
+        return;
+      }
+      merging.value = true;
+      try {
+        const data = await api(API.merge(), {
+          method: 'POST',
+          body: JSON.stringify({ mode: 'selected', phase: mergePhase.value, files }),
+        });
+        showToast('合并完成: ' + (data.output_file || ''), 'success');
+        if (mergePhase.value === 'phase1') await loadPhase1Files();
+        else await loadPhase2Files();
+      } catch (e) {
+        showToast('合并失败: ' + e.message, 'error');
+      } finally {
+        merging.value = false;
+      }
+    }
+
+    async function mergeByDate() {
+      if (!mergeDateStart.value || !mergeDateEnd.value) {
+        showToast('请选择起止日期', 'warning');
+        return;
+      }
+      merging.value = true;
+      try {
+        const data = await api(API.merge(), {
+          method: 'POST',
+          body: JSON.stringify({
+            mode: 'date_range',
+            phase: mergePhase.value,
+            date_start: mergeDateStart.value,
+            date_end: mergeDateEnd.value,
+          }),
+        });
+        showToast('按时间合并完成: ' + (data.output_file || ''), 'success');
+        if (mergePhase.value === 'phase1') await loadPhase1Files();
+        else await loadPhase2Files();
+      } catch (e) {
+        showToast('合并失败: ' + e.message, 'error');
+      } finally {
+        merging.value = false;
+      }
+    }
+
+    /* ========== Scheduled Tasks ========== */
+    async function loadSchedules() {
+      try {
+        const data = await api(API.schedules());
+        schedules.value = Array.isArray(data) ? data : (data.schedules || []);
+      } catch (e) {
+        showToast('加载定时任务失败: ' + e.message, 'error');
+      }
+    }
+
+    function openScheduleModal(s = null) {
+      modal.show = true;
+      modal.type = 'schedule';
+      modal.title = s ? '编辑定时任务' : '新建定时任务';
+      modal.data = s ? { ...s } : { name: '', task_type: 'full', cron: '0 8 * * *', enabled: true };
+    }
+
+    async function saveSchedule() {
+      if (!modal.data.name || !modal.data.cron) {
+        showToast('请填写完整信息', 'warning');
+        return;
+      }
+      try {
+        if (modal.data.id) {
+          await api(API.schedule(modal.data.id), {
+            method: 'PUT',
+            body: JSON.stringify(modal.data),
+          });
+          showToast('定时任务已更新', 'success');
+        } else {
+          await api(API.schedules(), {
+            method: 'POST',
+            body: JSON.stringify(modal.data),
+          });
+          showToast('定时任务已创建', 'success');
+        }
+        closeModal();
+        await loadSchedules();
+      } catch (e) {
+        showToast('保存失败: ' + e.message, 'error');
+      }
+    }
+
+    async function toggleSchedule(s) {
+      try {
+        await api(API.scheduleToggle(s.id), { method: 'POST' });
+        showToast(s.enabled ? '已禁用' : '已启用', 'success');
+        await loadSchedules();
+      } catch (e) {
+        showToast('操作失败: ' + e.message, 'error');
+      }
+    }
+
+    async function runScheduleNow(s) {
+      try {
+        await api(API.scheduleRun(s.id), { method: 'POST' });
+        showToast('已触发执行', 'success');
+      } catch (e) {
+        showToast('执行失败: ' + e.message, 'error');
+      }
+    }
+
+    async function deleteSchedule(s) {
+      const confirmed = confirm(`确定删除定时任务 "${s.name}" ?`);
+      if (!confirmed) return;
+      try {
+        await api(API.schedule(s.id), { method: 'DELETE' });
+        showToast('定时任务已删除', 'success');
+        await loadSchedules();
+      } catch (e) {
+        showToast('删除失败: ' + e.message, 'error');
+      }
+    }
+
+    /* ========== Search ========== */
+    async function doSearch() {
+      const kw = searchKeyword.value.trim();
+      if (!kw) return;
+      searching.value = true;
+      searchDone.value = false;
+      searchResults.value = [];
+      try {
+        const data = await api(`${API.search()}?keyword=${encodeURIComponent(kw)}`);
+        const results = Array.isArray(data) ? data : (data.results || []);
+        searchResults.value = results.map(r => ({
+          ...r,
+          snippet: highlightKeyword(r.snippet || r.content_preview || '', kw),
+        }));
+        searchDone.value = true;
+      } catch (e) {
+        showToast('搜索失败: ' + e.message, 'error');
+      } finally {
+        searching.value = false;
+      }
+    }
+
+    function highlightKeyword(text, keyword) {
+      if (!text) return '';
+      const escaped = esc(text);
+      const regex = new RegExp(`(${keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      return escaped.replace(regex, '<span class="highlight">$1</span>');
+    }
+
+    function openSearchResult(r) {
+      modal.show = true;
+      modal.type = 'searchResult';
+      modal.title = '搜索结果详情';
+      modal.data = r;
+    }
+
+    /* ========== Config ========== */
+    async function loadConfig() {
+      try {
+        const data = await api(API.config());
+        configThreshold.value = Math.round((data.match_threshold ?? 0.7) * 100);
+        configScheduleEnabled.value = data.schedule_enabled ?? true;
+        configAiCheck.value = data.ai_check ?? false;
+      } catch (e) {
+        // use defaults
+      }
+    }
+
+    async function saveConfig() {
+      savingConfig.value = true;
+      try {
+        await api(API.config(), {
+          method: 'PUT',
+          body: JSON.stringify({
+            match_threshold: configThreshold.value / 100,
+            schedule_enabled: configScheduleEnabled.value,
+            ai_check: configAiCheck.value,
+          }),
+        });
+        showToast('配置已保存', 'success');
+      } catch (e) {
+        showToast('保存配置失败: ' + e.message, 'error');
+      } finally {
+        savingConfig.value = false;
+      }
+    }
+
+    /* ========== Modal ========== */
+    function closeModal() {
+      modal.show = false;
+      modal.type = '';
+      modal.title = '';
+      modal.message = '';
+      modal.data = {};
+      modal.confirmAction = null;
+    }
+
+    /* ========== Clock ========== */
+    function updateClock() {
+      const d = new Date();
+      currentTime.value = d.toLocaleString('zh-CN', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+    }
+
+    /* ========== Lifecycle ========== */
+    onMounted(async () => {
+      updateClock();
+      clockTimer.value = setInterval(updateClock, 30000);
+      await checkHealth();
+      await loadTasks();
+    });
+
+    onUnmounted(() => {
+      stopLogPoll();
+      if (clockTimer.value) clearInterval(clockTimer.value);
+    });
+
+    /* ========== Watchers ========== */
+    watch(currentView, (newView) => {
+      if (newView !== 'execute' && logPollTimer.value) {
+        stopLogPoll();
+      }
+    });
+
+    /* ========== Return ========== */
+    return {
+      // State
+      currentView, apiHealthy, currentTime,
+      tasks, activeTaskId, activeTask, newTaskType, creating,
+      logs, logLevel, logPolling, logContainer,
+      phase1Files, phase2Files, selectedPhase1Files, selectedPhase2Files,
+      processing, merging, mergePhase, mergeDateStart, mergeDateEnd,
+      dragOver, phase1Upload,
+      schedules, searchKeyword, searchResults, searching, searchDone,
+      configThreshold, configScheduleEnabled, configAiCheck, savingConfig,
+      toasts, modal,
+      // Constants
+      navItems, taskTypes,
+      // Computed
+      filteredLogs, phase1AllSelected,
+      // Methods
+      showToast, taskTypeLabel, statusLabel, statusBadgeClass,
+      formatTime, formatLogTime, formatFileSize, esc,
+      checkHealth, switchView,
+      loadTasks, createTask, selectTask, loadTaskDetail, stopTask, confirmDelete, deleteTask,
+      startLogPoll, stopLogPoll, onLogLevelChange,
+      loadPhase1Files, onDragOver, onDragLeave, onPhase1Drop, onPhase1UploadChange,
+      previewPhase1File, loadPhase2Files, downloadFile, deleteFile,
+      processPhase2, toggleSelectAllPhase1,
+      mergeSelected, mergeByDate,
+      loadSchedules, openScheduleModal, saveSchedule, toggleSchedule, runScheduleNow, deleteSchedule,
+      doSearch, openSearchResult,
+      loadConfig, saveConfig,
+      closeModal,
+    };
+  }
+}).mount('#app');
+</script>
+</body>
+</html>

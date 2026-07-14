@@ -1,0 +1,5 @@
+{
+  "sim_threshold": 0.7,
+  "schedule_enabled": true,
+  "ai_verify": true
+}

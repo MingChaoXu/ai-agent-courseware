@@ -1,0 +1,79 @@
+{
+  "95efe146": {
+    "id": "95efe146",
+    "type": "full",
+    "params": {},
+    "status": "failed",
+    "progress": 0,
+    "created_at": "2026-07-14 20:04:32",
+    "started_at": "2026-07-14 20:04:32",
+    "finished_at": "2026-07-14 20:04:32",
+    "error": "No module named 'selenium'",
+    "result": null,
+    "report": null,
+    "files": [],
+    "log_count": 12,
+    "logs": [
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "任务已创建 (类型: full)"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "============================================================"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "开始执行完整流水线任务 (ID: 95efe146)"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "============================================================"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": ">>> 阶段 1/2: 数据采集"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "============================================================"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "开始执行 Phase1 数据采集任务 (ID: 95efe146)"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "参数: {}"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "============================================================"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "info",
+        "message": "pipeline_v3 不可用，尝试直接调用采集器..."
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "error",
+        "message": "Phase1 任务失败: No module named 'selenium'"
+      },
+      {
+        "time": "2026-07-14 20:04:32",
+        "level": "error",
+        "message": "Traceback (most recent call last):\n  File \"D:\\电信\\工作文档\\培训\\2607区县AI培训\\ai-agent-courseware\\exercises\\day5\\ex21_bidding_assistant\\backend\\main.py\", line 549, in _run_phase1_task\n    from collectors import get_gov\n  File \"D:\\电信\\工作文档\\培训\\2607区县AI培训\\ai-agent-courseware\\exercises\\day5\\ex21_bidding_assistant\\backend\\collectors\\get_gov.py\", line 1, in <module>\n    from selenium import webdriver\nModuleNotFoundError: No module named 'selenium'\n"
+      }
+    ]
+  }
+}

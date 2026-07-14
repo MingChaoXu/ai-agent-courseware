@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>低空智能体协同管控平台</title>
+<style>
+:root {
+  --primary: #1e88e5;
+  --primary-dark: #1565c0;
+  --primary-light: #64b5f6;
+  --bg: #0f1923;
+  --surface: #1a2332;
+  --surface-light: #243447;
+  --border: #2d3e50;
+  --text: #e0e6ed;
+  --text-muted: #7a8fa6;
+  --danger: #f44336;
+  --warning: #ff9800;
+  --success: #4caf50;
+  --info: #2196f3;
+  --accent: #00e5ff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg); color: var(--text); height: 100vh; overflow: hidden;
+}
+/* Layout */
+.app { display: flex; flex-direction: column; height: 100vh; }
+.header {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  padding: 8px 20px; display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3); z-index: 1000;
+}
+.header h1 { font-size: 18px; color: white; display: flex; align-items: center; gap: 8px; }
+.header .status-bar { display: flex; gap: 16px; font-size: 12px; align-items: center; }
+.status-pill {
+  padding: 3px 10px; border-radius: 12px; background: rgba(255,255,255,0.15);
+  display: flex; align-items: center; gap: 4px; color: white;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot-green { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.dot-red { background: var(--danger); }
+.dot-orange { background: var(--warning); }
+.main { flex: 1; display: flex; overflow: hidden; }
+/* Left panel: Chat */
+.chat-panel { width: 380px; min-width: 320px; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: var(--surface); }
+.chat-header { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+.chat-header h2 { font-size: 14px; color: var(--accent); }
+.agent-tabs { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; }
+.agent-tab {
+  padding: 3px 8px; border-radius: 4px; font-size: 11px; cursor: pointer;
+  background: var(--surface-light); border: 1px solid var(--border); color: var(--text-muted);
+  transition: all 0.2s;
+}
+.agent-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+.agent-tab:hover { border-color: var(--primary-light); }
+.messages { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.msg { max-width: 92%; padding: 8px 12px; border-radius: 8px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+.msg-user { align-self: flex-end; background: var(--primary); color: white; }
+.msg-ai { align-self: flex-start; background: var(--surface-light); border: 1px solid var(--border); }
+.msg-ai .agent-badge { font-size: 10px; color: var(--accent); margin-bottom: 4px; }
+.msg-ai .cv-badge { font-size: 10px; color: var(--warning); margin-top: 4px; padding: 2px 6px; background: rgba(255,152,0,0.15); border-radius: 3px; display: inline-block; }
+.samples { padding: 8px 12px; border-top: 1px solid var(--border); }
+.samples-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+.sample-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.sample-chip {
+  padding: 3px 8px; border-radius: 10px; font-size: 11px; cursor: pointer;
+  background: var(--surface-light); border: 1px solid var(--border); color: var(--text-muted);
+}
+.sample-chip:hover { border-color: var(--accent); color: var(--accent); }
+.input-area { padding: 10px 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
+.input-area textarea {
+  flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  border-radius: 6px; padding: 8px; font-size: 13px; resize: none; height: 40px; max-height: 80px;
+  font-family: inherit;
+}
+.input-area textarea:focus { outline: none; border-color: var(--primary); }
+.input-area button {
+  padding: 0 16px; border: none; border-radius: 6px; background: var(--primary);
+  color: white; font-size: 14px; cursor: pointer; transition: background 0.2s;
+}
+.input-area button:hover { background: var(--primary-dark); }
+.input-area button:disabled { opacity: 0.5; cursor: not-allowed; }
+/* Right panel */
+.right-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+/* Map */
+.map-container { flex: 1; position: relative; min-height: 300px; }
+#map { width: 100%; height: 100%; background: var(--bg); }
+.map-overlay {
+  position: absolute; top: 10px; right: 10px; z-index: 500;
+  background: rgba(26,35,50,0.9); border: 1px solid var(--border); border-radius: 8px;
+  padding: 8px 12px; font-size: 12px; min-width: 180px;
+}
+.map-overlay h3 { font-size: 12px; color: var(--accent); margin-bottom: 4px; }
+.map-overlay .stat-row { display: flex; justify-content: space-between; margin: 2px 0; }
+.map-overlay .stat-val { color: var(--text); font-weight: bold; }
+/* CV Panel */
+.cv-panel {
+  height: 280px; min-height: 200px; border-top: 2px solid var(--border);
+  background: var(--surface); display: flex; overflow: hidden;
+}
+.cv-left { flex: 1; display: flex; flex-direction: column; }
+.cv-right { width: 300px; border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.cv-header { padding: 6px 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.cv-header h3 { font-size: 13px; color: var(--accent); }
+.cv-type-selector { display: flex; gap: 4px; }
+.cv-type-btn {
+  padding: 2px 8px; font-size: 10px; border-radius: 3px; cursor: pointer;
+  background: var(--surface-light); border: 1px solid var(--border); color: var(--text-muted);
+}
+.cv-type-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.cv-image-area { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 8px; position: relative; }
+.cv-image-area img { max-width: 100%; max-height: 100%; border-radius: 4px; }
+.cv-image-placeholder { color: var(--text-muted); font-size: 13px; text-align: center; }
+.cv-threat-badge {
+  position: absolute; top: 12px; left: 12px; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: bold; color: white;
+}
+.threat-normal { background: var(--success); }
+.threat-warning { background: var(--warning); }
+.threat-danger { background: var(--danger); }
+.cv-results-list { flex: 1; overflow-y: auto; padding: 8px; }
+.cv-result-item {
+  padding: 4px 8px; margin-bottom: 3px; border-radius: 4px; font-size: 12px;
+  background: var(--surface-light); display: flex; justify-content: space-between; align-items: center;
+}
+.cv-result-item .det-class { color: var(--text); }
+.cv-result-item .det-conf { color: var(--text-muted); font-size: 11px; }
+.cv-summary { padding: 6px 12px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); }
+.cv-analysis-text { padding: 6px 12px; font-size: 11px; line-height: 1.4; color: var(--text); max-height: 60px; overflow-y: auto; }
+/* Drone list overlay */
+.drone-list-overlay {
+  position: absolute; bottom: 10px; left: 10px; z-index: 500;
+  background: rgba(26,35,50,0.9); border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 10px; font-size: 11px; max-height: 200px; overflow-y: auto; min-width: 200px;
+}
+.drone-list-overlay h3 { font-size: 11px; color: var(--accent); margin-bottom: 4px; }
+.drone-item { padding: 2px 0; display: flex; justify-content: space-between; align-items: center; }
+.drone-name { color: var(--text); }
+.drone-battery { font-size: 10px; }
+.battery-high { color: var(--success); }
+.battery-mid { color: var(--warning); }
+.battery-low { color: var(--danger); }
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+/* AMap dark theme override */
+.amap-container { background: var(--bg) !important; }
+.amap-logo, .amap-copyright { display: none !important; }
+.custom-marker { width: 24px; height: 24px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 8px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; font-weight: bold; }
+.marker-flying { background: var(--success); }
+.marker-idle { background: var(--info); }
+.marker-charging { background: var(--warning); }
+.marker-maintenance { background: var(--text-muted); }
+.marker-emergency { background: var(--danger); animation: pulse 1.5s infinite; }
+.marker-event { background: var(--danger); border-radius: 4px; animation: pulse 1.5s infinite; }
+.marker-landing { background: var(--primary-light); border-style: dashed; }
+@keyframes pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } }
+.amap-info-content { background: var(--surface) !important; color: var(--text) !important; border: 1px solid var(--border) !important; }
+.amap-info-sharp, .amap-info-sharpMinus { background: var(--surface) !important; }
+.map-offline-mask { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--bg); color: var(--text-muted); font-size: 14px; z-index: 1; }
+</style>
+</head>
+<body>
+<div id="app" class="app">
+  <div class="header">
+    <h1>🛩️ 低空智能体协同管控平台</h1>
+    <div class="status-bar">
+      <div class="status-pill"><div class="status-dot" :class="llmReady?'dot-green':'dot-red'"></div> LLM</div>
+      <div class="status-pill"><div class="status-dot" :class="cvReady?'dot-green':'dot-red'"></div> CV模型</div>
+      <div class="status-pill"><div class="status-dot" :class="amapMode==='online'?'dot-green':'dot-orange'"></div> {{ amapMode==='online' ? '高德在线' : '高德离线' }}</div>
+      <div class="status-pill">🤖 {{ droneCount }} 架</div>
+      <div class="status-pill">📦 {{ orderCount }} 单</div>
+      <div class="status-pill" v-if="eventCount>0"><div class="status-dot dot-orange"></div> {{ eventCount }} 事件</div>
+    </div>
+  </div>
+  <div class="main">
+    <!-- Chat Panel -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <h2>💬 智能体对话</h2>
+        <div class="agent-tabs">
+          <div class="agent-tab" :class="{active: selectedAgent==='auto'}" @click="selectedAgent='auto'">自动路由</div>
+          <div class="agent-tab" :class="{active: selectedAgent==='perception'}" @click="selectedAgent='perception'">感知</div>
+          <div class="agent-tab" :class="{active: selectedAgent==='logistics'}" @click="selectedAgent='logistics'">物流</div>
+          <div class="agent-tab" :class="{active: selectedAgent==='traffic'}" @click="selectedAgent='traffic'">管制</div>
+          <div class="agent-tab" :class="{active: selectedAgent==='emergency'}" @click="selectedAgent='emergency'">应急</div>
+        </div>
+      </div>
+      <div class="messages" ref="msgContainer">
+        <div v-for="(msg, i) in messages" :key="i" :class="['msg', msg.role==='user'?'msg-user':'msg-ai']">
+          <div v-if="msg.agent" class="agent-badge">▸ {{ agentNames[msg.agent] || msg.agent }}</div>
+          <div>{{ msg.content }}</div>
+          <div v-if="msg.cvResult" class="cv-badge">📷 CV检测: {{ msg.cvResult.detect_type }} | 威胁: {{ msg.cvResult.threat_level }} | 目标: {{ msg.cvResult.summary.total }}</div>
+        </div>
+        <div v-if="loading" class="msg msg-ai">
+          <div class="agent-badge">▸ {{ selectedAgent==='auto' ? '调度中' : agentNames[selectedAgent] }}</div>
+          <div>思考中<span class="dots">...</span></div>
+        </div>
+      </div>
+      <div class="samples">
+        <div class="samples-label">快捷指令：</div>
+        <div class="sample-chips">
+          <div class="sample-chip" v-for="s in samples" :key="s.text" @click="useSample(s.text)">{{ s.label }}</div>
+        </div>
+      </div>
+      <div class="input-area">
+        <textarea v-model="inputText" @keydown.enter.exact.prevent="send" placeholder="输入指令..." rows="2"></textarea>
+        <button @click="send" :disabled="loading || !inputText.trim()">发送</button>
+      </div>
+    </div>
+    <!-- Right: Map + CV -->
+    <div class="right-panel">
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="map-offline-mask" v-if="amapMode!=='online'">
+          <div style="text-align:center;">
+            <div style="font-size:32px;margin-bottom:8px;">🗺️</div>
+            <div>高德地图离线模式</div>
+            <div style="font-size:11px;margin-top:4px;">配置 AMAP_API_KEY 后可显示实时地图</div>
+          </div>
+        </div>
+        <div class="map-overlay">
+          <h3>📊 空域态势</h3>
+          <div class="stat-row"><span>飞行中</span><span class="stat-val">{{ stats.flying_drones || 0 }}</span></div>
+          <div class="stat-row"><span>待命</span><span class="stat-val">{{ stats.idle_drones || 0 }}</span></div>
+          <div class="stat-row"><span>平均电量</span><span class="stat-val">{{ stats.avg_battery || 0 }}%</span></div>
+          <div class="stat-row"><span>待处理订单</span><span class="stat-val">{{ stats.pending_orders || 0 }}</span></div>
+          <div class="stat-row"><span>活跃事件</span><span class="stat-val" :style="{color: (stats.active_events||0)>0?'var(--danger)':''}">{{ stats.active_events || 0 }}</span></div>
+        </div>
+        <div class="drone-list-overlay">
+          <h3>🛩️ 无人机编队</h3>
+          <div v-for="d in drones" :key="d.id" class="drone-item" @click="focusDrone(d)" style="cursor:pointer">
+            <span class="drone-name">{{ d.name }}</span>
+            <span class="drone-battery" :class="batteryClass(d.battery)">{{ d.status }} {{ d.battery.toFixed(0) }}%</span>
+          </div>
+        </div>
+      </div>
+      <!-- CV Panel -->
+      <div class="cv-panel">
+        <div class="cv-left">
+          <div class="cv-header">
+            <h3>📷 机载视觉 (YOLOv8)</h3>
+            <div class="cv-type-selector">
+              <div class="cv-type-btn" :class="{active: cvType==='aerial'}" @click="setCvType('aerial')">航拍</div>
+              <div class="cv-type-btn" :class="{active: cvType==='obstacle'}" @click="setCvType('obstacle')">障碍</div>
+              <div class="cv-type-btn" :class="{active: cvType==='intruder'}" @click="setCvType('intruder')">入侵</div>
+              <div class="cv-type-btn" :class="{active: cvType==='landing'}" @click="setCvType('landing')">降落</div>
+              <div class="cv-type-btn" :class="{active: cvType==='disaster'}" @click="setCvType('disaster')">灾害</div>
+              <div class="cv-type-btn" :class="{active: cvType==='traffic'}" @click="setCvType('traffic')">交通</div>
+            </div>
+          </div>
+          <div class="cv-image-area">
+            <div v-if="cvResult && cvResult.annotated_image" class="threat-badge" :class="'threat-'+cvResult.threat_level">
+              {{ threatLabel(cvResult.threat_level) }}
+            </div>
+            <img v-if="cvResult && cvResult.annotated_image" :src="'data:image/jpeg;base64,'+cvResult.annotated_image" alt="detection"/>
+            <div v-else class="cv-image-placeholder">
+              点击上方检测类型<br/>或通过对话触发CV检测
+            </div>
+          </div>
+          <div class="cv-analysis-text" v-if="cvResult">
+            {{ cvResult.analysis_text }}
+          </div>
+        </div>
+        <div class="cv-right">
+          <div class="cv-header"><h3>检测结果</h3></div>
+          <div class="cv-results-list">
+            <div v-if="!cvResult || !cvResult.detections.length" style="color:var(--text-muted);font-size:12px;text-align:center;padding:20px 8px;">
+              暂无检测结果
+            </div>
+            <div v-for="(d, i) in (cvResult?.detections || [])" :key="i" class="cv-result-item">
+              <span class="det-class">{{ d.class_name }} <small style="color:var(--text-muted)">[{{ d.category }}]</small></span>
+              <span class="det-conf">{{ (d.confidence*100).toFixed(0) }}%</span>
+            </div>
+          </div>
+          <div class="cv-summary" v-if="cvResult">
+            <div v-for="(v,k) in cvResult.summary" :key="k">
+              <span v-if="k!=='by_category'">{{ k }}: {{ v }}　</span>
+            </div>
+            <div v-if="cvResult.summary.by_category">
+              <span v-for="(v,k) in cvResult.summary.by_category" :key="k">{{ k }}: {{ v }}　</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script>
+<script>
+const { createApp, ref, onMounted, nextTick, computed } = Vue;
+
+const SAMPLES = [
+  {label:"空域态势报告", text:"报告当前空域态势，包括所有无人机状态和活跃事件"},
+  {label:"航拍检测", text:"调用CV视觉检测，分析当前航拍画面中有哪些目标"},
+  {label:"急救药品配送", text:"从天府广场发一批急救药品到龙泉驿站，需要1小时内送达"},
+  {label:"降落点评估", text:"UAV-002即将到达龙泉驿站，评估降落点安全性"},
+  {label:"航线冲突检测", text:"检查当前所有飞行中无人机的航线是否存在冲突"},
+  {label:"低电量处置", text:"UAV-004电量低于30%，立即处置"},
+  {label:"空域入侵", text:"检测到未授权飞行器进入核心管控区，立即处置"},
+  {label:"灾害侦察", text:"都江堰方向疑似山体滑坡，派遣无人机进行航拍侦察"},
+  {label:"交通监控", text:"分析路口交通流量，评估地面交通态势"},
+];
+
+const API_BASE = window.location.protocol + '//' + window.location.hostname + ':' + (window.location.port || '8300') + '/api';
+
+createApp({
+  setup() {
+    const messages = ref([
+      {role: 'ai', content: '低空智能体协同管控平台已启动。\n\n我可以帮你：\n• 监控空域态势和无人机状态\n• 处理物流订单和航线规划\n• 管控城市空中交通\n• 处置应急事件\n• 调用CV视觉检测\n\n请输入指令或点击下方快捷操作。', agent: 'system'}
+    ]);
+    const inputText = ref('');
+    const loading = ref(false);
+    const selectedAgent = ref('auto');
+    const drones = ref([]);
+    const orders = ref([]);
+    const events = ref([]);
+    const flightPaths = ref([]);
+    const stats = ref({});
+    const llmReady = ref(false);
+    const cvReady = ref(false);
+    const amapMode = ref('offline');
+    const amapKey = ref('');
+    const droneCount = ref(0);
+    const orderCount = ref(0);
+    const eventCount = ref(0);
+    const cvResult = ref(null);
+    const cvType = ref('aerial');
+    const msgContainer = ref(null);
+    let map = null;
+    let _mapInitialized = false;
+    let markers = [];
+    let pathLines = [];
+    let landingMarkers = [];
+    let _pendingMapOp = null;
+    let amapLoaded = false;
+
+    const agentNames = {
+      perception: '全域感知智能体',
+      logistics: '无人机物流智能体',
+      traffic: '城市空中交通智能体',
+      emergency: '应急响应智能体',
+      auto: '自动路由',
+      system: '系统',
+    };
+
+    const batteryClass = (b) => b > 50 ? 'battery-high' : (b > 20 ? 'battery-mid' : 'battery-low');
+    const threatLabel = (t) => ({normal:'正常', warning:'警告', danger:'危险'}[t] || t);
+
+    function useSample(text) {
+      inputText.value = text;
+      send();
+    }
+
+    async function send() {
+      const q = inputText.value.trim();
+      if (!q || loading.value) return;
+      messages.value.push({role: 'user', content: q});
+      inputText.value = '';
+      loading.value = true;
+      await scrollToBottom();
+      try {
+        const resp = await fetch(API_BASE + '/chat', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            question: q,
+            agent: selectedAgent.value === 'auto' ? null : selectedAgent.value,
+          }),
+        });
+        const data = await resp.json();
+        if (data.error) throw new Error(data.error);
+        const msg = {role: 'ai', content: data.answer || '(无回复)', agent: data.agent_used};
+        if (data.cv_results) {
+          msg.cvResult = data.cv_results;
+          cvResult.value = data.cv_results;
+        }
+        messages.value.push(msg);
+        await refreshData();
+      } catch (e) {
+        messages.value.push({role: 'ai', content: '错误: ' + e.message, agent: 'error'});
+      } finally {
+        loading.value = false;
+        await scrollToBottom();
+      }
+    }
+
+    async function scrollToBottom() {
+      await nextTick();
+      if (msgContainer.value) {
+        msgContainer.value.scrollTop = msgContainer.value.scrollHeight;
+      }
+    }
+
+    async function refreshData() {
+      try {
+        const resp = await fetch(API_BASE + '/dashboard');
+        const data = await resp.json();
+        drones.value = data.drones || [];
+        orders.value = data.orders || [];
+        events.value = data.events || [];
+        flightPaths.value = data.flight_paths || [];
+        stats.value = data.stats || {};
+        droneCount.value = drones.value.length;
+        orderCount.value = (data.orders || []).filter(o => o.status === 'pending' || o.status === 'assigned').length;
+        eventCount.value = (data.events || []).filter(e => e.status === 'active' || e.status === 'monitoring').length;
+        cvReady.value = data.cv_model_status?.loaded || false;
+        updateMap();
+      } catch (e) {
+        console.error('Dashboard error:', e);
+      }
+    }
+
+    async function checkHealth() {
+      try {
+        const resp = await fetch(API_BASE + '/health');
+        const data = await resp.json();
+        llmReady.value = data.llm_configured;
+        cvReady.value = data.cv_model_loaded;
+        amapMode.value = data.amap_mode || 'offline';
+        amapKey.value = data.amap_api_key || '';
+        droneCount.value = data.drones_count;
+        orderCount.value = data.active_orders;
+        eventCount.value = data.active_events;
+        if (amapKey.value && !amapLoaded) {
+          loadAmapScript(amapKey.value);
+        }
+      } catch (e) {
+        console.error('Health error:', e);
+      }
+    }
+
+    function loadAmapScript(key) {
+      if (amapLoaded || !key) return;
+      const script = document.createElement('script');
+      script.src = 'https://webapi.amap.com/maps?v=2.0&key=' + key;
+      script.onload = () => {
+        amapLoaded = true;
+        nextTick(() => initMap());
+      };
+      script.onerror = () => {
+        console.warn('[AMap] SDK load failed');
+      };
+      document.head.appendChild(script);
+    }
+
+    function initMap() {
+      if (_mapInitialized || !window.AMap) return;
+      const container = document.getElementById('map');
+      if (!container) return;
+      map = new AMap.Map('map', {
+        zoom: 12,
+        center: [104.0668, 30.5728],
+        resizeEnable: true,
+        mapStyle: 'amap://styles/dark',
+      });
+      _mapInitialized = true;
+
+      // Landing points
+      const landingPoints = [
+        {name: '天府广场起降点', lat: 30.5728, lng: 104.0668},
+        {name: '高新区起降点', lat: 30.5828, lng: 104.0768},
+        {name: '春熙路起降点', lat: 30.5928, lng: 104.0868},
+        {name: '龙泉驿起降点', lat: 30.6128, lng: 104.1068},
+        {name: '双流机场货运点', lat: 30.5528, lng: 104.0468},
+        {name: '天府新区起降点', lat: 30.6228, lng: 104.0968},
+      ];
+      landingPoints.forEach(lp => {
+        const m = new AMap.Marker({
+          position: [lp.lng, lp.lat],
+          offset: new AMap.Pixel(-10, -10),
+          zIndex: 50,
+        });
+        m.setContent('<div class="custom-marker marker-landing" style="width:16px;height:16px;border:2px dashed #64b5f6;background:rgba(30,136,229,0.3);"></div>');
+        m.on('click', () => {
+          const win = new AMap.InfoWindow({
+            content: '<div style="padding:6px 12px;font-size:12px;"><b>' + lp.name + '</b></div>',
+            offset: new AMap.Pixel(0, -20),
+          });
+          win.open(map, [lp.lng, lp.lat]);
+        });
+        map.add(m);
+        landingMarkers.push(m);
+      });
+
+      if (_pendingMapOp) {
+        const op = _pendingMapOp;
+        _pendingMapOp = null;
+        setTimeout(() => op(), 100);
+      }
+    }
+
+    function updateMap() {
+      if (!map || !_mapInitialized) {
+        _pendingMapOp = updateMap;
+        return;
+      }
+
+      // Clear old markers
+      markers.forEach(m => { try { map.remove(m); } catch(e){} });
+      markers = [];
+      pathLines.forEach(p => { try { map.remove(p); } catch(e){} });
+      pathLines = [];
+
+      // Draw flight paths (Polyline)
+      flightPaths.value.forEach(fp => {
+        if (fp.status !== 'active' || !fp.waypoints?.length) return;
+        const path = fp.waypoints.map(w => [w.lng, w.lat]);
+        const color = fp.drone_id % 2 === 0 ? '#4caf50' : '#ff9800';
+        const line = new AMap.Polyline({
+          path: path,
+          strokeColor: color,
+          strokeWeight: 3,
+          strokeOpacity: 0.7,
+          strokeStyle: 'dashed',
+          strokeDasharray: [6, 4],
+          zIndex: 60,
+        });
+        map.add(line);
+        pathLines.push(line);
+      });
+
+      // Draw drone markers
+      drones.value.forEach(d => {
+        const statusIcons = {
+          flying: '🛩️', idle: '🅿️', charging: '🔋',
+          maintenance: '🔧', emergency: '⚠️',
+        };
+        const m = new AMap.Marker({
+          position: [d.lng, d.lat],
+          offset: new AMap.Pixel(-12, -12),
+          zIndex: 100,
+        });
+        m.setContent('<div class="custom-marker marker-' + d.status + '">' + (statusIcons[d.status] || '●') + '</div>');
+        m.on('click', () => {
+          const win = new AMap.InfoWindow({
+            content: '<div style="padding:8px 12px;font-size:12px;min-width:180px;">' +
+              '<b style="font-size:13px;color:#00e5ff;">' + d.name + '</b><br/>' +
+              '状态: ' + d.status + '<br/>' +
+              '电量: ' + d.battery.toFixed(0) + '%<br/>' +
+              '高度: ' + d.altitude.toFixed(0) + 'm<br/>' +
+              '速度: ' + d.speed.toFixed(0) + ' m/s<br/>' +
+              '载重: ' + d.payload.toFixed(1) + '/' + d.max_payload.toFixed(1) + 'kg<br/>' +
+              '位置: (' + d.lat.toFixed(4) + ', ' + d.lng.toFixed(4) + ')' +
+              '</div>',
+            offset: new AMap.Pixel(0, -30),
+          });
+          win.open(map, [d.lng, d.lat]);
+        });
+        map.add(m);
+        markers.push(m);
+      });
+
+      // Draw event markers
+      events.value.filter(e => e.status === 'active' || e.status === 'monitoring').forEach(e => {
+        const sevColors = {danger: '#f44336', warning: '#ff9800', info: '#2196f3'};
+        const sevLabels = {danger: '危险', warning: '警告', info: '提示'};
+        const sev = sevLabels[e.severity] || e.severity;
+        const m = new AMap.Marker({
+          position: [e.lng, e.lat],
+          offset: new AMap.Pixel(-12, -12),
+          zIndex: 120,
+        });
+        m.setContent('<div class="custom-marker marker-event" style="background:' + (sevColors[e.severity]||'#f44336') + ';border-radius:4px;">!</div>');
+        m.on('click', () => {
+          const win = new AMap.InfoWindow({
+            content: '<div style="padding:8px 12px;font-size:12px;min-width:200px;">' +
+              '<b style="color:#f44336;">事件 #' + e.id + ' [' + sev + ']</b><br/>' +
+              e.description + '<br/>' +
+              '位置: (' + e.lat.toFixed(4) + ', ' + e.lng.toFixed(4) + ')<br/>' +
+              '状态: ' + e.status +
+              '</div>',
+            offset: new AMap.Pixel(0, -30),
+          });
+          win.open(map, [e.lng, e.lat]);
+        });
+        map.add(m);
+        markers.push(m);
+      });
+    }
+
+    function focusDrone(d) {
+      if (map && _mapInitialized) {
+        map.setZoomAndCenter(14, [d.lng, d.lat]);
+      }
+    }
+
+    function setCvType(t) {
+      cvType.value = t;
+      runCvDetect(t);
+    }
+
+    async function runCvDetect(detectType) {
+      try {
+        const resp = await fetch(API_BASE + '/cv/detect', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({image_source: 'sample', detect_type: detectType}),
+        });
+        const data = await resp.json();
+        if (data.success && data.result) {
+          cvResult.value = data.result;
+        }
+      } catch (e) {
+        console.error('CV detect error:', e);
+      }
+    }
+
+    onMounted(async () => {
+      await checkHealth();
+      if (!amapLoaded) {
+        // If no AMap key, still init a placeholder
+        nextTick(() => { if (window.AMap) initMap(); });
+      }
+      await refreshData();
+      setInterval(refreshData, 15000);
+    });
+
+    return {
+      messages, inputText, loading, selectedAgent, drones, orders, events,
+      stats, llmReady, cvReady, amapMode, droneCount, orderCount, eventCount,
+      cvResult, cvType, msgContainer, samples: SAMPLES, agentNames,
+      batteryClass, threatLabel, useSample, send, focusDrone, setCvType,
+    };
+  },
+}).mount('#app');
+</script>
+</body>
+</html>
