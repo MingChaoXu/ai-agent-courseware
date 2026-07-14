@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -180,8 +180,19 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <a class="nav-item" href="#s3" onclick="navClick(this)">1.3 Agent = LLM + 上下文 + 工具<span class="time-badge">30min</span></a>
 <a class="nav-item" href="#s3-1" onclick="navClick(this)">├ Agent核心公式</a>
 <a class="nav-item" href="#s3-2" onclick="navClick(this)">├ 三大组件详解</a>
-<a class="nav-item" href="#s3-3" onclick="navClick(this)">└ 从ChatBot到Agent演进</a>
+<a class="nav-item" href="#s3-3" onclick="navClick(this)">├ 从ChatBot到Agent演进</a>
 <a class="nav-item" href="#s3-4" onclick="navClick(this)">└ AI工程范式演进：Harness与Loop</a>
+<a class="nav-item" href="#s3b" onclick="navClick(this)">1.4 生产级Agent底层架构解析<span class="time-badge">40min</span></a>
+<a class="nav-item" href="#s3b-1" onclick="navClick(this)">├ 三大Agent全景对比</a>
+<a class="nav-item" href="#s3b-2" onclick="navClick(this)">├ OpenClaw: Gateway与路由</a>
+<a class="nav-item" href="#s3b-3" onclick="navClick(this)">├ OpenClaw: Skills与Prompt</a>
+<a class="nav-item" href="#s3b-4" onclick="navClick(this)">├ OpenClaw: 记忆与安全</a>
+<a class="nav-item" href="#s3b-5" onclick="navClick(this)">├ Claude Code: QueryEngine</a>
+<a class="nav-item" href="#s3b-6" onclick="navClick(this)">├ Claude Code: 七层记忆</a>
+<a class="nav-item" href="#s3b-7" onclick="navClick(this)">├ Hermes: 闭环学习</a>
+<a class="nav-item" href="#s3b-8" onclick="navClick(this)">├ Hermes: 子Agent与RL</a>
+<a class="nav-item" href="#s3b-9" onclick="navClick(this)">├ ETCLOVG七层映射</a>
+<a class="nav-item" href="#s3b-10" onclick="navClick(this)">└ Loop成本与认知风险</a>
 </div>
 <div class="nav-group">
 <div class="nav-group-title">下午 · Prompt工程与ReAct</div>
@@ -940,8 +951,469 @@ CMU/Yale/Amazon联合发表的综述论文<strong>《Agent Harness Engineering: 
 </div>
 
 <!-- ============================================================ -->
-<!-- SECTION 4: Prompt工程核心技巧 -->
+<!-- SECTION 3.5: 生产级Agent底层架构解析 -->
 <!-- ============================================================ -->
+<div class="section" id="s3b">
+<div class="section-header">
+<span class="section-tag morning">上午 · 1.4</span>
+<h2>生产级Agent底层架构解析</h2>
+<p>OpenClaw · Claude Code · Hermes 三强源码级解构 · 40分钟</p>
+</div>
+
+<div class="topic-card" id="s3b-1">
+<h3>三大生产级Agent全景对比</h3>
+
+<p>2026年，Agent产品已经从"更聪明的聊天机器人"进化为"自主工作的数字员工"。OpenClaw（开源Agent平台）、Claude Code（编程Agent产品）、Hermes（闭环学习Agent）代表了三种典型范式。下面从8个维度进行源码级对比：</p>
+
+<table class="compare-table">
+<thead>
+<tr><th>维度</th><th>OpenClaw</th><th>Claude Code</th><th>Hermes</th></tr>
+</thead>
+<tbody>
+<tr><td>定位</td><td>开源Agent平台</td><td>编程Agent产品</td><td>开源闭环学习Agent</td></tr>
+<tr><td>产品形态</td><td>IM + 桌面</td><td>终端CLI</td><td>CLI + API</td></tr>
+<tr><td>架构核心</td><td>Gateway + 确定性路由</td><td>认知集中 + 极致性能</td><td>闭环学习 + 数据飞轮</td></tr>
+<tr><td>Agent Loop</td><td>ReAct + 5Hook + NO_REPLY</td><td>QueryEngine 4.6万行</td><td>conversation_loop 90迭代</td></tr>
+<tr><td>记忆系统</td><td>两层（文件系统）</td><td>七层（压缩管线）</td><td>五层（Honcho辩证）</td></tr>
+<tr><td>技能系统</td><td>XML元数据 + 惰性加载</td><td>ACI统一协议 + MCP</td><td>agentskills.io + 闭环生成</td></tr>
+<tr><td>安全哲学</td><td>Prompt约束（Safety Rails）</td><td>代码拦截（Permission）</td><td>五层防线</td></tr>
+<tr><td>主动工作</td><td>Heartbeat + Cron</td><td>无</td><td>闭环学习循环</td></tr>
+<tr><td>闭环学习</td><td>无</td><td>无</td><td>有（Nudge + RL）</td></tr>
+<tr><td>开源状态</td><td>开源</td><td>闭源（源码曾泄露）</td><td>MIT开源</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">&#128161; 核心洞察：Agent竞争力 = 架构质量 × 模型能力</div>
+<div class="pc-body">
+Claude Code 的 SWE-bench Verified 80.8% 得分主要来自架构，而非模型本身。同样的模型，不同的架构，性能差异巨大。模型能力是波动的，架构是压舱石。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3b-2">
+<h3>OpenClaw：Gateway架构与确定性路由</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; Gateway五大角色——编排与执行分离</div>
+<div class="pc-body">
+OpenClaw的核心是一个<strong>单进程长驻Gateway</strong>（<code>ws://127.0.0.1:18789</code>），承担5个关键角色：<br><br>
+<strong>1. 唯一长驻进程</strong>：所有Agent实例按需创建和销毁，状态单一真理源<br>
+<strong>2. 消息总线</strong>：在Channel、Agent、UI之间路由所有消息，确保可观测性<br>
+<strong>3. 多Agent路由</strong>：维护Agent注册表，按Bindings规则路由到正确Agent<br>
+<strong>4. 认证与信任边界</strong>：Ed25519签名设备配对，未配对设备无法通信<br>
+<strong>5. 嵌入式HTTP Host</strong>：内嵌REST API + WebSocket，无需外部Web服务器<br><br>
+<strong>关键设计</strong>：Gateway<strong>只做路由和认证，不做编排</strong>。Agent执行逻辑完全封装在Agent内部。即使Agent崩溃，Gateway仍可正常路由——编排与执行分离保证了轻量化和稳定性。
+</div>
+</div>
+
+<h4>Channel层：IM为第一入口</h4>
+<p>Channel层有一个反直觉设计：<strong>agentTools反向提供工具</strong>——不是Agent向Channel提供工具，而是Channel向Agent提供工具。Channel是用户交互的第一入口，知道如何将IM消息转换为结构化数据。</p>
+
+<p>消息路由采用<strong>确定性规则</strong>，延迟 <code>&lt;1ms</code>，不使用LLM。9级优先级匹配：从"特定用户+特定群组+消息类型"（级9）到"全局默认Agent"（级1），命中即停止。</p>
+
+<h4>两层Lane队列：并发控制的核心</h4>
+
+<div class="step-block">
+<div class="step-num">1</div>
+<h4>per-session串行队列</h4>
+<p>同一Session的消息<strong>严格串行处理</strong>，避免并发修改同一份记忆/上下文。Session Key格式：<code>agent:channel:group:id</code></p>
+</div>
+<div class="step-block">
+<div class="step-num">2</div>
+<h4>global并发上限（默认4）</h4>
+<p>即使有数百个会话，同时只有4个能执行LLM调用，其他在队列中等待。哲学：<strong>同会话串行，跨会话并发，全局上限</strong></p>
+</div>
+
+<p>三种队列模式：<code>collect</code>（累积后一起处理）/ <code>steer</code>（中断当前执行）/ <code>followup</code>（追加到队列末尾）</p>
+</div>
+
+<div class="topic-card" id="s3b-3">
+<h3>OpenClaw：Skills系统与System Prompt工程</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; Skills元数据注入：97 chars/skill的极致效率</div>
+<div class="pc-body">
+Skills以<strong>XML格式</strong>注入到System Prompt的 <code>&lt;available_skills&gt;</code> 块中。每个Skill只包含元数据（名称、描述、触发词、位置），<strong>不包含实际内容</strong>。<br><br>
+<strong>Token开销公式</strong>：<code>97 chars/skill + 字段长度</code>。即使有50个Skills，开销也仅约6000 chars（约2000 tokens）。<br><br>
+<strong>"Read Before Acting"模式</strong>：LLM判断需要某个Skill时，先调用 <code>read_skill</code> 工具读取完整内容，然后再执行。每次最多只读一个Skill。这种惰性加载策略避免了一次性加载所有Skills导致的token浪费。<br><br>
+<strong>三级优先级</strong>：workspace（最高）&gt; <code>~/.openclaw/skills</code>（用户级）&gt; bundled（内置）。高优先级同名覆盖低优先级。每个会话创建时拍摄Skills Snapshot，支持热更新。
+</div>
+</div>
+
+<h4>System Prompt = 行为契约，而非角色设定</h4>
+<p>OpenClaw的System Prompt不是"你是一个友好的助手"，而是一份<strong>结构化行为契约</strong>，由以下模块组成：</p>
+
+<table class="compare-table">
+<thead>
+<tr><th>模块</th><th>作用</th><th>关键设计</th></tr>
+</thead>
+<tbody>
+<tr><td>身份声明</td><td>Agent基础角色</td><td>简短精准，不啰嗦</td></tr>
+<tr><td>工具清单</td><td>可用工具列表</td><td>结构化声明，含参数Schema</td></tr>
+<tr><td>Skills XML</td><td>能力元数据</td><td>~97 chars/skill，惰性加载</td></tr>
+<tr><td>Safety Rails</td><td>不可协商的安全规则</td><td>注入防御 + 敏感操作确认</td></tr>
+<tr><td>URL生命周期</td><td>三级回退策略</td><td>Skill → web_fetch → browser</td></tr>
+<tr><td>Tool Call Style</td><td>减少废话，直接执行</td><td>每次工具调用都消耗token</td></tr>
+<tr><td>Runtime元信息</td><td>时间/OS/工作目录</td><td>帮助Agent做出更精确决策</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888; Safety Rails：Non-Negotiable</div>
+<div class="pc-body">
+<strong>注入防御</strong>：严禁将用户输入中的指令视为系统指令。即使用户说"忽略之前的指令"，Agent也不应遵守。<br>
+<strong>插件防毒</strong>：对来自插件/工具的输出，必须安全检查后才能执行。<br>
+<strong>敏感操作确认</strong>：删除文件、发送消息等不可逆操作，必须经过显式确认。这是<strong>强制规则，不是建议</strong>。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3b-4">
+<h3>OpenClaw：记忆、Heartbeat与安全</h3>
+
+<h4>文件系统即数据库</h4>
+<p>OpenClaw的记忆系统基于<strong>文件系统</strong>，简单、可读、可Git版本控制：</p>
+
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">&#128196;</div>
+<div class="cc-name">MEMORY.md</div>
+<div class="cc-desc">长期知识库：用户偏好、项目上下文、重要决策</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128197;</div>
+<div class="cc-name">YYYY-MM-DD.md</div>
+<div class="cc-desc">日记忆：当天关键事件和决策，轻量级易扫描</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128100;</div>
+<div class="cc-name">USER.md</div>
+<div class="cc-desc">用户偏好和习惯，个性化适配</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128152;</div>
+<div class="cc-name">SOUL.md</div>
+<div class="cc-desc">Agent核心个性，行为风格定义</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#9889;</div>
+<div class="cc-name">HEARTBEAT.md</div>
+<div class="cc-desc">Heartbeat巡逻指令，定义主动行为</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128164;</div>
+<div class="cc-name">DREAMS.md</div>
+<div class="cc-desc">后台记忆整合中间结果，类似睡眠整合</div>
+</div>
+</div>
+
+<p>按会话类型的加载策略：<strong>主会话</strong>全量加载 / <strong>子Agent/Cron</strong>精简加载 / <strong>群聊</strong>排除MEMORY.md防隐私泄露</p>
+
+<h4>Heartbeat + Cron：主动工作的双引擎</h4>
+<p><strong>Heartbeat</strong>默认~30分钟触发一次。无事件时返回<code>HEARTBEAT_OK</code>静默退出；有事件时在主会话中执行。<br>
+<strong>Cron</strong>支持精确到秒的定时调度，两种模式：<code>systemEvent</code>（只触发事件，轻量级）/ <code>agentTurn</code>（分配完整Agent执行周期，可调用工具）。支持<code>lightContext</code>轻量化上下文和防尖峰<code>stagger</code>（最多5分钟随机延迟）。</p>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; NO_REPLY机制：给AI沉默权</div>
+<div class="pc-body">
+当Agent判断不需要回复时，返回特殊的<code>NO_REPLY</code> token。这不是空响应，而是<strong>显式的"我选择不回复"决策</strong>。尤其在群聊场景中，不是每条消息都需要Agent回复。同时<code>HEARTBEAT_OK</code>也是"沉默即正常"的体现——这是一个常被忽视但非常重要的设计原则。
+</div>
+</div>
+
+<h4>六层纵深防御</h4>
+<table class="compare-table">
+<thead>
+<tr><th>层级</th><th>防御机制</th><th>实现方式</th></tr>
+</thead>
+<tbody>
+<tr><td>第1层</td><td>设备配对认证</td><td>Ed25519椭圆曲线签名</td></tr>
+<tr><td>第2层</td><td>WebSocket第一帧强制connect</td><td>未connect则断开</td></tr>
+<tr><td>第3层</td><td>Safety Rails注入防御</td><td>Prompt层安全约束</td></tr>
+<tr><td>第4层</td><td>Skill AST安全分析</td><td>代码层静态检查</td></tr>
+<tr><td>第5层</td><td>敏感操作确认机制</td><td>不可逆操作必须显式确认</td></tr>
+<tr><td>第6层</td><td>沙箱执行环境</td><td>隔离不可信代码执行</td></tr>
+</tbody>
+</table>
+
+<div class="tips-box">
+<div class="tips-title">&#9888; 真实安全事件</div>
+<p><strong>CVE-2026-25253</strong>：gatewayUrl参数注入漏洞，攻击者可重定向WebSocket到恶意服务器实施中间人攻击</p>
+<p><strong>ClawHub供应链中毒</strong>：恶意Skill包含AMOS窃密木马，导致OpenClaw加强Skill安全审计机制</p>
+</div>
+</div>
+
+<div class="topic-card" id="s3b-5">
+<h3>Claude Code：4.6万行QueryEngine与认知集中</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; 2026.3.31源码泄露——51.2万行暴露架构真相</div>
+<div class="pc-body">
+Claude Code的npm包因source map配置失误泄露了<strong>51.2万行源码</strong>。这是Agent历史上第一次大规模源码泄露事件，其意义远超安全层面：<br>
+1. 让社区第一次深入生产级Agent的内部实现<br>
+2. 揭示了SWE-bench Verified 80.8%的技术根因：不是模型本身，而是<strong>围绕模型构建的工程体系</strong><br>
+3. 为Loop Engineering范式提供了最直接的工程证据
+</div>
+</div>
+
+<h4>启动层：Bootstrapper与并行预取</h4>
+<p><code>main.tsx</code> 执行并行预取：MDM配置加载、macOS Keychain凭证拉取、Terminal UI初始化。三种会话形态：<strong>本地交互</strong>（终端直接交互）/ <strong>远程协同</strong>（SSH连接）/ <strong>非交互批处理</strong>（CI/CD场景）。</p>
+
+<h4>QueryEngine.ts——认知逻辑原子性</h4>
+<p>4.6万行代码集中在一个文件中看似违反软件工程原则，但体现了<strong>"认知逻辑原子性"</strong>：Agent的思考过程是不可分割的，拆分为多个模块只会增加状态同步的复杂度。核心循环：</p>
+
+<div class="flow-diagram">streaming_response → intercept tool_use → execute_tool → feedback_to_LLM → repeat
+↑ 实时截断解析tool_use指令，不需要等待完整响应
+↑ 每次迭代后进行预算检查，超过阈值则中断循环</div>
+
+<h4>UI层：游戏引擎化终端渲染</h4>
+<p>React + Ink构建终端UI，渲染优化极为激进：</p>
+<ul>
+<li><strong>位掩码编码样式元数据</strong>：加粗、斜体、颜色等用一个整数表示</li>
+<li><strong>Int32Array ASCII字符池</strong>：避免大量字符串对象的创建和GC压力</li>
+<li><strong>自驱动行宽缓存</strong>：stringWidth调用次数降低50倍</li>
+</ul>
+</div>
+
+<div class="topic-card" id="s3b-6">
+<h3>Claude Code：四大协议模块与七层记忆</h3>
+
+<h4>ACI统一工具协议</h4>
+<p>Agent-Computer Interface定义每个工具包含三部分：<strong>Zod校验</strong>（参数验证）+ <strong>工具Prompt</strong>（告诉LLM如何使用）+ <strong>并发声明</strong>（哪些工具可并行执行）。</p>
+
+<h4>分层动态上下文装配</h4>
+<p><code>CLAUDE.md</code>文件层次定义上下文指令，支持<strong>Replace</strong>和<strong>Append</strong>两种模式。MCP指令也作为上下文的一部分装配。不同级别的配置可以相互覆盖。</p>
+
+<h4>多阶段上下文压缩管线</h4>
+<div class="flow-diagram">裁剪(trim) → 截断(snip) → 微压缩(microcompact) → 折叠(fold) → 摘要(summarize)
+   移除无关      截断长结果    近期上下文压缩    合并重复内容    LLM生成摘要替换原文
+   
+每个阶段递进：只有前一个阶段不够时才触发下一个</div>
+
+<h4>MCP + LSP开放扩展协议</h4>
+<p><strong>MCP</strong>(Model Context Protocol)提供标准化工具扩展接口，<strong>LSP</strong>(Language Server Protocol)提供代码智能接口。二者深度集成使Claude Code能以<strong>编译器级精度</strong>理解代码——这是其在编程任务上表现优异的关键原因。</p>
+
+<h4>7层渐进式记忆管理</h4>
+<table class="compare-table">
+<thead>
+<tr><th>层级</th><th>名称</th><th>成本</th><th>覆盖场景</th></tr>
+</thead>
+<tbody>
+<tr><td>L1</td><td>工具结果存储</td><td>零</td><td>原始工具返回值</td></tr>
+<tr><td>L2</td><td>微压缩</td><td>极低</td><td>截断长工具结果</td></tr>
+<tr><td>L3</td><td>会话记忆</td><td>低</td><td>当前会话关键信息</td></tr>
+<tr><td>L4</td><td>全压缩</td><td>中等</td><td>整个会话历史摘要</td></tr>
+<tr><td>L5</td><td>自动记忆提取</td><td>较高</td><td>自动提取值得保存的知识</td></tr>
+<tr><td>L6</td><td>做梦机制</td><td>高</td><td>闲置时后台整合记忆</td></tr>
+<tr><td>L7</td><td>跨代理通信</td><td>最高</td><td>不同Agent实例共享信息</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">&#128161; L1-L2处理90%场景，成本近零</div>
+<div class="pc-body">
+七层架构的核心智慧：<strong>成本递增、能力递增</strong>。绝大多数情况下L1-L2就够用了，只有需要深度记忆时才触发更高层级。这种渐进式设计避免了"一刀切"的记忆策略。
+</div>
+</div>
+
+<h4>安全哲学：显式授权</h4>
+<p>与OpenClaw的Prompt约束截然不同。Claude Code侧重<strong>代码层权限检查</strong>：</p>
+<ul>
+<li><strong>ToolPermissionContext</strong>：每个工具调用在特定权限上下文中执行（允许/拒绝/需确认）</li>
+<li><strong>AST安全分析</strong>：解析Bash命令的实际行为而非关键词匹配——能区分<code>rm</code>是删除文件还是在查看列表</li>
+<li><strong>BashTool只读约束 + 沙箱</strong>：可配置只读模式，禁止写操作；支持沙箱执行不可信命令</li>
+</ul>
+</div>
+
+<div class="topic-card" id="s3b-7">
+<h3>Hermes：三层System Prompt与闭环学习</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; System Prompt三层架构——为前缀缓存而设计</div>
+<div class="pc-body">
+Hermes的<code>build_system_prompt_parts()</code>将System Prompt分为三层，核心目的是<strong>优化前缀缓存命中率</strong>：<br><br>
+<strong>稳定层</strong>：SOUL.md + 工具指引 + skills + 环境/平台信息。<strong>几乎不变，缓存命中率最高</strong>。<br>
+<strong>上下文层</strong>：AGENTS.md + .cursorrules + system_message。<strong>随项目变化，低频更新</strong>。<br>
+<strong>易变层</strong>：记忆快照 + 用户画像 + 外部记忆 + 时间戳/会话/模型/提供商。<strong>每次调用都可能变化</strong>。
+</div>
+</div>
+
+<h4>Agent Loop：conversation_loop.py</h4>
+<p>约3900行，核心逻辑<strong>&lt;10行</strong>。循环条件：</p>
+
+<div class="code-block">
+<div class="code-header"><span class="lang-badge">Python</span></div>
+<div class="code-body"><span class="kw">while</span> (api_call_count <span class="op">&lt;</span> max_iterations <span class="kw">and</span> iteration_budget.remaining <span class="op">&gt;</span> <span class="num">0</span>) <span class="kw">or</span> budget_grace_call:
+    <span class="com"># max_iterations = 90, 8 worker threads</span>
+    <span class="com"># budget_grace_call: 允许一次额外调用</span>
+    think → act → observe → iterate</div>
+</div>
+
+<p>保守并行策略：<strong>白名单制</strong>，未知工具一律串行。与OpenClaw的per-session串行形成对比。</p>
+
+<h4>五层记忆系统</h4>
+<table class="compare-table">
+<thead>
+<tr><th>层级</th><th>内容</th><th>持久性</th><th>独特价值</th></tr>
+</thead>
+<tbody>
+<tr><td>L1</td><td>Transformer上下文</td><td>会话内</td><td>即时推理</td></tr>
+<tr><td>L2</td><td>SKILL.md程序性知识</td><td>永久</td><td>"如何做"的技能沉淀</td></tr>
+<tr><td>L3</td><td>向量存储索引</td><td>永久</td><td>语义检索跨会话知识</td></tr>
+<tr><td>L4</td><td>Honcho辩证式用户建模</td><td>持续进化</td><td>正-反-合辩证推理</td></tr>
+<tr><td>L5</td><td>FTS5全文检索 + LLM摘要</td><td>永久</td><td>关键词+语义双检索</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">&#128161; L4 Honcho：辩证式用户建模——Agent的"认知升级"</div>
+<div class="pc-body">
+v0.14.0版本将原始对话<strong>蒸馏为高密度元认知知识</strong>。不是简单地记住"用户说了什么"，而是理解"用户为什么这么说"——通过<strong>正-反-合</strong>（thesis-antithesis-synthesis）的辩证过程，构建对用户的深层认知模型。这是Hermes区别于其他Agent的核心记忆创新。
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3b-8">
+<h3>Hermes：闭环学习与子Agent委派</h3>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; 四阶段闭环学习——唯一能从使用中自主进化的Agent</div>
+<div class="pc-body">
+这是Hermes的<strong>终极差异化</strong>，与OpenClaw/Claude Code形成本质区别：<br><br>
+<strong>Stage 1 任务执行</strong>：Agent正常完成任务<br>
+<strong>Stage 2 Nudge Engine</strong>：扫描对话中的行为模式，识别可沉淀的技能<br>
+<strong>Stage 3 技能生成</strong>：fork一个子Agent撰写SKILL.md<br>
+<strong>Stage 4 技能修正</strong>：RL + 人工审阅，确保技能质量<br><br>
+<code>agentskills.io</code>标准保证了技能的跨框架可移植性和条件激活。<br><br>
+<strong>对比</strong>：OpenClaw/Claude Code的记忆是<strong>被动存储</strong>（用户告诉什么，记住什么），Hermes的闭环学习是<strong>主动进化</strong>（自己发现模式，自己写技能）。从<strong>线性增长</strong>到<strong>指数增长</strong>：更多使用 → 更多技能 → 更强模型 → 更好服务。
+</div>
+</div>
+
+<h4>子Agent委派的五大安全约束</h4>
+<table class="compare-table">
+<thead>
+<tr><th>约束</th><th>规则</th><th>原因</th></tr>
+</thead>
+<tbody>
+<tr><td>禁止递归委派</td><td>子Agent不能再委派子Agent</td><td>防止无限递归</td></tr>
+<tr><td>禁止用户交互</td><td>子Agent不能与用户直接通信</td><td>保持控制流单一</td></tr>
+<tr><td>禁止写入共享记忆</td><td>子Agent不能修改父Agent的记忆</td><td>防止记忆污染</td></tr>
+<tr><td>深度与并发限制</td><td>最多2层深度，最多3个并发</td><td>资源可控</td></tr>
+<tr><td>工具集交集</td><td>子Agent只能用父Agent工具集的子集</td><td>最小权限原则</td></tr>
+</tbody>
+</table>
+
+<h4>RL训练数据飞轮</h4>
+<p>轨迹生成 → 压缩清洗 → Atropos RL训练 → 更强模型。<strong>垂直集成</strong>是核心壁垒：NousResearch同时拥有Atropos + Tinker，竞品难以复制。三大壁垒：<strong>工具完整性 / 端到端管道 / 垂直集成</strong>。</p>
+
+<h4>五层安全防线</h4>
+<p>第1层：用户授权（allowlist + DM pairing）→ 第2层：危险命令审批（manual/smart/off三种模式）→ 第3层：容器隔离（Docker硬化参数）→ 第4层：MCP凭证过滤 → 第5层：Prompt injection检测。</p>
+
+<div class="tips-box">
+<div class="tips-title">&#9888; Mini Shai-Hulud蠕虫事件（2026.5.12）</div>
+<p>供应链攻击导致Hermes采用<strong>exact version locking</strong>（<code>==X.Y.Z</code>），不再使用浮动版本号。与OpenClaw的ClawHub中毒事件形成呼应——供应链安全是Agent平台必须面对的现实威胁。</p>
+</div>
+</div>
+
+<div class="topic-card" id="s3b-9">
+<h3>ETCLOVG七层架构映射</h3>
+
+<p>三大Agent产品在Harness工程的E(环境)/T(工具)/C(上下文)/L(编排)/O(观测)/V(验证)/G(治理)七层框架下的实现对照：</p>
+
+<table class="compare-table">
+<thead>
+<tr><th>层</th><th>含义</th><th>OpenClaw</th><th>Claude Code</th><th>Hermes</th></tr>
+</thead>
+<tbody>
+<tr><td>E</td><td>环境</td><td>workspace + .env</td><td>CLAUDE.md层次</td><td>config.yaml + .env</td></tr>
+<tr><td>T</td><td>工具</td><td>ChannelPlugin + agentTools</td><td>ACI + MCP</td><td>9核心工具集 + registry</td></tr>
+<tr><td>C</td><td>上下文</td><td>System Prompt模块化</td><td>CLAUDE.md + MCP指令</td><td>三层System Prompt</td></tr>
+<tr><td>L</td><td>编排</td><td>Gateway确定性路由</td><td>QueryEngine循环</td><td>conversation_loop</td></tr>
+<tr><td>O</td><td>观测</td><td>3条事件流 + Hook</td><td>token/工具/迭代审计</td><td>Nudge Engine模式扫描</td></tr>
+<tr><td>V</td><td>验证</td><td>Safety Rails + AST</td><td>ToolPermission + AST</td><td>RL + 人工审阅</td></tr>
+<tr><td>G</td><td>治理</td><td>6层纵深防御</td><td>显式授权 + 沙箱</td><td>5层防线 + 版本锁定</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; 架构铁律：从源码中学到的9条原则</div>
+<div class="pc-body">
+<strong>1. 架构重于模型</strong>：模型能力波动，架构是压舱石<br>
+<strong>2. 确定性路由 + 非确定性执行</strong>：路由不使用LLM，执行可以使用LLM<br>
+<strong>3. 串行化 = 并发安全</strong>：同session串行，跨session并发<br>
+<strong>4. System Prompt是第一道工程</strong>：行为契约工程，非提示词工程<br>
+<strong>5. Skills = 文档驱动的能力扩展</strong>：写文档比写代码快，惰性加载省token<br>
+<strong>6. 文件系统 &gt; 数据库</strong>：个人Agent的记忆不需要向量数据库（除非需要语义检索）<br>
+<strong>7. 给AI沉默权</strong>：NO_REPLY / HEARTBEAT_OK——不是每条消息都需要回复<br>
+<strong>8. 治理先行</strong>：安全是第一道工序，不是最后一道<br>
+<strong>9. 闭环学习是终极差异化</strong>：从线性增长到指数增长
+</div>
+</div>
+</div>
+
+<div class="topic-card" id="s3b-10">
+<h3>Loop Engineering的成本与认知风险</h3>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888; 无人值守的账单失控——两个真实案例</div>
+<div class="pc-body">
+<strong>Claude Code隔夜循环 $6,000</strong>：开发者让Claude Code过夜运行，次日发现API账单$6,000。原因：Agent在循环中不断重试失败操作，每次重试都消耗token，但没有触发停止条件。<br><br>
+<strong>LangChain Agent互相深入分析 $47,000</strong>：两个LangChain Agent在循环中互相要求对方进行更深入的分析，形成无限递归。揭示了多Agent系统中最危险的失败模式。
+</div>
+</div>
+
+<h4>四大认知风险</h4>
+<div class="concept-grid">
+<div class="concept-card">
+<div class="cc-icon">&#128269;</div>
+<div class="cc-name">验证债务</div>
+<div class="cc-desc">Agent输出的正确性谁来验证？人类在Loop中缺席时，验证必须自动化</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128218;</div>
+<div class="cc-name">理解债务</div>
+<div class="cc-desc">人类是否真正理解Agent的每一步决策？复杂Agent可能产生人类无法理解的行为</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#128526;</div>
+<div class="cc-name">认知投降</div>
+<div class="cc-desc">用户是否越来越倾向于盲目信任Agent的输出？"自动化偏见"是危险的</div>
+</div>
+<div class="concept-card">
+<div class="cc-icon">&#127919;</div>
+<div class="cc-name">目标漂移</div>
+<div class="cc-desc">Agent是否在循环中逐渐偏离原始目标？这是循环引力的自然结果</div>
+</div>
+</div>
+
+<h4>设计好Loop的三个关键问题</h4>
+<div class="step-block">
+<div class="step-num">1</div>
+<h4>停止条件</h4>
+<p>必须有明确的停止条件：最大迭代次数、最大成本、任务完成检测。缺一不可。</p>
+</div>
+<div class="step-block">
+<div class="step-num">2</div>
+<h4>验证输出</h4>
+<p>每个循环的输出都应该被验证，而不是盲目信任。验证器可以是一个简单的规则检查，也可以是另一个LLM。</p>
+</div>
+<div class="step-block">
+<div class="step-num">3</div>
+<h4>成本监控</h4>
+<p>实时追踪每次循环的成本（token消耗、API调用费、时间），超过阈值立即中断。这是防止"账单失控"的唯一可靠手段。</p>
+</div>
+
+<div class="tips-box">
+<div class="tips-title">&#128161; 与本课程的对应关系</div>
+<p><strong>Day2 ReAct原理</strong> = Loop的Agent Loop层（Thought→Action→Observation循环）</p>
+<p><strong>Day2 RAG</strong> = Harness的C层（Context管理）+ T层（检索工具）</p>
+<p><strong>Day2-5 Skill工具链</strong> = Harness的T层（工具注册与调用）</p>
+<p><strong>Day5 消融评估</strong> = Harness的V层（验证评估）+ Loop的Validator</p>
+<p><strong>Day5 治理Agent</strong> = Harness的G层（安全治理）+ Loop的Guardrails</p>
+</div>
+</div>
+
+</div>
 <div class="section" id="s4">
 <div class="section-header">
 <span class="section-tag afternoon">下午 · 2.1</span>
