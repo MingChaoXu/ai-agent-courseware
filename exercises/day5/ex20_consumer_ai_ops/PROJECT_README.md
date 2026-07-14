@@ -7,7 +7,7 @@
 ## 项目结构
 
 ```
-ex19_consumer_ai_ops/
+ex20_consumer_ai_ops/
 ├── backend/
 │   ├── main.py                     # FastAPI入口，注册路由、初始化数据
 │   ├── config.py                   # LLM + Embedding配置

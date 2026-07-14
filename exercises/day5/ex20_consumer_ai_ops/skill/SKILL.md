@@ -66,7 +66,7 @@ Module 3: Marketing (Structured Output + Computed)
 Copy or symlink the `skill/` directory into the TeleAgent skills folder:
 
 ```bash
-ln -s /path/to/ex19_consumer_ai_ops/skill ~/.config/TeleAgent/skills/ex19_consumer_ai_ops
+ln -s /path/to/ex20_consumer_ai_ops/skill ~/.config/TeleAgent/skills/ex20_consumer_ai_ops
 ```
 
 ## Configuration

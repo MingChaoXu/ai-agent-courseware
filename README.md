@@ -84,7 +84,7 @@
 | ex16 | 消融评估框架 | ex16_ablation_eval/ |
 | ex17 | 综合路演 | ex17_roadshow/ |
 | ex18 | 交通事件智能处置 | ex18_traffic_incident/ |
-| ex19 | 消费领域AI智能运营 | ex19_consumer_ai_ops/ |
+| ex20 | 消费领域AI智能运营 | ex20_consumer_ai_ops/ |
 
 ## 快速开始
 
