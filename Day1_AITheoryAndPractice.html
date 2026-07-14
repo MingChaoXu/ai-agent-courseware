@@ -480,8 +480,27 @@ Step 3: 输入变为「公积金提取需要哪些材料」→ 预测 → 「？
 <tr><td>GPT-4</td><td>8K-128K tokens</td><td>~4,000-64,000字</td><td>长文档处理</td></tr>
 <tr><td>Claude 3</td><td>200K tokens</td><td>~100,000字</td><td>超长文档分析</td></tr>
 <tr><td>国产大模型</td><td>8K-128K tokens</td><td>~4,000-64,000字</td><td>政务/企业场景</td></tr>
+<tr><td>1张图片（512×512）</td><td>~258 tokens</td><td>≈ 130字</td><td>图像理解</td></tr>
+<tr><td>1张图片（1920×1080）</td><td>~2,042 tokens</td><td>≈ 1,000字</td><td>高清图片分析</td></tr>
 </tbody>
 </table>
+
+<div class="principle-card">
+<div class="pc-title">&#128248; 图像↔Token：视觉信息的数字化代价</div>
+<div class="pc-body">
+多模态模型将图像也转换为Token，但<strong>一幅图的Token消耗远超想象</strong>：<br><br>
+<strong>图像Token化过程</strong>：<br>
+1. 将图片切成 <strong>14×14像素</strong>的小块（Patch）<br>
+2. 每个Patch经过PatchEmbed变为一个向量 → 2×2 PatchMerger合并 → <strong>每~32×32像素 ≈ 1个Token</strong><br>
+3. 再加2个特殊Token（起止标记）<br><br>
+<strong>Token计算公式</strong>：<code>num_tokens = (H'/32) × (W'/32) + 2</code>（H'/W'为缩放后的分辨率）<br><br>
+<strong>实际示例</strong>：<br>
+&bull; 512×512 图片 → (16×16)+2 = <strong>258 tokens</strong> ≈ 130个中文字<br>
+&bull; 1920×1080 图片 → (~44×~46)+2 ≈ <strong>2,042 tokens</strong> ≈ 1,000个中文字<br>
+&bull; 4K图片(3840×2160) → ~<strong>8,194 tokens</strong> ≈ 4,000个中文字<br><br>
+<strong>实战启示</strong>：发送10张截图给大模型 ≈ 消耗1-2万Token，等于喂了一整篇论文！图片越大、分辨率越高，Token消耗指数级增长。
+</div>
+</div>
 
 <div class="principle-card warn">
 <div class="pc-title">&#9888; 上下文窗口 ≠ 有效注意力</div>
@@ -491,6 +510,7 @@ Step 3: 输入变为「公积金提取需要哪些材料」→ 预测 → 「？
 2. 中间部分的内容容易被"遗忘"（Lost in the Middle现象）<br>
 3. 这就是为什么System Prompt放在开头（首因效应）、最新对话放在末尾（近因效应）<br>
 4. <strong>上下文压缩策略</strong>（Day 3学习）的核心目的就是解决窗口受限问题
+</div>
 </div>
 </div>
 </div>
