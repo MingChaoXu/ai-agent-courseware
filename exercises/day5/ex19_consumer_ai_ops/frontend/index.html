@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>消费领域AI智能运营平台</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#4F6EF7;--secondary:#7C3AED;--success:#10B981;--warning:#F59E0B;--danger:#EF4444;--bg:#F0F2F5;--card:#FFFFFF;--text:#1F2937;--text2:#6B7280;--border:#E5E7EB;--shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);--shadow-lg:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.06)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+.header{background:#1a1a2e;display:flex;align-items:center;padding:0 24px;height:56px;position:sticky;top:0;z-index:100}
+.header-title{color:#fff;font-size:18px;font-weight:600;letter-spacing:1px;white-space:nowrap}
+.header-tabs{display:flex;gap:4px;margin-left:40px}
+.header-tab{padding:8px 20px;border-radius:6px;cursor:pointer;color:rgba(255,255,255,.65);font-size:14px;transition:all .2s;border:none;background:transparent}
+.header-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
+.header-tab.active{color:#fff;background:var(--primary);font-weight:500}
+.header-status{margin-left:auto;display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.7);font-size:12px}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.status-dot.ok{background:var(--success);box-shadow:0 0 6px var(--success)}
+.status-dot.err{background:var(--danger);box-shadow:0 0 6px var(--danger)}
+.page{padding:20px;min-height:calc(100vh - 56px)}
+.card{background:var(--card);border-radius:8px;box-shadow:var(--shadow);padding:16px;transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow-lg)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi-card{background:var(--card);border-radius:8px;box-shadow:var(--shadow);padding:20px;display:flex;align-items:center;gap:16px;transition:transform .2s,box-shadow .2s}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.kpi-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.kpi-content{flex:1}
+.kpi-label{color:var(--text2);font-size:13px;margin-bottom:4px}
+.kpi-value{font-size:24px;font-weight:700;color:var(--text);line-height:1.2}
+.kpi-trend{font-size:12px;margin-top:4px;display:flex;align-items:center;gap:4px}
+.kpi-trend.up{color:var(--success)}
+.kpi-trend.down{color:var(--danger)}
+.row{display:grid;gap:16px;margin-top:16px}
+.row-2{grid-template-columns:1fr 1fr}
+.row-6-4{grid-template-columns:6fr 4fr}
+.row-3-7{grid-template-columns:3fr 7fr}
+.chart-box{background:var(--card);border-radius:8px;box-shadow:var(--shadow);padding:16px;min-height:300px}
+.chart-title{font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text)}
+.chart-container{width:100%;height:280px}
+.chat-panel{background:var(--card);border-radius:8px;box-shadow:var(--shadow);display:flex;flex-direction:column;height:500px}
+.chat-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:15px}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chat-msg{display:flex;gap:8px;max-width:80%}
+.chat-msg.user{align-self:flex-end;flex-direction:row-reverse}
+.chat-msg.ai{align-self:flex-start}
+.chat-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.chat-msg.user .chat-avatar{background:var(--primary);color:#fff}
+.chat-msg.ai .chat-avatar{background:var(--secondary);color:#fff}
+.chat-bubble{padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.6;word-break:break-word}
+.chat-msg.user .chat-bubble{background:var(--primary);color:#fff;border-bottom-right-radius:4px}
+.chat-msg.ai .chat-bubble{background:#F3F4F6;color:var(--text);border-bottom-left-radius:4px}
+.chat-inline-chart{width:100%;height:220px;margin-top:8px;border-radius:6px;overflow:hidden}
+.chat-input-area{padding:12px 16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.quick-btns{display:flex;gap:6px;flex-wrap:wrap}
+.quick-btn{padding:4px 12px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text2);font-size:12px;cursor:pointer;transition:all .2s}
+.quick-btn:hover{border-color:var(--primary);color:var(--primary);background:rgba(79,110,247,.06)}
+.chat-input-row{display:flex;gap:8px}
+.chat-input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none;transition:border-color .2s}
+.chat-input:focus{border-color:var(--primary)}
+.chat-send{padding:8px 20px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;transition:background .2s;display:flex;align-items:center;gap:6px}
+.chat-send:hover{background:#3B5BD9}
+.chat-send:disabled{opacity:.5;cursor:not-allowed}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tool-calls{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.tool-tag{font-size:11px;padding:2px 8px;border-radius:4px;background:#EDE9FE;color:var(--secondary);cursor:pointer}
+.tool-tag-expand{font-size:11px;padding:4px 8px;background:#F5F3FF;border-radius:4px;margin-top:4px;color:var(--text2);max-width:300px;word-break:break-all}
+.intent-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;margin-right:6px}
+.intent-query{background:#DBEAFE;color:#1D4ED8}
+.intent-complaint{background:#FEE2E2;color:#DC2626}
+.intent-faq{background:#D1FAE5;color:#059669}
+.intent-other{background:#F3F4F6;color:#6B7280}
+.sentiment-icon{display:inline-block;margin-left:6px;font-size:14px}
+.ticket-card{margin-top:8px;padding:10px;border:1px solid var(--warning);border-radius:6px;background:#FFFBEB;font-size:12px}
+.sources-section{margin-top:8px}
+.sources-toggle{font-size:12px;color:var(--primary);cursor:pointer}
+.source-item{padding:6px 8px;background:#F9FAFB;border-radius:4px;margin-top:4px;font-size:12px;color:var(--text2)}
+.faq-btn{padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:#fff;font-size:12px;cursor:pointer;transition:all .2s;color:var(--text)}
+.faq-btn:hover{border-color:var(--primary);color:var(--primary)}
+.stat-card{background:var(--card);border-radius:8px;box-shadow:var(--shadow);padding:16px;text-align:center}
+.stat-value{font-size:28px;font-weight:700;color:var(--primary)}
+.stat-label{font-size:13px;color:var(--text2);margin-top:4px}
+.faq-cat-item{padding:8px 12px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;border-radius:6px;transition:background .2s;font-size:13px}
+.faq-cat-item:hover{background:var(--bg)}
+.faq-cat-item.active{background:rgba(79,110,247,.08);color:var(--primary);font-weight:500}
+.faq-count{font-size:12px;color:var(--text2);background:var(--bg);padding:1px 8px;border-radius:10px}
+.section-title{font-size:15px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.select-input,.text-input{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;outline:none;width:100%;transition:border-color .2s}
+.select-input:focus,.text-input:focus{border-color:var(--primary)}
+.btn{padding:6px 16px;border-radius:6px;border:none;cursor:pointer;font-size:13px;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:#3B5BD9}
+.btn-secondary{background:var(--secondary);color:#fff}
+.btn-secondary:hover{background:#6D28D9}
+.btn-sm{padding:4px 10px;font-size:12px}
+.persona-card,.strategy-card{padding:12px;background:#F9FAFB;border-radius:8px;margin-top:8px;font-size:13px}
+.persona-card h4,.strategy-card h4{font-size:14px;color:var(--primary);margin-bottom:6px}
+.persona-item,.strategy-item{padding:3px 0;display:flex;gap:8px}
+.persona-label,.strategy-label{color:var(--text2);min-width:80px}
+.slider-group{margin-bottom:8px}
+.slider-label{font-size:12px;color:var(--text2);display:flex;justify-content:space-between}
+.slider-group input[type=range]{width:100%;margin:4px 0;accent-color:var(--primary)}
+.sim-result{margin-top:12px}
+.sim-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.sim-metric{text-align:center;padding:8px;background:#F9FAFB;border-radius:6px}
+.sim-metric-val{font-size:18px;font-weight:700;color:var(--primary)}
+.sim-metric-label{font-size:11px;color:var(--text2)}
+.toast{position:fixed;top:70px;right:20px;padding:10px 20px;border-radius:8px;color:#fff;font-size:13px;z-index:999;animation:slideIn .3s;box-shadow:var(--shadow-lg)}
+.toast-error{background:var(--danger)}
+.toast-success{background:var(--success)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.loading-skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:4px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-line{height:16px;margin-bottom:8px;width:80%}
+.skeleton-chart{height:280px}
+.fade-enter-active,.fade-leave-active{transition:opacity .2s}
+.fade-enter-from,.fade-leave-to{opacity:0}
+.tab-content{animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.row-2,.row-6-4{grid-template-columns:1fr}}
+@media(max-width:768px){.kpi-grid{grid-template-columns:1fr}.header-tabs{margin-left:16px}.header-tab{padding:6px 12px;font-size:13px}}
+</style>
+</head>
+<body>
+<div id="app">
+<div class="header">
+  <div class="header-title">消费领域AI智能运营平台</div>
+  <div class="header-tabs">
+    <button class="header-tab" :class="{active:tab==='bi'}" @click="switchTab('bi')">智能BI</button>
+    <button class="header-tab" :class="{active:tab==='cs'}" @click="switchTab('cs')">智能客服</button>
+    <button class="header-tab" :class="{active:tab==='mk'}" @click="switchTab('mk')">精准营销</button>
+  </div>
+  <div class="header-status">
+    <span class="status-dot" :class="llmOk?'ok':'err'"></span>
+    <span>{{llmOk?'LLM已连接':'LLM未连接'}}</span>
+  </div>
+</div>
+
+<div class="toast" v-if="toast.show" :class="'toast-'+toast.type">{{toast.msg}}</div>
+
+<!-- ==================== BI MODULE ==================== -->
+<div class="page tab-content" v-if="tab==='bi'" key="bi">
+  <div class="kpi-grid" v-if="bi.data">
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(79,110,247,.1);color:var(--primary)">💰</div>
+      <div class="kpi-content">
+        <div class="kpi-label">总销售额</div>
+        <div class="kpi-value">¥{{formatNum(bi.data.kpi.total_amount)}}</div>
+        <div class="kpi-trend" :class="bi.data.kpi.yoy_growth>=0?'up':'down'">
+          {{bi.data.kpi.yoy_growth>=0?'↑':'↓'}} {{Math.abs(bi.data.kpi.yoy_growth).toFixed(1)}}% 同比
+        </div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(124,58,237,.1);color:var(--secondary)">📦</div>
+      <div class="kpi-content">
+        <div class="kpi-label">订单量</div>
+        <div class="kpi-value">{{formatNum(bi.data.kpi.total_orders)}}</div>
+        <div class="kpi-trend up">最新月: {{bi.data.kpi.latest_month}}</div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(16,185,129,.1);color:var(--success)">📊</div>
+      <div class="kpi-content">
+        <div class="kpi-label">客单价</div>
+        <div class="kpi-value">¥{{bi.data.kpi.avg_order_value.toFixed(0)}}</div>
+        <div class="kpi-trend up">最新月: ¥{{formatNum(bi.data.kpi.latest_amount)}}</div>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(245,158,11,.1);color:var(--warning)">📈</div>
+      <div class="kpi-content">
+        <div class="kpi-label">同比增长率</div>
+        <div class="kpi-value">{{bi.data.kpi.yoy_growth.toFixed(1)}}%</div>
+        <div class="kpi-trend" :class="bi.data.kpi.yoy_growth>=0?'up':'down'">
+          {{bi.data.kpi.yoy_growth>=0?'持续增长':'需要关注'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="kpi-grid" v-else>
+    <div class="kpi-card" v-for="i in 4" :key="i"><div class="loading-skeleton skeleton-line" style="height:40px;width:60%"></div></div>
+  </div>
+
+  <div class="row row-2" v-if="bi.data">
+    <div class="chart-box">
+      <div class="chart-title">月度销售趋势</div>
+      <div class="chart-container" ref="biTrendChart"></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">品类销售占比（{{bi.data.kpi.latest_month}}）</div>
+      <div class="chart-container" ref="biPieChart"></div>
+    </div>
+  </div>
+
+  <div class="row row-2" v-if="bi.data">
+    <div class="chart-box">
+      <div class="chart-title">区域销售对比</div>
+      <div class="chart-container" ref="biBarChart"></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">品类×区域 交叉分析</div>
+      <div class="chart-container" ref="biHeatChart"></div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:16px" v-if="bi.data">
+    <div class="chat-panel">
+      <div class="chat-header">💬 智能数据问答</div>
+      <div class="chat-messages" ref="biChatScroll">
+        <div v-for="(m,i) in bi.chatMessages" :key="i" class="chat-msg" :class="m.role">
+          <div class="chat-avatar">{{m.role==='user'?'我':'AI'}}</div>
+          <div>
+            <div class="chat-bubble" v-html="m.content"></div>
+            <div v-if="m.chartSpec" class="chat-inline-chart" :ref="el=>{if(el)biInlineRefs[i]=el}"></div>
+            <div v-if="m.toolCalls&&m.toolCalls.length" class="tool-calls">
+              <template v-for="(tc,ti) in m.toolCalls" :key="ti">
+                <span class="tool-tag" @click="tc._exp=!tc._exp">{{tc.tool}}</span>
+                <div v-if="tc._exp" class="tool-tag-expand">{{tc.output_preview}}</div>
+              </template>
+            </div>
+          </div>
+        </div>
+        <div v-if="bi.chatLoading" class="chat-msg ai">
+          <div class="chat-avatar">AI</div>
+          <div class="chat-bubble"><span class="spinner" style="border-color:rgba(79,110,247,.3);border-top-color:var(--primary)"></span> 思考中...</div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="quick-btns">
+          <button class="quick-btn" @click="biSend('本月各区域销售对比')">本月各区域销售对比</button>
+          <button class="quick-btn" @click="biSend('美妆品类增长趋势')">美妆品类增长趋势</button>
+          <button class="quick-btn" @click="biSend('哪个渠道ROI最高')">哪个渠道ROI最高</button>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" v-model="bi.chatInput" @keydown.enter="biSend(bi.chatInput)" placeholder="输入数据分析问题...">
+          <button class="chat-send" @click="biSend(bi.chatInput)" :disabled="!bi.chatInput.trim()||bi.chatLoading">
+            <span v-if="bi.chatLoading" class="spinner"></span>
+            <span v-else>发送</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CS MODULE ==================== -->
+<div class="page tab-content" v-if="tab==='cs'" key="cs">
+  <div class="row row-6-4" style="margin-top:0">
+    <div>
+      <div class="chat-panel" style="height:calc(100vh - 96px)">
+        <div class="chat-header">🤖 智能客服助手</div>
+        <div class="chat-messages" ref="csChatScroll">
+          <div v-for="(m,i) in cs.messages" :key="i" class="chat-msg" :class="m.role">
+            <div class="chat-avatar">{{m.role==='user'?'我':'AI'}}</div>
+            <div style="max-width:90%">
+              <div class="chat-bubble">{{m.content}}</div>
+              <div v-if="m.intent" style="margin-top:4px">
+                <span class="intent-badge" :class="'intent-'+m.intent.intent">{{intentLabel(m.intent.intent)}}</span>
+                <span style="font-size:11px;color:var(--text2)">置信度 {{(m.intent.confidence*100).toFixed(0)}}%</span>
+              </div>
+              <div v-if="m.sentiment" class="sentiment-icon">{{sentimentEmoji(m.sentiment.emotion)}}</div>
+              <div v-if="m.ticket" class="ticket-card">
+                🎫 工单已创建: <strong>{{m.ticket}}</strong>
+              </div>
+              <div v-if="m.sources&&m.sources.length" class="sources-section">
+                <span class="sources-toggle" @click="m._showSrc=!m._showSrc">{{m._showSrc?'▼ 收起来源':'▶ 查看来源 ('+m.sources.length+')'}}</span>
+                <div v-if="m._showSrc">
+                  <div v-for="(s,si) in m.sources" :key="si" class="source-item">
+                    <div style="color:var(--primary);font-weight:500;margin-bottom:2px">{{s.question||s.category}}</div>
+                    <div>{{s.content?.slice(0,100)}}{{s.content?.length>100?'...':''}}</div>
+                    <div style="color:var(--success)">相关度: {{(s.score*100).toFixed(0)}}%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-if="cs.loading" class="chat-msg ai">
+            <div class="chat-avatar">AI</div>
+            <div class="chat-bubble"><span class="spinner" style="border-color:rgba(124,58,237,.3);border-top-color:var(--secondary)"></span> 分析中...</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="quick-btns">
+            <button class="faq-btn" v-for="q in cs.faqQuick" :key="q" @click="csSend(q)">{{q}}</button>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" v-model="cs.input" @keydown.enter="csSend(cs.input)" placeholder="描述您的问题或需求...">
+            <button class="chat-send" style="background:var(--secondary)" @click="csSend(cs.input)" :disabled="!cs.input.trim()||cs.loading">
+              <span v-if="cs.loading" class="spinner"></span>
+              <span v-else>发送</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="kpi-grid" style="grid-template-columns:1fr" v-if="cs.stats">
+        <div class="stat-card"><div class="stat-value">{{cs.stats.today_chats||0}}</div><div class="stat-label">今日咨询</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--success)">{{(cs.stats.satisfaction_rate||0).toFixed(1)}}%</div><div class="stat-label">满意度</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--warning)">{{cs.stats.pending_tickets||0}}</div><div class="stat-label">待处理工单</div></div>
+      </div>
+      <div class="card" v-if="cs.stats">
+        <div class="section-title">📋 FAQ分类</div>
+        <div v-for="cat in cs.stats.faq_categories" :key="cat.name" class="faq-cat-item" :class="{active:cs.faqCategory===cat.name}" @click="loadFaq(cat.name)">
+          {{cat.name}} <span class="faq-count">{{cat.count}}</span>
+        </div>
+      </div>
+      <div class="card" v-if="cs.faqs.length">
+        <div class="section-title">💬 FAQ详情</div>
+        <div v-for="faq in cs.faqs" :key="faq.id" style="padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="font-weight:500;color:var(--primary);cursor:pointer;font-size:13px" @click="csSend(faq.question)">{{faq.question}}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px">{{faq.answer.slice(0,60)}}...</div>
+        </div>
+      </div>
+      <div class="card" v-if="cs.stats">
+        <div class="section-title">⏱️ 服务指标</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0">
+          <span style="color:var(--text2)">平均响应</span><span>{{cs.stats.avg_response_time||'-'}}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0">
+          <span style="color:var(--text2)">FAQ总数</span><span>{{cs.stats.total_faq||0}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MARKETING MODULE ==================== -->
+<div class="page tab-content" v-if="tab==='mk'" key="mk">
+  <div class="kpi-grid" v-if="mk.segData">
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(79,110,247,.1);color:var(--primary)">👥</div>
+      <div class="kpi-content"><div class="kpi-label">总客户数</div><div class="kpi-value">{{mk.totalCustomers}}</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(124,58,237,.1);color:var(--secondary)">⭐</div>
+      <div class="kpi-content"><div class="kpi-label">高价值客户占比</div><div class="kpi-value">{{mk.highValuePct}}%</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(16,185,129,.1);color:var(--success)">💎</div>
+      <div class="kpi-content"><div class="kpi-label">平均LTV</div><div class="kpi-value">¥{{mk.avgLtv}}</div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon" style="background:rgba(239,68,68,.1);color:var(--danger)">⚠️</div>
+      <div class="kpi-content"><div class="kpi-label">流失风险客户</div><div class="kpi-value">{{mk.churnRiskCount}}</div></div>
+    </div>
+  </div>
+
+  <div class="row row-2" v-if="mk.vizData">
+    <div class="chart-box">
+      <div class="chart-title">RFM分析：消费频次 × 消费金额</div>
+      <div class="chart-container" ref="mkScatterChart"></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">客户分群占比</div>
+      <div class="chart-container" ref="mkSegPieChart"></div>
+    </div>
+  </div>
+
+  <div class="row row-2" v-if="mk.sentData">
+    <div class="chart-box">
+      <div class="chart-title">品类情感分布</div>
+      <div class="chart-container" ref="mkSentBarChart"></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">整体满意度</div>
+      <div class="chart-container" ref="mkGaugeChart"></div>
+    </div>
+  </div>
+
+  <div class="row row-2" style="margin-top:16px">
+    <div class="card">
+      <div class="section-title">👤 画像分析</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <select class="select-input" v-model="mk.personaCid" style="flex:1">
+          <option value="">选择客户ID</option>
+          <option v-for="c in mk.customers" :key="c.customer_id" :value="c.customer_id">{{c.customer_id}}</option>
+        </select>
+        <button class="btn btn-primary" @click="loadPersona" :disabled="!mk.personaCid||mk.personaLoading">
+          <span v-if="mk.personaLoading" class="spinner" style="border-color:rgba(255,255,255,.3);border-top-color:#fff"></span>
+          生成画像
+        </button>
+      </div>
+      <div class="persona-card" v-if="mk.persona">
+        <h4>客户 {{mk.persona.customer_id}} - {{mk.persona.segment}}</h4>
+        <div class="persona-item"><span class="persona-label">消费偏好</span><span>{{mk.persona.consumption_preference}}</span></div>
+        <div class="persona-item"><span class="persona-label">风险因素</span><span>{{mk.persona.risk_factors}}</span></div>
+        <div class="persona-item"><span class="persona-label">推荐动作</span><span>{{mk.persona.recommended_actions}}</span></div>
+        <div class="persona-item"><span class="persona-label">预估LTV</span><span style="color:var(--primary);font-weight:600">¥{{formatNum(mk.persona.estimated_ltv)}}</span></div>
+        <div class="persona-item"><span class="persona-label">偏好渠道</span><span>{{mk.persona.preferred_channel}}</span></div>
+      </div>
+
+      <div class="section-title" style="margin-top:20px">🎯 策略生成</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+        <select class="select-input" v-model="mk.stratSegment" style="flex:1;min-width:120px">
+          <option value="">选择分群</option>
+          <option v-for="s in mk.segmentNames" :key="s" :value="s">{{s}}</option>
+        </select>
+        <input class="text-input" v-model="mk.stratObjective" placeholder="营销目标" style="flex:1;min-width:120px">
+        <button class="btn btn-secondary" @click="genStrategy" :disabled="!mk.stratSegment||mk.stratLoading">
+          <span v-if="mk.stratLoading" class="spinner" style="border-color:rgba(255,255,255,.3);border-top-color:#fff"></span>
+          生成策略
+        </button>
+      </div>
+      <div class="strategy-card" v-if="mk.strategy">
+        <h4>{{mk.strategy.campaign_name}}</h4>
+        <div class="strategy-item"><span class="strategy-label">目标人群</span><span>{{mk.strategy.target_segment}}</span></div>
+        <div class="strategy-item"><span class="strategy-label">目标</span><span>{{mk.strategy.objective}}</span></div>
+        <div class="strategy-item"><span class="strategy-label">渠道</span><span>{{mk.strategy.channels?.join(', ')}}</span></div>
+        <div class="strategy-item"><span class="strategy-label">核心信息</span><span>{{mk.strategy.key_message}}</span></div>
+        <div class="strategy-item"><span class="strategy-label">优惠设计</span><span>{{mk.strategy.offer_design}}</span></div>
+        <div class="strategy-item"><span class="strategy-label">预算</span><span style="color:var(--warning)">¥{{formatNum(mk.strategy.budget_estimate)}}</span></div>
+        <div class="strategy-item"><span class="strategy-label">预期ROI</span><span style="color:var(--success)">{{mk.strategy.roi_forecast}}</span></div>
+        <div class="strategy-item"><span class="strategy-label">时间线</span><span>{{mk.strategy.timeline}}</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">📊 ROI模拟器</div>
+      <div class="slider-group">
+        <div class="slider-label"><span>预算</span><span>¥{{mk.simBudget}}万</span></div>
+        <input type="range" min="1" max="50" v-model.number="mk.simBudget">
+      </div>
+      <div style="margin-bottom:8px">
+        <select class="select-input" v-model="mk.simSegment">
+          <option value="">全部分群</option>
+          <option v-for="s in mk.segmentNames" :key="s" :value="s">{{s}}</option>
+        </select>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>线上渠道占比</span><span>{{mk.simMix.online}}%</span></div>
+        <input type="range" min="0" max="100" :value="mk.simMix.online" @input="adjustMix('online',$event)">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>线下渠道占比</span><span>{{mk.simMix.offline}}%</span></div>
+        <input type="range" min="0" max="100" :value="mk.simMix.offline" @input="adjustMix('offline',$event)">
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span>社交渠道占比</span><span>{{mk.simMix.social}}%</span></div>
+        <input type="range" min="0" max="100" :value="mk.simMix.social" @input="adjustMix('social',$event)">
+      </div>
+      <div style="text-align:center;margin:8px 0">
+        <button class="btn btn-primary" @click="runSimulate" :disabled="mk.simLoading" style="width:100%">
+          <span v-if="mk.simLoading" class="spinner" style="border-color:rgba(255,255,255,.3);border-top-color:#fff"></span>
+          <span v-else>🚀 开始模拟</span>
+        </button>
+      </div>
+      <div class="sim-result" v-if="mk.simResult">
+        <div class="chart-container" style="height:200px" ref="mkSimBarChart"></div>
+        <div class="sim-metrics">
+          <div class="sim-metric"><div class="sim-metric-val">{{mk.simResult.overall_roi?.toFixed(1)}}%</div><div class="sim-metric-label">综合ROI</div></div>
+          <div class="sim-metric"><div class="sim-metric-val">¥{{formatNum(mk.simResult.total_revenue)}}</div><div class="sim-metric-label">预期收入</div></div>
+          <div class="sim-metric"><div class="sim-metric-val">{{mk.simResult.total_conversion}}</div><div class="sim-metric-label">预期转化</div></div>
+        </div>
+        <div v-if="mk.simResult.monte_carlo" style="margin-top:8px">
+          <div style="font-size:13px;font-weight:500;margin-bottom:4px">蒙特卡洛模拟</div>
+          <div class="chart-container" style="height:180px" ref="mkMonteChart"></div>
+          <div style="display:flex;justify-content:space-around;font-size:12px;margin-top:4px">
+            <span>P10: {{mk.simResult.monte_carlo.p10_roi?.toFixed(1)}}%</span>
+            <span style="color:var(--primary);font-weight:600">P50: {{mk.simResult.monte_carlo.p50_roi?.toFixed(1)}}%</span>
+            <span>P90: {{mk.simResult.monte_carlo.p90_roi?.toFixed(1)}}%</span>
+            <span>正收益概率: {{(mk.simResult.monte_carlo.positive_prob*100)?.toFixed(0)}}%</span>
+          </div>
+        </div>
+        <div v-if="mk.simResult.recommendation" style="margin-top:8px;padding:8px;background:#EFF6FF;border-radius:6px;font-size:12px;color:#1D4ED8">
+          💡 {{mk.simResult.recommendation}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const{createApp,ref,reactive,computed,onMounted,onBeforeUnmount,watch,nextTick}=Vue;
+
+const API=window.location.port ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}` : 'http://localhost:8000';
+const SEG_COLORS=['#4F6EF7','#7C3AED','#10B981','#F59E0B','#EF4444','#EC4899'];
+
+function fmtNum(n){
+  if(n==null)return'0';
+  if(n>=1e8)return(n/1e8).toFixed(2)+'亿';
+  if(n>=1e4)return(n/1e4).toFixed(1)+'万';
+  return n.toLocaleString('zh-CN');
+}
+
+let chartInstances=[];
+
+function initChart(el,opt){
+  if(!el)return null;
+  const c=echarts.init(el);
+  c.setOption(opt);
+  chartInstances.push(c);
+  return c;
+}
+
+function disposeAll(){
+  chartInstances.forEach(c=>{try{c.dispose()}catch(e){}});
+  chartInstances=[];
+}
+
+const ro=new ResizeObserver(()=>{
+  chartInstances.forEach(c=>{try{c.resize()}catch(e){}});
+});
+ro.observe(document.body);
+
+const app=createApp({
+  setup(){
+    const tab=ref('bi');
+    const llmOk=ref(false);
+    const toast=reactive({show:false,msg:'',type:'error'});
+
+    function showToast(msg,type='error'){
+      toast.msg=msg;toast.type=type;toast.show=true;
+      setTimeout(()=>{toast.show=false},3000);
+    }
+
+    async function apiFetch(path,opts={}){
+      try{
+        const r=await fetch(API+path,{headers:{'Content-Type':'application/json'},...opts});
+        if(!r.ok)throw new Error(`HTTP ${r.status}`);
+        return await r.json();
+      }catch(e){
+        showToast(e.message,'error');
+        return null;
+      }
+    }
+
+    async function checkStatus(){
+      const r=await apiFetch('/api/status');
+      llmOk.value=!!(r&&r.llm_configured);
+    }
+
+    // ==================== BI ====================
+    const bi=reactive({
+      data:null,
+      chatMessages:[],
+      chatInput:'',
+      chatLoading:false,
+      inlineCharts:{}
+    });
+    const biTrendChart=ref(null);
+    const biPieChart=ref(null);
+    const biBarChart=ref(null);
+    const biHeatChart=ref(null);
+    const biChatScroll=ref(null);
+    const biInlineRefs=reactive({});
+
+    async function loadBI(){
+      const r=await apiFetch('/api/bi/dashboard');
+      if(!r)return;
+      bi.data=r;
+      await nextTick();
+      renderBITrend();renderBIPie();renderBIBar();renderBIHeat();
+    }
+
+    function renderBITrend(){
+      const d=bi.data;if(!d||!biTrendChart.value)return;
+      initChart(biTrendChart.value,{
+        tooltip:{trigger:'axis'},
+        legend:{data:['销售额','订单量'],top:0},
+        grid:{left:60,right:60,top:36,bottom:24},
+        xAxis:{type:'category',data:d.trend.map(t=>t.date),axisLabel:{fontSize:11}},
+        yAxis:[
+          {type:'value',name:'销售额',axisLabel:{fontSize:11}},
+          {type:'value',name:'订单量',axisLabel:{fontSize:11}}
+        ],
+        series:[
+          {name:'销售额',type:'line',data:d.trend.map(t=>t.amount),smooth:true,itemStyle:{color:'#4F6EF7'},areaStyle:{color:'rgba(79,110,247,.1)'}},
+          {name:'订单量',type:'line',yAxisIndex:1,data:d.trend.map(t=>t.orders),smooth:true,itemStyle:{color:'#7C3AED'}}
+        ]
+      });
+    }
+
+    function renderBIPie(){
+      const d=bi.data;if(!d||!biPieChart.value)return;
+      initChart(biPieChart.value,{
+        tooltip:{trigger:'item',formatter:'{b}: ¥{c} ({d}%)'},
+        legend:{type:'scroll',bottom:0},
+        series:[{
+          type:'pie',radius:['40%','70%'],center:['50%','45%'],
+          data:d.category_pie.map(c=>({name:c.name,value:c.value})),
+          emphasis:{itemStyle:{shadowBlur:10,shadowOffsetX:0,shadowColor:'rgba(0,0,0,0.2)'}},
+          label:{formatter:'{b}\n{d}%'}
+        }]
+      });
+    }
+
+    function renderBIBar(){
+      const d=bi.data;if(!d||!biBarChart.value)return;
+      initChart(biBarChart.value,{
+        tooltip:{trigger:'axis'},
+        grid:{left:80,right:20,top:20,bottom:24},
+        xAxis:{type:'category',data:d.region_bar.map(r=>r.name),axisLabel:{fontSize:11}},
+        yAxis:{type:'value',axisLabel:{fontSize:11}},
+        series:[{type:'bar',data:d.region_bar.map(r=>r.value),itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#4F6EF7'},{offset:1,color:'#7C3AED'}])},barWidth:20}]
+      });
+    }
+
+    function renderBIHeat(){
+      const d=bi.data;if(!d||!d.heatmap||!biHeatChart.value)return;
+      const hm=d.heatmap;
+      const seriesData=[];
+      for(let y=0;y<hm.y_labels.length;y++)
+        for(let x=0;x<hm.x_labels.length;x++)
+          seriesData.push([x,y,hm.data[y]?.[x]||0]);
+      initChart(biHeatChart.value,{
+        tooltip:{formatter:p=>`${hm.x_labels[p.value[0]]} × ${hm.y_labels[p.value[1]]}<br>金额: ¥${fmtNum(p.value[2])}`},
+        grid:{left:80,right:20,top:10,bottom:50},
+        xAxis:{type:'category',data:hm.x_labels,splitArea:{show:true},axisLabel:{fontSize:11}},
+        yAxis:{type:'category',data:hm.y_labels,splitArea:{show:true},axisLabel:{fontSize:11}},
+        visualMap:{min:0,max:Math.max(...seriesData.map(s=>s[2]),1),calculable:true,orient:'horizontal',left:'center',bottom:0,inRange:{color:['#EBF5FF','#4F6EF7']}},
+        series:[{type:'heatmap',data:seriesData,label:{show:false},emphasis:{itemStyle:{shadowBlur:10,shadowColor:'rgba(0,0,0,0.3)'}}}]
+      });
+    }
+
+    async function biSend(q){
+      if(!q||!q.trim())return;
+      q=q.trim();
+      bi.chatInput='';
+      bi.chatMessages.push({role:'user',content:q});
+      bi.chatLoading=true;
+      await nextTick();
+      if(biChatScroll.value)biChatScroll.value.scrollTop=biChatScroll.value.scrollHeight;
+      try{
+        const r=await fetch(API+'/api/bi/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        const data=await r.json();
+        const msg={role:'ai',content:data.answer||'暂无结果',chartSpec:data.chart_spec||null,toolCalls:(data.tool_calls||[]).map(tc=>({...tc,_exp:false}))};
+        bi.chatMessages.push(msg);
+        bi.chatLoading=false;
+        await nextTick();
+        if(biChatScroll.value)biChatScroll.value.scrollTop=biChatScroll.value.scrollHeight;
+        if(data.chart_spec){
+          const idx=bi.chatMessages.length-1;
+          await nextTick();
+          const el=biInlineRefs[idx];
+          if(el){const c=echarts.init(el);c.setOption(data.chart_spec);chartInstances.push(c);}
+        }
+      }catch(e){
+        bi.chatMessages.push({role:'ai',content:'请求失败: '+e.message});
+        bi.chatLoading=false;
+        showToast(e.message);
+      }
+    }
+
+    // ==================== CS ====================
+    const cs=reactive({
+      messages:[],
+      input:'',
+      loading:false,
+      sessionId:null,
+      stats:null,
+      faqCategory:'',
+      faqs:[],
+      faqQuick:['如何退货退款','配送时效多久','如何修改收货地址','会员积分规则']
+    });
+    const csChatScroll=ref(null);
+
+    async function loadCSStats(){
+      const r=await apiFetch('/api/cs/stats');
+      if(r)cs.stats=r;
+    }
+
+    async function loadFaq(cat){
+      cs.faqCategory=cat;
+      const r=await apiFetch('/api/cs/faq?category='+encodeURIComponent(cat));
+      if(r)cs.faqs=r.items||[];
+    }
+
+    async function csSend(q){
+      if(!q||!q.trim())return;
+      q=q.trim();
+      cs.input='';
+      cs.messages.push({role:'user',content:q});
+      cs.loading=true;
+      await nextTick();
+      if(csChatScroll.value)csChatScroll.value.scrollTop=csChatScroll.value.scrollHeight;
+      try{
+        const body={question:q};
+        if(cs.sessionId)body.session_id=cs.sessionId;
+        const r=await fetch(API+'/api/cs/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        const data=await r.json();
+        cs.sessionId=data.session_id||cs.sessionId;
+        cs.messages.push({
+          role:'ai',
+          content:data.answer||'暂无回复',
+          intent:data.intent||null,
+          sentiment:data.sentiment||null,
+          ticket:data.ticket||null,
+          sources:data.sources||[],
+          _showSrc:false
+        });
+      }catch(e){
+        cs.messages.push({role:'ai',content:'请求失败: '+e.message});
+        showToast(e.message);
+      }
+      cs.loading=false;
+      await nextTick();
+      if(csChatScroll.value)csChatScroll.value.scrollTop=csChatScroll.value.scrollHeight;
+    }
+
+    function intentLabel(intent){
+      const m={query:'查询',complaint:'投诉',faq:'FAQ',refund:'退款',delivery:'配送',other:'其他'};
+      return m[intent]||intent||'其他';
+    }
+    function sentimentEmoji(e){
+      const m={happy:'😊',neutral:'😐',angry:'😠',sad:'😢',anxious:'😟'};
+      return m[e]||'😐';
+    }
+
+    // ==================== MARKETING ====================
+    const mk=reactive({
+      segData:null,
+      vizData:null,
+      sentData:null,
+      customers:[],
+      personaCid:'',
+      persona:null,
+      personaLoading:false,
+      stratSegment:'',
+      stratObjective:'',
+      stratLoading:false,
+      strategy:null,
+      simBudget:10,
+      simSegment:'',
+      simMix:{online:50,offline:30,social:20},
+      simLoading:false,
+      simResult:null
+    });
+    const mkScatterChart=ref(null);
+    const mkSegPieChart=ref(null);
+    const mkSentBarChart=ref(null);
+    const mkGaugeChart=ref(null);
+    const mkSimBarChart=ref(null);
+    const mkMonteChart=ref(null);
+
+    const segmentNames=computed(()=>{
+      if(!mk.segData)return[];
+      return Object.keys(mk.segData);
+    });
+    const totalCustomers=computed(()=>{
+      if(!mk.segData)return 0;
+      return Object.values(mk.segData).reduce((s,v)=>s+v.count,0);
+    });
+    const highValuePct=computed(()=>{
+      if(!mk.segData||!totalCustomers.value)return 0;
+      const hv=mk.segData['高价值客户']||mk.segData['高价值']||mk.segData['VIP客户']||{count:0};
+      return(hv.count/totalCustomers.value*100).toFixed(1);
+    });
+    const avgLtv=computed(()=>{
+      if(!mk.segData)return'0';
+      let tc=0,tl=0;
+      for(const v of Object.values(mk.segData)){tc+=v.count;tl+=v.avg_ltv*v.count;}
+      return fmtNum(tc?tl/tc:0);
+    });
+    const churnRiskCount=computed(()=>{
+      if(!mk.segData)return 0;
+      let c=0;
+      for(const v of Object.values(mk.segData)){
+        const dist=v.churn_risk_distribution||{};
+        c+=(dist.high||0)*v.count/100;
+        c+=(dist.medium||0)*v.count/100;
+      }
+      return Math.round(c);
+    });
+
+    async function loadMkSegmentation(){
+      const r=await apiFetch('/api/marketing/segmentation');
+      if(r)mk.segData=r;
+    }
+    async function loadMkViz(){
+      const r=await apiFetch('/api/marketing/visualization');
+      if(r)mk.vizData=r;
+    }
+    async function loadMkSentiment(){
+      const r=await apiFetch('/api/marketing/sentiment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})});
+      if(r)mk.sentData=r;
+    }
+    async function loadCustomers(){
+      const r=await apiFetch('/api/data/customers');
+      if(r)mk.customers=r;
+    }
+
+    function renderMKScatter(){
+      if(!mk.customers.length||!mkScatterChart.value)return;
+      const segMap={};
+      mk.customers.forEach(c=>{
+        const seg=c.segment||'其他';
+        if(!segMap[seg])segMap[seg]=[];
+        segMap[seg].push(c);
+      });
+      const series=Object.entries(segMap).map(([name,arr],i)=>({
+        name,type:'scatter',
+        data:arr.map(c=>[c.recency||0,c.monetary||0]),
+        itemStyle:{color:SEG_COLORS[i%6]},
+        symbolSize:val=>Math.max(4,Math.min(16,val[1]/2000))
+      }));
+      initChart(mkScatterChart.value,{
+        tooltip:{formatter:p=>`${p.seriesName}<br>Recency: ${p.value[0]}天<br>Monetary: ¥${fmtNum(p.value[1])}`},
+        legend:{top:0},
+        grid:{left:60,right:20,top:36,bottom:24},
+        xAxis:{name:'Recency(天)',type:'value',nameLocation:'middle',nameGap:30},
+        yAxis:{name:'Monetary(元)',type:'value'},
+        series
+      });
+    }
+
+    function renderMKSegPie(){
+      if(!mk.vizData||!mkSegPieChart.value)return;
+      const d=mk.vizData.segmentation;
+      initChart(mkSegPieChart.value,{
+        tooltip:{trigger:'item',formatter:'{b}: {c}人 ({d}%)'},
+        legend:{type:'scroll',bottom:0},
+        series:[{
+          type:'pie',radius:['35%','65%'],center:['50%','45%'],
+          data:d.segment_pie||[],
+          itemStyle:{borderRadius:6,borderColor:'#fff',borderWidth:2},
+          label:{formatter:'{b}\n{d}%'}
+        }]
+      });
+    }
+
+    function renderMKSentBar(){
+      if(!mk.sentData||!mkSentBarChart.value)return;
+      const d=mk.sentData;
+      const cats=(d.category_sentiment||[]).map(c=>c.category||c.name);
+      const pos=(d.category_sentiment||[]).map(c=>c.positive||c.pos||0);
+      const neu=(d.category_sentiment||[]).map(c=>c.neutral||c.neu||0);
+      const neg=(d.category_sentiment||[]).map(c=>c.negative||c.neg||0);
+      initChart(mkSentBarChart.value,{
+        tooltip:{trigger:'axis'},
+        legend:{data:['正面','中性','负面'],top:0},
+        grid:{left:60,right:20,top:36,bottom:24},
+        xAxis:{type:'category',data:cats,axisLabel:{fontSize:11}},
+        yAxis:{type:'value'},
+        series:[
+          {name:'正面',type:'bar',stack:'s',data:pos,itemStyle:{color:'#10B981'}},
+          {name:'中性',type:'bar',stack:'s',data:neu,itemStyle:{color:'#F59E0B'}},
+          {name:'负面',type:'bar',stack:'s',data:neg,itemStyle:{color:'#EF4444'}}
+        ]
+      });
+    }
+
+    function renderMKGauge(){
+      if(!mk.vizData||!mkGaugeChart.value)return;
+      const rating=mk.vizData.sentiment?.avg_rating||mk.sentData?.avg_rating||0;
+      initChart(mkGaugeChart.value,{
+        series:[{
+          type:'gauge',startAngle:200,endAngle:340,min:0,max:5,
+          radius:'85%',center:['50%','60%'],
+          axisLine:{lineStyle:{width:18,color:[[rating/5,'#4F6EF7'],[1,'#E5E7EB']]}},
+          pointer:{itemStyle:{color:'#4F6EF7'},width:4},
+          axisTick:{show:false},
+          splitLine:{show:false},
+          axisLabel:{fontSize:11,color:'#6B7280',distance:20},
+          detail:{valueAnimation:true,formatter:'{value}',fontSize:28,offsetCenter:[0,'30%'],color:'#1F2937'},
+          data:[{value:parseFloat(rating.toFixed(1))}]
+        }]
+      });
+    }
+
+    async function loadPersona(){
+      if(!mk.personaCid)return;
+      mk.personaLoading=true;
+      const r=await apiFetch('/api/marketing/persona/'+encodeURIComponent(mk.personaCid));
+      mk.persona=r;
+      mk.personaLoading=false;
+    }
+
+    async function genStrategy(){
+      if(!mk.stratSegment)return;
+      mk.stratLoading=true;
+      const r=await apiFetch('/api/marketing/strategy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({segment:mk.stratSegment,objective:mk.stratObjective||undefined})});
+      mk.strategy=r;
+      mk.stratLoading=false;
+    }
+
+    function adjustMix(channel,event){
+      const val=parseInt(event.target.value);
+      const others=Object.keys(mk.simMix).filter(k=>k!==channel);
+      const remaining=100-val;
+      const otherSum=others.reduce((s,k)=>s+mk.simMix[k],0);
+      if(otherSum===0){
+        others.forEach(k=>{mk.simMix[k]=Math.round(remaining/others.length)});
+      }else{
+        others.forEach(k=>{mk.simMix[k]=Math.round(remaining*mk.simMix[k]/otherSum)});
+      }
+      mk.simMix[channel]=val;
+      const total=Object.values(mk.simMix).reduce((s,v)=>s+v,0);
+      if(total!==100){
+        mk.simMix[others[0]]+=100-total;
+      }
+    }
+
+    async function runSimulate(){
+      mk.simLoading=true;
+      const body={
+        budget:mk.simBudget*10000,
+        target_segment:mk.simSegment||undefined,
+        channel_mix:{online:mk.simMix.online/100,offline:mk.simMix.offline/100,social:mk.simMix.social/100}
+      };
+      const r=await apiFetch('/api/marketing/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      mk.simResult=r;
+      mk.simLoading=false;
+      if(r){
+        await nextTick();
+        renderMKSimBar();
+        renderMKMonte();
+      }
+    }
+
+    function renderMKSimBar(){
+      if(!mk.simResult||!mkSimBarChart.value)return;
+      const cr=mk.simResult.channel_results||{};
+      const channels=Object.keys(cr);
+      initChart(mkSimBarChart.value,{
+        tooltip:{trigger:'axis'},
+        legend:{data:['触达','转化','收入'],top:0},
+        grid:{left:50,right:20,top:36,bottom:10},
+        xAxis:{type:'category',data:channels},
+        yAxis:{type:'value'},
+        series:[
+          {name:'触达',type:'bar',data:channels.map(c=>cr[c].reaches||0),itemStyle:{color:'#4F6EF7'}},
+          {name:'转化',type:'bar',data:channels.map(c=>cr[c].conversions||0),itemStyle:{color:'#7C3AED'}},
+          {name:'收入',type:'bar',data:channels.map(c=>cr[c].revenue||0),itemStyle:{color:'#10B981'}}
+        ]
+      });
+    }
+
+    function renderMKMonte(){
+      if(!mk.simResult||!mk.simResult.monte_carlo||!mkMonteChart.value)return;
+      const mc=mk.simResult.monte_carlo;
+      const p10=mc.p10_roi||0,p50=mc.p50_roi||0,p90=mc.p90_roi||0;
+      const mean=(p10+p50+p90)/3;
+      const std=Math.max(Math.abs(p90-p10)/4,1);
+      const bins=20;
+      const minV=mean-3*std,maxV=mean+3*std;
+      const step=(maxV-minV)/bins;
+      const histData=new Array(bins).fill(0);
+      for(let i=0;i<100;i++){
+        const u1=Math.random(),u2=Math.random();
+        const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+        const v=mean+z*std;
+        const bin=Math.floor((v-minV)/step);
+        if(bin>=0&&bin<bins)histData[bin]++;
+      }
+      const maxH=Math.max(...histData,1);
+      const labels=histData.map((_,i)=>(minV+i*step).toFixed(0)+'%');
+      initChart(mkMonteChart.value,{
+        tooltip:{formatter:p=>`ROI: ${p.name}<br>频次: ${p.value}`},
+        grid:{left:40,right:20,top:10,bottom:24},
+        xAxis:{type:'category',data:labels,axisLabel:{fontSize:10,interval:4}},
+        yAxis:{type:'value',axisLabel:{fontSize:10}},
+        series:[{type:'bar',data:histData,itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'rgba(79,110,247,.8)'},{offset:1,color:'rgba(124,58,237,.4)'}])},barWidth:8}]
+      });
+    }
+
+    // ==================== TAB SWITCH ====================
+    async function switchTab(t){
+      disposeAll();
+      tab.value=t;
+      await nextTick();
+      if(t==='bi'&&bi.data){renderBITrend();renderBIPie();renderBIBar();renderBIHeat();}
+      if(t==='mk'){
+        if(mk.customers.length)renderMKScatter();
+        if(mk.vizData){renderMKSegPie();renderMKGauge();}
+        if(mk.sentData)renderMKSentBar();
+        if(mk.simResult){renderMKSimBar();renderMKMonte();}
+      }
+    }
+
+    function formatNum(n){return fmtNum(n);}
+
+    // ==================== INIT ====================
+    onMounted(async()=>{
+      await checkStatus();
+      await loadBI();
+      loadCSStats();
+      loadMkSegmentation();
+      loadMkViz();
+      loadMkSentiment();
+      loadCustomers();
+    });
+
+    onBeforeUnmount(()=>{
+      disposeAll();
+      ro.disconnect();
+    });
+
+    return{
+      tab,llmOk,toast,switchTab,formatNum,
+      bi,biTrendChart,biPieChart,biBarChart,biHeatChart,biChatScroll,biInlineRefs,biSend,
+      cs,csChatScroll,csSend,loadFaq,intentLabel,sentimentEmoji,
+      mk,mkScatterChart,mkSegPieChart,mkSentBarChart,mkGaugeChart,mkSimBarChart,mkMonteChart,
+      segmentNames,totalCustomers,highValuePct,avgLtv,churnRiskCount,
+      loadPersona,genStrategy,adjustMix,runSimulate
+    };
+  }
+});
+
+app.mount('#app');
+</script>
+</body>
+</html>

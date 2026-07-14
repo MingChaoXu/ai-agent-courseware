@@ -1,0 +1,212 @@
+[
+  {
+    "id": "P001",
+    "name": "鲜萃拿铁咖啡24罐装",
+    "category": "食品饮料",
+    "price": 89.9,
+    "cost": 42
+  },
+  {
+    "id": "P002",
+    "name": "有机燕麦奶1L装",
+    "category": "食品饮料",
+    "price": 29.9,
+    "cost": 14
+  },
+  {
+    "id": "P003",
+    "name": "坚果混合礼盒1kg",
+    "category": "食品饮料",
+    "price": 128,
+    "cost": 58
+  },
+  {
+    "id": "P004",
+    "name": "玻尿酸保湿精华30ml",
+    "category": "美妆个护",
+    "price": 199,
+    "cost": 42
+  },
+  {
+    "id": "P005",
+    "name": "烟酰胺亮肤面膜10片",
+    "category": "美妆个护",
+    "price": 69.9,
+    "cost": 18
+  },
+  {
+    "id": "P006",
+    "name": "防晒喷雾SPF50+ 150ml",
+    "category": "美妆个护",
+    "price": 89,
+    "cost": 28
+  },
+  {
+    "id": "P007",
+    "name": "日本进口洗衣凝珠30颗",
+    "category": "家居日用",
+    "price": 39.9,
+    "cost": 16
+  },
+  {
+    "id": "P008",
+    "name": "竹纤维毛巾套装3条",
+    "category": "家居日用",
+    "price": 49.9,
+    "cost": 18
+  },
+  {
+    "id": "P009",
+    "name": "智能扫地机器人Pro",
+    "category": "数码家电",
+    "price": 2499,
+    "cost": 1200
+  },
+  {
+    "id": "P010",
+    "name": "蓝牙降噪耳机",
+    "category": "数码家电",
+    "price": 399,
+    "cost": 145
+  },
+  {
+    "id": "P011",
+    "name": "智能手表运动版",
+    "category": "数码家电",
+    "price": 899,
+    "cost": 380
+  },
+  {
+    "id": "P012",
+    "name": "真丝衬衫女士款",
+    "category": "服饰鞋包",
+    "price": 359,
+    "cost": 120
+  },
+  {
+    "id": "P013",
+    "name": "运动休闲双肩包",
+    "category": "服饰鞋包",
+    "price": 199,
+    "cost": 68
+  },
+  {
+    "id": "P014",
+    "name": "牛皮通勤手提包",
+    "category": "服饰鞋包",
+    "price": 599,
+    "cost": 195
+  },
+  {
+    "id": "P015",
+    "name": "婴儿纸尿裤L号72片",
+    "category": "母婴用品",
+    "price": 139,
+    "cost": 62
+  },
+  {
+    "id": "P016",
+    "name": "儿童益生菌固体饮料",
+    "category": "母婴用品",
+    "price": 89,
+    "cost": 32
+  },
+  {
+    "id": "P017",
+    "name": "婴儿润肤霜200ml",
+    "category": "母婴用品",
+    "price": 69.9,
+    "cost": 22
+  },
+  {
+    "id": "P018",
+    "name": "瑜伽垫加厚防滑款",
+    "category": "运动户外",
+    "price": 129,
+    "cost": 38
+  },
+  {
+    "id": "P019",
+    "name": "碳纤维登山杖一对",
+    "category": "运动户外",
+    "price": 269,
+    "cost": 88
+  },
+  {
+    "id": "P020",
+    "name": "速干运动T恤",
+    "category": "运动户外",
+    "price": 99,
+    "cost": 32
+  },
+  {
+    "id": "P021",
+    "name": "猫粮成猫通用5kg",
+    "category": "宠物用品",
+    "price": 159,
+    "cost": 58
+  },
+  {
+    "id": "P022",
+    "name": "狗零食鸡肉干500g",
+    "category": "宠物用品",
+    "price": 49.9,
+    "cost": 18
+  },
+  {
+    "id": "P023",
+    "name": "自动喂食器WiFi版",
+    "category": "宠物用品",
+    "price": 299,
+    "cost": 98
+  },
+  {
+    "id": "P024",
+    "name": "气泡水机家用版",
+    "category": "食品饮料",
+    "price": 399,
+    "cost": 148
+  },
+  {
+    "id": "P025",
+    "name": "抗老精华霜50ml",
+    "category": "美妆个护",
+    "price": 329,
+    "cost": 78
+  },
+  {
+    "id": "P026",
+    "name": "空气净化器除甲醛款",
+    "category": "家居日用",
+    "price": 1299,
+    "cost": 520
+  },
+  {
+    "id": "P027",
+    "name": "便携投影仪",
+    "category": "数码家电",
+    "price": 1599,
+    "cost": 620
+  },
+  {
+    "id": "P028",
+    "name": "轻奢羊毛围巾",
+    "category": "服饰鞋包",
+    "price": 259,
+    "cost": 82
+  },
+  {
+    "id": "P029",
+    "name": "儿童积木桌游套装",
+    "category": "母婴用品",
+    "price": 199,
+    "cost": 62
+  },
+  {
+    "id": "P030",
+    "name": "智能跳绳计数版",
+    "category": "运动户外",
+    "price": 79,
+    "cost": 26
+  }
+]

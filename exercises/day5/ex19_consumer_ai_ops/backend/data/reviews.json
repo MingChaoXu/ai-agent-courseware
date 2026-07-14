@@ -1,0 +1,602 @@
+[
+  {
+    "id": "R001",
+    "product_id": "P021",
+    "product_name": "猫粮成猫通用5kg",
+    "category": "宠物用品",
+    "rating": 1,
+    "content": "猫粮成猫通用5kg质量不行，用了几天就出问题了，失望",
+    "sentiment": "负面",
+    "date": "2026-06-26"
+  },
+  {
+    "id": "R002",
+    "product_id": "P029",
+    "product_name": "儿童积木桌游套装",
+    "category": "母婴用品",
+    "rating": 5,
+    "content": "儿童积木桌游套装用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-07-04"
+  },
+  {
+    "id": "R003",
+    "product_id": "P011",
+    "product_name": "智能手表运动版",
+    "category": "数码家电",
+    "rating": 5,
+    "content": "已经是第智能手表运动版次购买了，一如既往地好",
+    "sentiment": "正面",
+    "date": "2026-04-22"
+  },
+  {
+    "id": "R004",
+    "product_id": "P017",
+    "product_name": "婴儿润肤霜200ml",
+    "category": "母婴用品",
+    "rating": 5,
+    "content": "包装精美，物流也快，婴儿润肤霜200ml性价比超高",
+    "sentiment": "正面",
+    "date": "2026-05-14"
+  },
+  {
+    "id": "R005",
+    "product_id": "P017",
+    "product_name": "婴儿润肤霜200ml",
+    "category": "母婴用品",
+    "rating": 5,
+    "content": "婴儿润肤霜200ml这个价位真的很值，比实体店便宜很多",
+    "sentiment": "正面",
+    "date": "2026-06-26"
+  },
+  {
+    "id": "R006",
+    "product_id": "P026",
+    "product_name": "空气净化器除甲醛款",
+    "category": "家居日用",
+    "rating": 5,
+    "content": "空气净化器除甲醛款用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-07-04"
+  },
+  {
+    "id": "R007",
+    "product_id": "P019",
+    "product_name": "碳纤维登山杖一对",
+    "category": "运动户外",
+    "rating": 4,
+    "content": "碳纤维登山杖一对这个价位真的很值，比实体店便宜很多",
+    "sentiment": "正面",
+    "date": "2026-06-28"
+  },
+  {
+    "id": "R008",
+    "product_id": "P016",
+    "product_name": "儿童益生菌固体饮料",
+    "category": "母婴用品",
+    "rating": 5,
+    "content": "儿童益生菌固体饮料这个价位真的很值，比实体店便宜很多",
+    "sentiment": "正面",
+    "date": "2026-07-11"
+  },
+  {
+    "id": "R009",
+    "product_id": "P008",
+    "product_name": "竹纤维毛巾套装3条",
+    "category": "家居日用",
+    "rating": 2,
+    "content": "物流太慢了，竹纤维毛巾套装3条到货时都快过期了",
+    "sentiment": "负面",
+    "date": "2026-06-11"
+  },
+  {
+    "id": "R010",
+    "product_id": "P013",
+    "product_name": "运动休闲双肩包",
+    "category": "服饰鞋包",
+    "rating": 3,
+    "content": "运动休闲双肩包还行吧，一般般，没有特别惊喜",
+    "sentiment": "中性",
+    "date": "2026-06-23"
+  },
+  {
+    "id": "R011",
+    "product_id": "P010",
+    "product_name": "蓝牙降噪耳机",
+    "category": "数码家电",
+    "rating": 4,
+    "content": "蓝牙降噪耳机这个价位真的很值，比实体店便宜很多",
+    "sentiment": "正面",
+    "date": "2026-05-08"
+  },
+  {
+    "id": "R012",
+    "product_id": "P030",
+    "product_name": "智能跳绳计数版",
+    "category": "运动户外",
+    "rating": 3,
+    "content": "智能跳绳计数版中规中矩，这个价位说得过去",
+    "sentiment": "中性",
+    "date": "2026-05-23"
+  },
+  {
+    "id": "R013",
+    "product_id": "P020",
+    "product_name": "速干运动T恤",
+    "category": "运动户外",
+    "rating": 5,
+    "content": "已经是第速干运动T恤次购买了，一如既往地好",
+    "sentiment": "正面",
+    "date": "2026-04-30"
+  },
+  {
+    "id": "R014",
+    "product_id": "P016",
+    "product_name": "儿童益生菌固体饮料",
+    "category": "母婴用品",
+    "rating": 2,
+    "content": "物流太慢了，儿童益生菌固体饮料到货时都快过期了",
+    "sentiment": "负面",
+    "date": "2026-07-09"
+  },
+  {
+    "id": "R015",
+    "product_id": "P011",
+    "product_name": "智能手表运动版",
+    "category": "数码家电",
+    "rating": 4,
+    "content": "包装精美，物流也快，智能手表运动版性价比超高",
+    "sentiment": "正面",
+    "date": "2026-07-06"
+  },
+  {
+    "id": "R016",
+    "product_id": "P005",
+    "product_name": "烟酰胺亮肤面膜10片",
+    "category": "美妆个护",
+    "rating": 4,
+    "content": "已经是第烟酰胺亮肤面膜10片次购买了，一如既往地好",
+    "sentiment": "正面",
+    "date": "2026-04-20"
+  },
+  {
+    "id": "R017",
+    "product_id": "P030",
+    "product_name": "智能跳绳计数版",
+    "category": "运动户外",
+    "rating": 1,
+    "content": "跟描述不符，智能跳绳计数版实物差距很大，希望改进",
+    "sentiment": "负面",
+    "date": "2026-05-02"
+  },
+  {
+    "id": "R018",
+    "product_id": "P029",
+    "product_name": "儿童积木桌游套装",
+    "category": "母婴用品",
+    "rating": 3,
+    "content": "儿童积木桌游套装还行吧，一般般，没有特别惊喜",
+    "sentiment": "中性",
+    "date": "2026-05-30"
+  },
+  {
+    "id": "R019",
+    "product_id": "P003",
+    "product_name": "坚果混合礼盒1kg",
+    "category": "食品饮料",
+    "rating": 2,
+    "content": "客服态度差，坚果混合礼盒1kg有问题也不给解决",
+    "sentiment": "负面",
+    "date": "2026-07-03"
+  },
+  {
+    "id": "R020",
+    "product_id": "P029",
+    "product_name": "儿童积木桌游套装",
+    "category": "母婴用品",
+    "rating": 3,
+    "content": "儿童积木桌游套装还行吧，一般般，没有特别惊喜",
+    "sentiment": "中性",
+    "date": "2026-06-09"
+  },
+  {
+    "id": "R021",
+    "product_id": "P024",
+    "product_name": "气泡水机家用版",
+    "category": "食品饮料",
+    "rating": 5,
+    "content": "质量很好，气泡水机家用版用着很舒服，回购了",
+    "sentiment": "正面",
+    "date": "2026-06-15"
+  },
+  {
+    "id": "R022",
+    "product_id": "P021",
+    "product_name": "猫粮成猫通用5kg",
+    "category": "宠物用品",
+    "rating": 4,
+    "content": "猫粮成猫通用5kg用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-06-14"
+  },
+  {
+    "id": "R023",
+    "product_id": "P001",
+    "product_name": "鲜萃拿铁咖啡24罐装",
+    "category": "食品饮料",
+    "rating": 2,
+    "content": "鲜萃拿铁咖啡24罐装质量不行，用了几天就出问题了，失望",
+    "sentiment": "负面",
+    "date": "2026-06-18"
+  },
+  {
+    "id": "R024",
+    "product_id": "P018",
+    "product_name": "瑜伽垫加厚防滑款",
+    "category": "运动户外",
+    "rating": 3,
+    "content": "瑜伽垫加厚防滑款中规中矩，这个价位说得过去",
+    "sentiment": "中性",
+    "date": "2026-04-17"
+  },
+  {
+    "id": "R025",
+    "product_id": "P022",
+    "product_name": "狗零食鸡肉干500g",
+    "category": "宠物用品",
+    "rating": 3,
+    "content": "收到狗零食鸡肉干500g了，还没用，先给个中评吧",
+    "sentiment": "中性",
+    "date": "2026-05-13"
+  },
+  {
+    "id": "R026",
+    "product_id": "P002",
+    "product_name": "有机燕麦奶1L装",
+    "category": "食品饮料",
+    "rating": 5,
+    "content": "有机燕麦奶1L装用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-05-19"
+  },
+  {
+    "id": "R027",
+    "product_id": "P023",
+    "product_name": "自动喂食器WiFi版",
+    "category": "宠物用品",
+    "rating": 4,
+    "content": "包装精美，物流也快，自动喂食器WiFi版性价比超高",
+    "sentiment": "正面",
+    "date": "2026-06-28"
+  },
+  {
+    "id": "R028",
+    "product_id": "P029",
+    "product_name": "儿童积木桌游套装",
+    "category": "母婴用品",
+    "rating": 3,
+    "content": "儿童积木桌游套装中规中矩，这个价位说得过去",
+    "sentiment": "中性",
+    "date": "2026-05-29"
+  },
+  {
+    "id": "R029",
+    "product_id": "P007",
+    "product_name": "日本进口洗衣凝珠30颗",
+    "category": "家居日用",
+    "rating": 4,
+    "content": "质量很好，日本进口洗衣凝珠30颗用着很舒服，回购了",
+    "sentiment": "正面",
+    "date": "2026-07-02"
+  },
+  {
+    "id": "R030",
+    "product_id": "P019",
+    "product_name": "碳纤维登山杖一对",
+    "category": "运动户外",
+    "rating": 5,
+    "content": "碳纤维登山杖一对用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-05-06"
+  },
+  {
+    "id": "R031",
+    "product_id": "P019",
+    "product_name": "碳纤维登山杖一对",
+    "category": "运动户外",
+    "rating": 5,
+    "content": "质量很好，碳纤维登山杖一对用着很舒服，回购了",
+    "sentiment": "正面",
+    "date": "2026-06-12"
+  },
+  {
+    "id": "R032",
+    "product_id": "P027",
+    "product_name": "便携投影仪",
+    "category": "数码家电",
+    "rating": 4,
+    "content": "质量很好，便携投影仪用着很舒服，回购了",
+    "sentiment": "正面",
+    "date": "2026-06-20"
+  },
+  {
+    "id": "R033",
+    "product_id": "P010",
+    "product_name": "蓝牙降噪耳机",
+    "category": "数码家电",
+    "rating": 5,
+    "content": "朋友推荐的蓝牙降噪耳机，确实不错，会继续购买",
+    "sentiment": "正面",
+    "date": "2026-06-12"
+  },
+  {
+    "id": "R034",
+    "product_id": "P010",
+    "product_name": "蓝牙降噪耳机",
+    "category": "数码家电",
+    "rating": 5,
+    "content": "蓝牙降噪耳机用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-06-28"
+  },
+  {
+    "id": "R035",
+    "product_id": "P022",
+    "product_name": "狗零食鸡肉干500g",
+    "category": "宠物用品",
+    "rating": 5,
+    "content": "朋友推荐的狗零食鸡肉干500g，确实不错，会继续购买",
+    "sentiment": "正面",
+    "date": "2026-06-17"
+  },
+  {
+    "id": "R036",
+    "product_id": "P016",
+    "product_name": "儿童益生菌固体饮料",
+    "category": "母婴用品",
+    "rating": 3,
+    "content": "儿童益生菌固体饮料中规中矩，这个价位说得过去",
+    "sentiment": "中性",
+    "date": "2026-06-15"
+  },
+  {
+    "id": "R037",
+    "product_id": "P015",
+    "product_name": "婴儿纸尿裤L号72片",
+    "category": "母婴用品",
+    "rating": 3,
+    "content": "婴儿纸尿裤L号72片中规中矩，这个价位说得过去",
+    "sentiment": "中性",
+    "date": "2026-05-04"
+  },
+  {
+    "id": "R038",
+    "product_id": "P010",
+    "product_name": "蓝牙降噪耳机",
+    "category": "数码家电",
+    "rating": 1,
+    "content": "跟描述不符，蓝牙降噪耳机实物差距很大，希望改进",
+    "sentiment": "负面",
+    "date": "2026-06-09"
+  },
+  {
+    "id": "R039",
+    "product_id": "P011",
+    "product_name": "智能手表运动版",
+    "category": "数码家电",
+    "rating": 3,
+    "content": "收到智能手表运动版了，还没用，先给个中评吧",
+    "sentiment": "中性",
+    "date": "2026-06-30"
+  },
+  {
+    "id": "R040",
+    "product_id": "P002",
+    "product_name": "有机燕麦奶1L装",
+    "category": "食品饮料",
+    "rating": 5,
+    "content": "有机燕麦奶1L装用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-04-25"
+  },
+  {
+    "id": "R041",
+    "product_id": "P016",
+    "product_name": "儿童益生菌固体饮料",
+    "category": "母婴用品",
+    "rating": 5,
+    "content": "包装精美，物流也快，儿童益生菌固体饮料性价比超高",
+    "sentiment": "正面",
+    "date": "2026-05-08"
+  },
+  {
+    "id": "R042",
+    "product_id": "P008",
+    "product_name": "竹纤维毛巾套装3条",
+    "category": "家居日用",
+    "rating": 4,
+    "content": "竹纤维毛巾套装3条这个价位真的很值，比实体店便宜很多",
+    "sentiment": "正面",
+    "date": "2026-05-27"
+  },
+  {
+    "id": "R043",
+    "product_id": "P024",
+    "product_name": "气泡水机家用版",
+    "category": "食品饮料",
+    "rating": 1,
+    "content": "跟描述不符，气泡水机家用版实物差距很大，希望改进",
+    "sentiment": "负面",
+    "date": "2026-06-13"
+  },
+  {
+    "id": "R044",
+    "product_id": "P023",
+    "product_name": "自动喂食器WiFi版",
+    "category": "宠物用品",
+    "rating": 5,
+    "content": "自动喂食器WiFi版用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-07-11"
+  },
+  {
+    "id": "R045",
+    "product_id": "P016",
+    "product_name": "儿童益生菌固体饮料",
+    "category": "母婴用品",
+    "rating": 1,
+    "content": "物流太慢了，儿童益生菌固体饮料到货时都快过期了",
+    "sentiment": "负面",
+    "date": "2026-05-25"
+  },
+  {
+    "id": "R046",
+    "product_id": "P010",
+    "product_name": "蓝牙降噪耳机",
+    "category": "数码家电",
+    "rating": 1,
+    "content": "蓝牙降噪耳机质量不行，用了几天就出问题了，失望",
+    "sentiment": "负面",
+    "date": "2026-04-26"
+  },
+  {
+    "id": "R047",
+    "product_id": "P013",
+    "product_name": "运动休闲双肩包",
+    "category": "服饰鞋包",
+    "rating": 4,
+    "content": "运动休闲双肩包用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-07-08"
+  },
+  {
+    "id": "R048",
+    "product_id": "P008",
+    "product_name": "竹纤维毛巾套装3条",
+    "category": "家居日用",
+    "rating": 5,
+    "content": "包装精美，物流也快，竹纤维毛巾套装3条性价比超高",
+    "sentiment": "正面",
+    "date": "2026-05-06"
+  },
+  {
+    "id": "R049",
+    "product_id": "P002",
+    "product_name": "有机燕麦奶1L装",
+    "category": "食品饮料",
+    "rating": 3,
+    "content": "有机燕麦奶1L装还行吧，一般般，没有特别惊喜",
+    "sentiment": "中性",
+    "date": "2026-05-05"
+  },
+  {
+    "id": "R050",
+    "product_id": "P025",
+    "product_name": "抗老精华霜50ml",
+    "category": "美妆个护",
+    "rating": 5,
+    "content": "质量很好，抗老精华霜50ml用着很舒服，回购了",
+    "sentiment": "正面",
+    "date": "2026-05-31"
+  },
+  {
+    "id": "R051",
+    "product_id": "P030",
+    "product_name": "智能跳绳计数版",
+    "category": "运动户外",
+    "rating": 2,
+    "content": "物流太慢了，智能跳绳计数版到货时都快过期了",
+    "sentiment": "负面",
+    "date": "2026-04-29"
+  },
+  {
+    "id": "R052",
+    "product_id": "P007",
+    "product_name": "日本进口洗衣凝珠30颗",
+    "category": "家居日用",
+    "rating": 3,
+    "content": "日本进口洗衣凝珠30颗中规中矩，这个价位说得过去",
+    "sentiment": "中性",
+    "date": "2026-04-25"
+  },
+  {
+    "id": "R053",
+    "product_id": "P014",
+    "product_name": "牛皮通勤手提包",
+    "category": "服饰鞋包",
+    "rating": 2,
+    "content": "牛皮通勤手提包质量不行，用了几天就出问题了，失望",
+    "sentiment": "负面",
+    "date": "2026-05-04"
+  },
+  {
+    "id": "R054",
+    "product_id": "P013",
+    "product_name": "运动休闲双肩包",
+    "category": "服饰鞋包",
+    "rating": 2,
+    "content": "物流太慢了，运动休闲双肩包到货时都快过期了",
+    "sentiment": "负面",
+    "date": "2026-05-06"
+  },
+  {
+    "id": "R055",
+    "product_id": "P015",
+    "product_name": "婴儿纸尿裤L号72片",
+    "category": "母婴用品",
+    "rating": 5,
+    "content": "已经是第婴儿纸尿裤L号72片次购买了，一如既往地好",
+    "sentiment": "正面",
+    "date": "2026-05-08"
+  },
+  {
+    "id": "R056",
+    "product_id": "P009",
+    "product_name": "智能扫地机器人Pro",
+    "category": "数码家电",
+    "rating": 5,
+    "content": "智能扫地机器人Pro用了两周感觉有明显改善，推荐大家试试",
+    "sentiment": "正面",
+    "date": "2026-06-13"
+  },
+  {
+    "id": "R057",
+    "product_id": "P005",
+    "product_name": "烟酰胺亮肤面膜10片",
+    "category": "美妆个护",
+    "rating": 2,
+    "content": "物流太慢了，烟酰胺亮肤面膜10片到货时都快过期了",
+    "sentiment": "负面",
+    "date": "2026-06-08"
+  },
+  {
+    "id": "R058",
+    "product_id": "P003",
+    "product_name": "坚果混合礼盒1kg",
+    "category": "食品饮料",
+    "rating": 1,
+    "content": "客服态度差，坚果混合礼盒1kg有问题也不给解决",
+    "sentiment": "负面",
+    "date": "2026-05-01"
+  },
+  {
+    "id": "R059",
+    "product_id": "P013",
+    "product_name": "运动休闲双肩包",
+    "category": "服饰鞋包",
+    "rating": 4,
+    "content": "朋友推荐的运动休闲双肩包，确实不错，会继续购买",
+    "sentiment": "正面",
+    "date": "2026-04-20"
+  },
+  {
+    "id": "R060",
+    "product_id": "P009",
+    "product_name": "智能扫地机器人Pro",
+    "category": "数码家电",
+    "rating": 3,
+    "content": "收到智能扫地机器人Pro了，还没用，先给个中评吧",
+    "sentiment": "中性",
+    "date": "2026-07-12"
+  }
+]

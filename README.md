@@ -1,58 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '0cf5e840-3caa-4ca0-ac6d-9c4e64be2a01'
-  PropagateID: '0cf5e840-3caa-4ca0-ac6d-9c4e64be2a01'
-  ReservedCode1: 'c3269ece-12e3-4ced-ab4a-ed6ba961cae8'
-  ReservedCode2: 'c3269ece-12e3-4ced-ab4a-ed6ba961cae8'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '98302738-bd83-4c06-a67f-37e9413b707a'
-  PropagateID: '98302738-bd83-4c06-a67f-37e9413b707a'
-  ReservedCode1: '777d2ef4-4088-4035-a83c-f4759851a20f'
-  ReservedCode2: '777d2ef4-4088-4035-a83c-f4759851a20f'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '861b0058-e3bc-4dcc-95db-596ef4d52b73'
-  PropagateID: '861b0058-e3bc-4dcc-95db-596ef4d52b73'
-  ReservedCode1: 'ce76ae1a-e82b-4d48-ae00-8cf7dae37466'
-  ReservedCode2: 'ce76ae1a-e82b-4d48-ae00-8cf7dae37466'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '424c71d5-7f31-49ed-b127-896869eea449'
-  PropagateID: '424c71d5-7f31-49ed-b127-896869eea449'
-  ReservedCode1: '008a4841-354f-4dca-bbcf-a95b6c41b5bf'
-  ReservedCode2: '008a4841-354f-4dca-bbcf-a95b6c41b5bf'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '1e3a0383-0de0-45c9-b59d-f98ff7ae0716'
-  PropagateID: '1e3a0383-0de0-45c9-b59d-f98ff7ae0716'
-  ReservedCode1: '10623e4e-7165-4dfe-aca7-29a8fb2f4152'
-  ReservedCode2: '10623e4e-7165-4dfe-aca7-29a8fb2f4152'
----
-
 # 区县AI赋能培训课程
 
 面向电信行业客户经理与解决方案经理的5天AI智能体实战培训课程，涵盖AI理论与实践、RAG知识库、文档审核、多模态数据分析、复杂智能体等16+行业场景。
@@ -139,6 +84,7 @@ AIGC:
 | ex16 | 消融评估框架 | ex16_ablation_eval/ |
 | ex17 | 综合路演 | ex17_roadshow/ |
 | ex18 | 交通事件智能处置 | ex18_traffic_incident/ |
+| ex19 | 消费领域AI智能运营 | ex19_consumer_ai_ops/ |
 
 ## 快速开始
 
