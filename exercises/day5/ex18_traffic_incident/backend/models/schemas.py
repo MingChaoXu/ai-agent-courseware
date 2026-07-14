@@ -21,6 +21,7 @@ class HealthResponse(BaseModel):
     llm_configured: bool
     agent_ready: bool
     amap_mode: str = Field("", description="online or offline")
+    amap_api_key: str = Field("", description="AMap JS API key for frontend map rendering")
     modules: list = Field(default_factory=list, description="Available agent modules")
 
 

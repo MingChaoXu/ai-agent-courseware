@@ -23,10 +23,15 @@
       --warning: #f59e0b;
       --info: #3b82f6;
     }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100vh; }
-    .app { display: flex; flex-direction: column; height: 100vh; max-width: 960px; margin: 0 auto; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; }
+
+    /* ====== Layout: Left panel + Right map ====== */
+    .app-layout { display: flex; height: 100vh; }
+    .left-panel { flex: 1; display: flex; flex-direction: column; min-width: 0; max-width: 640px; border-right: 1px solid var(--border); background: var(--surface); }
+    .right-panel { flex: 1; position: relative; background: #e5e7eb; min-width: 400px; }
+
     /* Header */
-    .header { padding: 12px 24px; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .header { padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--surface); }
     .header-top { display: flex; align-items: center; gap: 12px; }
     .header h1 { font-size: 18px; font-weight: 600; }
     .header .badge { font-size: 11px; padding: 2px 8px; border-radius: 12px; font-weight: 500; }
@@ -39,8 +44,9 @@
     .tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--text-secondary); transition: all 0.2s; white-space: nowrap; }
     .tab:hover { color: var(--primary); }
     .tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
     /* Messages */
-    .messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
     .empty-state { text-align: center; color: var(--text-secondary); padding: 40px 20px; }
     .empty-state .icon { font-size: 42px; margin-bottom: 12px; opacity: 0.3; }
     .empty-state h3 { font-size: 16px; margin-bottom: 6px; color: var(--text); }
@@ -67,19 +73,19 @@
     .agent-panel-header .step-status { margin-left: auto; font-size: 11px; color: var(--text-secondary); }
     .agent-panel-body { padding: 14px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; word-break: break-word; max-height: 400px; overflow-y: auto; }
     .agent-panel-body.error { color: var(--danger); }
-    /* AMap Data Panel */
-    .amap-panel { background: var(--accent-bg); border: 1px solid #fde68a; border-radius: 10px; padding: 12px 14px; font-size: 12px; }
-    .amap-panel-title { font-size: 12px; font-weight: 600; color: #92400e; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .amap-section { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #fef3c7; }
+    /* AMap Data Panel (compact, below agent panels) */
+    .amap-panel { background: var(--accent-bg); border: 1px solid #fde68a; border-radius: 10px; padding: 10px 14px; font-size: 12px; }
+    .amap-panel-title { font-size: 12px; font-weight: 600; color: #92400e; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .amap-section { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid #fef3c7; }
     .amap-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .amap-section-label { font-weight: 600; color: #78350f; font-size: 11px; margin-bottom: 4px; }
+    .amap-section-label { font-weight: 600; color: #78350f; font-size: 11px; margin-bottom: 2px; }
     .amap-section-value { color: var(--text); }
     .amap-poi-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 2px; }
     .amap-poi-item { padding: 2px 6px; background: white; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; }
     .amap-poi-item .poi-dist { color: var(--text-secondary); }
     .amap-route-item { padding: 3px 6px; background: white; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; margin-top: 2px; }
     /* Input Area */
-    .input-area { padding: 12px 24px; border-top: 1px solid var(--border); background: var(--surface); }
+    .input-area { padding: 12px 20px; border-top: 1px solid var(--border); background: var(--surface); }
     .input-box { display: flex; gap: 8px; align-items: flex-end; }
     .input-box textarea { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 12px; font-size: 14px; resize: none; outline: none; font-family: inherit; min-height: 44px; max-height: 200px; }
     .input-box textarea:focus { border-color: var(--primary-light); }
@@ -92,6 +98,25 @@
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes blink { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
+
+    /* ====== Right Map Panel ====== */
+    .map-wrapper { width: 100%; height: 100%; position: relative; }
+    #main-map { width: 100%; height: 100%; }
+    #main-map .amap-logo, #main-map .amap-copyright { display: none !important; }
+    .map-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px 32px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); text-align: center; z-index: 10; }
+    .map-loading .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .map-legend { position: absolute; bottom: 16px; left: 16px; background: white; border-radius: 8px; padding: 10px 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); font-size: 11px; z-index: 10; }
+    .map-legend .legend-title { font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .map-legend .legend-item { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .map-legend .legend-dot { width: 14px; height: 14px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 9px; font-weight: 700; }
+    .map-info-bar { position: absolute; top: 12px; left: 12px; right: 12px; background: white; border-radius: 10px; padding: 12px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); z-index: 10; display: none; }
+    .map-info-bar.visible { display: block; }
+    .map-info-bar .info-title { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
+    .map-info-bar .info-address { font-size: 12px; color: var(--text-secondary); }
+    .map-info-bar .info-tags { display: flex; gap: 6px; margin-top: 6px; }
+    .map-info-bar .info-tag { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+
     /* Incident Archive */
     .archive-list { display: flex; flex-direction: column; gap: 8px; }
     .incident-card { padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: var(--surface); }
@@ -130,195 +155,224 @@
 </head>
 <body>
 <div id="app">
-  <div class="app">
-    <!-- Header -->
-    <div class="header">
-      <div class="header-top">
-        <h1>交通事件智能处置Agent</h1>
-        <span class="badge" :class="agentReady ? 'ok' : 'err'">{{ agentReady ? 'Agent就绪' : '未初始化' }}</span>
-        <span class="badge" :class="amapMode === 'online' ? 'amap-online' : 'amap-offline'">
-          {{ amapMode === 'online' ? '高德在线' : '高德离线' }}
-        </span>
+  <div class="app-layout">
+    <!-- ====== Left Panel: Chat / Archive ====== -->
+    <div class="left-panel">
+      <div class="header">
+        <div class="header-top">
+          <h1>交通事件智能处置</h1>
+          <span class="badge" :class="agentReady ? 'ok' : 'err'">{{ agentReady ? 'Agent就绪' : '未初始化' }}</span>
+          <span class="badge" :class="amapMode === 'online' ? 'amap-online' : 'amap-offline'">
+            {{ amapMode === 'online' ? '高德在线' : '高德离线' }}
+          </span>
+        </div>
+        <div class="tabs">
+          <div class="tab" :class="{active: tab === 'chat'}" @click="tab = 'chat'">事件处置</div>
+          <div class="tab" :class="{active: tab === 'archive'}" @click="tab = 'archive'; loadIncidents()">事件档案</div>
+        </div>
       </div>
-      <div class="tabs">
-        <div class="tab" :class="{active: tab === 'chat'}" @click="tab = 'chat'">事件处置</div>
-        <div class="tab" :class="{active: tab === 'archive'}" @click="tab = 'archive'; loadIncidents()">事件档案</div>
-      </div>
+
+      <!-- Chat Tab -->
+      <template v-if="tab === 'chat'">
+        <div class="messages" ref="msgContainer">
+          <div v-if="messages.length === 0" class="empty-state">
+            <div class="icon">🚦</div>
+            <h3>交通事件智能处置Agent</h3>
+            <p>输入交通事件描述，5个Agent将协作完成：事件感知 → 影响评估 → 疏导方案 → 信息发布 → 复盘报告</p>
+            <div class="sample-section">
+              <div class="section-title">快速选择样本</div>
+              <div class="sample-cards">
+                <div v-for="s in samples" :key="s.title" class="sample-card" @click="useSample(s)">
+                  <div class="card-title">{{ s.title }}</div>
+                  <div class="card-sub">{{ s.text.substring(0, 40) }}...</div>
+                  <span class="card-tag" :class="s.tagClass">{{ s.tagLabel }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <template v-for="(msg, i) in messages" :key="i">
+            <!-- User message -->
+            <div v-if="msg.role === 'user'" class="msg user" style="display:flex;gap:12px;align-self:flex-end;flex-direction:row-reverse;">
+              <div class="msg-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">报</div>
+              <div class="msg-body" style="padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.7;max-width:560px;background:var(--primary);color:white;border-bottom-right-radius:4px;word-break:break-word;">{{ msg.text }}</div>
+            </div>
+
+            <!-- Agent results -->
+            <div v-else-if="msg.role === 'assistant'" style="display:flex;flex-direction:column;gap:10px;">
+              <!-- AMap compact data -->
+              <div v-if="msg.amapData && msg.amapData.geocode" class="amap-panel">
+                <div class="amap-panel-title">📍 {{ msg.amapData.geocode.formatted_address || msg.amapData.geocode.location }}
+                  <span style="margin-left:auto;font-size:10px;color:#92400e;">{{ msg.amapMode }}</span>
+                </div>
+                <div v-if="msg.amapData.traffic" class="amap-section">
+                  <div class="amap-section-label">实时路况</div>
+                  <div class="amap-section-value">{{ msg.amapData.traffic.status }} - {{ msg.amapData.traffic.description }}</div>
+                </div>
+                <div v-if="msg.amapData.around" class="amap-section">
+                  <div class="amap-section-label">周边救援</div>
+                  <template v-for="(pois, cat) in msg.amapData.around">
+                    <div v-if="pois && pois.length" :key="cat" style="margin-top:2px;">
+                      <span style="font-weight:600;color:#78350f;font-size:11px;">{{ amapLabels[cat] || cat }}:</span>
+                      <div class="amap-poi-list">
+                        <span v-for="p in pois" :key="p.name" class="amap-poi-item">{{ p.name }} <span class="poi-dist">{{ p.distance }}m</span></span>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+                <div v-if="msg.amapData.detour_routes && msg.amapData.detour_routes.length" class="amap-section">
+                  <div class="amap-section-label">分流路线</div>
+                  <div v-for="(r, idx) in msg.amapData.detour_routes" :key="idx" class="amap-route-item">{{ r.route }} | {{ r.distance }} | {{ r.duration }}</div>
+                </div>
+              </div>
+
+              <!-- Agent Panels -->
+              <div v-for="(agentKey, idx) in agentKeys" :key="agentKey">
+                <div v-if="msg.results && msg.results[agentKey]" class="agent-panel">
+                  <div class="agent-panel-header">
+                    <div class="step-num">{{ idx + 1 }}</div>
+                    <div class="step-title">{{ agentLabels[agentKey] }}</div>
+                    <div class="step-status">{{ agentKey }}</div>
+                  </div>
+                  <div class="agent-panel-body" :class="{error: msg.results[agentKey].startsWith('[')}">{{ msg.results[agentKey] }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading -->
+            <div v-else-if="msg.role === 'loading'" style="display:flex;gap:12px;">
+              <div class="msg-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--primary-bg);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">AI</div>
+              <div style="padding:12px 16px;border-radius:12px;font-size:14px;background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px;">
+                <div class="typing"><span></span><span></span><span></span></div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">5个Agent协作分析中...</div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+          <div class="input-box">
+            <textarea v-model="input" placeholder="输入交通事件描述，如：三环路辅路与人民路交叉口发生多车追尾事故..." @keydown.enter.exact.prevent="send" rows="1" ref="inputEl"></textarea>
+            <button @click="send" :disabled="loading || !input.trim()">{{ loading ? '分析中' : '发送' }}</button>
+          </div>
+        </div>
+      </template>
+
+      <!-- Archive Tab -->
+      <template v-if="tab === 'archive'">
+        <div class="messages">
+          <div v-if="!selectedIncident">
+            <div class="filter-bar">
+              <input v-model="archiveKeyword" placeholder="搜索事件..." @input="loadIncidents" style="flex:1;" />
+              <select v-model="archiveStatus" @change="loadIncidents">
+                <option value="">全部状态</option>
+                <option value="pending">待处理</option>
+                <option value="analyzed">已分析</option>
+                <option value="dispatched">已处置</option>
+                <option value="resolved">已结案</option>
+              </select>
+            </div>
+            <div class="archive-list">
+              <div v-for="inc in incidents" :key="inc.id" class="incident-card" @click="selectIncident(inc.id)">
+                <div class="ic-header">
+                  <span class="ic-id">#{{ inc.id }}</span>
+                  <span v-if="inc.incident_type" class="ic-type" :class="getTypeClass(inc.incident_type)">{{ inc.incident_type }}</span>
+                  <span class="ic-status" :class="'status-' + inc.status">{{ getStatusLabel(inc.status) }}</span>
+                </div>
+                <div class="ic-desc">{{ inc.description }}</div>
+                <div class="ic-meta">
+                  <span v-if="inc.location">📍 {{ inc.location }}</span>
+                  <span v-if="inc.severity">⚠ {{ inc.severity }}</span>
+                  <span>🕐 {{ inc.created_at }}</span>
+                  <span v-if="inc.dispatch_count">📋 {{ inc.dispatch_count }}条处置</span>
+                </div>
+              </div>
+              <div v-if="incidents.length === 0" class="empty-state">
+                <div class="icon">📋</div>
+                <p>暂无事件记录</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Incident Detail -->
+          <div v-else>
+            <div class="detail-back" @click="selectedIncident = null; selectedDispatches = []">← 返回列表</div>
+            <div class="detail-card">
+              <div class="dc-title">事件 #{{ selectedIncident.id }}</div>
+              <div class="dc-row"><span class="dc-label">描述</span><span class="dc-value">{{ selectedIncident.description }}</span></div>
+              <div class="dc-row"><span class="dc-label">类型</span><span class="dc-value">{{ selectedIncident.incident_type || '未分类' }}</span></div>
+              <div class="dc-row"><span class="dc-label">位置</span><span class="dc-value">{{ selectedIncident.location || '未知' }}</span></div>
+              <div class="dc-row"><span class="dc-label">严重程度</span><span class="dc-value">{{ selectedIncident.severity || '未评估' }}</span></div>
+              <div class="dc-row"><span class="dc-label">状态</span><span class="dc-value">{{ getStatusLabel(selectedIncident.status) }}</span></div>
+              <div class="dc-row"><span class="dc-label">创建时间</span><span class="dc-value">{{ selectedIncident.created_at }}</span></div>
+            </div>
+            <div v-if="selectedIncident.ai_analysis" class="detail-card">
+              <div class="dc-title">AI分析摘要</div>
+              <div style="font-size:13px;line-height:1.7;white-space:pre-wrap;">{{ selectedIncident.ai_analysis }}</div>
+            </div>
+            <div v-if="selectedDispatches.length">
+              <div style="font-size:14px;font-weight:600;margin-bottom:8px;">处置记录 ({{ selectedDispatches.length }})</div>
+              <div v-for="d in selectedDispatches" :key="d.id" class="dispatch-card">
+                <div class="dc-time">🕐 {{ d.created_at }}</div>
+                <div v-if="d.analysis_text" class="dc-section">
+                  <div class="dc-section-label">事件分析</div>
+                  <div class="dc-section-body">{{ d.analysis_text.substring(0, 200) }}{{ d.analysis_text.length > 200 ? '...' : '' }}</div>
+                </div>
+                <div v-if="d.dispatch_plan" class="dc-section">
+                  <div class="dc-section-label">处置方案</div>
+                  <div class="dc-section-body">{{ d.dispatch_plan.substring(0, 200) }}{{ d.dispatch_plan.length > 200 ? '...' : '' }}</div>
+                </div>
+                <div v-if="d.publish_text" class="dc-section">
+                  <div class="dc-section-label">发布文案</div>
+                  <div class="dc-section-body">{{ d.publish_text.substring(0, 150) }}{{ d.publish_text.length > 150 ? '...' : '' }}</div>
+                </div>
+                <div v-if="d.review_report" class="dc-section">
+                  <div class="dc-section-label">复盘报告</div>
+                  <div class="dc-section-body">{{ d.review_report.substring(0, 150) }}{{ d.review_report.length > 150 ? '...' : '' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
 
-    <!-- Chat Tab -->
-    <template v-if="tab === 'chat'">
-      <div class="messages" ref="msgContainer">
-        <div v-if="messages.length === 0" class="empty-state">
-          <div class="icon">🚦</div>
-          <h3>交通事件智能处置Agent</h3>
-          <p>输入交通事件描述，5个Agent将协作完成：事件感知 → 影响评估 → 疏导方案 → 信息发布 → 复盘报告</p>
-          <div class="sample-section">
-            <div class="section-title">快速选择样本</div>
-            <div class="sample-cards">
-              <div v-for="s in samples" :key="s.title" class="sample-card" @click="useSample(s)">
-                <div class="card-title">{{ s.title }}</div>
-                <div class="card-sub">{{ s.text.substring(0, 40) }}...</div>
-                <span class="card-tag" :class="s.tagClass">{{ s.tagLabel }}</span>
-              </div>
-            </div>
+    <!-- ====== Right Panel: Map ====== -->
+    <div class="right-panel">
+      <div class="map-wrapper">
+        <div id="main-map"></div>
+        <!-- Loading overlay -->
+        <div v-if="!amapLoaded" class="map-loading">
+          <div class="spinner"></div>
+          <div style="font-size:14px;font-weight:600;color:var(--text);">地图加载中</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">正在连接高德地图服务...</div>
+        </div>
+        <!-- Info bar -->
+        <div class="map-info-bar" :class="{visible: mapInfo.visible}">
+          <div class="info-title">{{ mapInfo.title }}</div>
+          <div class="info-address">{{ mapInfo.address }}</div>
+          <div class="info-tags">
+            <span v-if="mapInfo.severity" class="info-tag" :style="{background: severityBg(mapInfo.severity), color: severityColor(mapInfo.severity)}">{{ mapInfo.severity }}</span>
+            <span v-if="mapInfo.type" class="info-tag tag-accident">{{ mapInfo.type }}</span>
           </div>
         </div>
-
-        <template v-for="(msg, i) in messages" :key="i">
-          <!-- User message -->
-          <div v-if="msg.role === 'user'" class="msg user" style="display:flex;gap:12px;align-self:flex-end;flex-direction:row-reverse;">
-            <div class="msg-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">报</div>
-            <div class="msg-body" style="padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.7;max-width:640px;background:var(--primary);color:white;border-bottom-right-radius:4px;word-break:break-word;">{{ msg.text }}</div>
-          </div>
-
-          <!-- Agent results -->
-          <div v-else-if="msg.role === 'assistant'" style="display:flex;flex-direction:column;gap:12px;max-width:780px;">
-            <!-- AMap Data Panel -->
-            <div v-if="msg.amapData && msg.amapData.geocode" class="amap-panel">
-              <div class="amap-panel-title">📍 高德地图数据 ({{ msg.amapMode }})</div>
-              <div class="amap-section">
-                <div class="amap-section-label">地理编码</div>
-                <div class="amap-section-value">{{ msg.amapData.geocode.formatted_address }} ({{ msg.amapData.geocode.location }})</div>
-              </div>
-              <div v-if="msg.amapData.traffic" class="amap-section">
-                <div class="amap-section-label">实时路况</div>
-                <div class="amap-section-value">{{ msg.amapData.traffic.status }} - {{ msg.amapData.traffic.description }}</div>
-              </div>
-              <div v-if="msg.amapData.around" class="amap-section">
-                <div class="amap-section-label">周边救援资源</div>
-                <template v-for="(pois, cat) in msg.amapData.around">
-                  <div v-if="pois && pois.length" :key="cat" style="margin-top:4px;">
-                    <span style="font-weight:600;color:#78350f;font-size:11px;">{{ amapLabels[cat] || cat }}:</span>
-                    <div class="amap-poi-list">
-                      <span v-for="p in pois" :key="p.name" class="amap-poi-item">{{ p.name }} <span class="poi-dist">{{ p.distance }}m</span></span>
-                    </div>
-                  </div>
-                </template>
-              </div>
-              <div v-if="msg.amapData.detour_routes && msg.amapData.detour_routes.length" class="amap-section">
-                <div class="amap-section-label">分流路线方案</div>
-                <div v-for="(r, idx) in msg.amapData.detour_routes" :key="idx" class="amap-route-item">{{ r.route }} | {{ r.distance }} | {{ r.duration }} | {{ r.tolls }}</div>
-              </div>
-            </div>
-
-            <!-- Agent Panels -->
-            <div v-for="(agentKey, idx) in agentKeys" :key="agentKey">
-              <div v-if="msg.results && msg.results[agentKey]" class="agent-panel">
-                <div class="agent-panel-header">
-                  <div class="step-num">{{ idx + 1 }}</div>
-                  <div class="step-title">{{ agentLabels[agentKey] }}</div>
-                  <div class="step-status">{{ agentKey }}</div>
-                </div>
-                <div class="agent-panel-body" :class="{error: msg.results[agentKey].startsWith('[')}">{{ msg.results[agentKey] }}</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Loading -->
-          <div v-else-if="msg.role === 'loading'" style="display:flex;gap:12px;">
-            <div class="msg-avatar" style="width:32px;height:32px;border-radius:50%;background:var(--primary-bg);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;">AI</div>
-            <div style="padding:12px 16px;border-radius:12px;font-size:14px;background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px;">
-              <div class="typing"><span></span><span></span><span></span></div>
-              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">5个Agent协作分析中...</div>
-            </div>
-          </div>
-        </template>
-      </div>
-
-      <!-- Input Area -->
-      <div class="input-area">
-        <div class="input-box">
-          <textarea v-model="input" placeholder="输入交通事件描述，如：三环路辅路与人民路交叉口发生多车追尾事故..." @keydown.enter.exact.prevent="send" rows="1" ref="inputEl"></textarea>
-          <button @click="send" :disabled="loading || !input.trim()">{{ loading ? '分析中' : '发送' }}</button>
+        <!-- Legend -->
+        <div class="map-legend" v-if="amapLoaded">
+          <div class="legend-title">图例</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ef4444;">!</div> 事件位置</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ef4444;">医</div> 医院</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;">消</div> 消防站</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;">警</div> 交警队</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#10b981;">油</div> 加油站</div>
         </div>
       </div>
-    </template>
-
-    <!-- Archive Tab -->
-    <template v-if="tab === 'archive'">
-      <div class="messages">
-        <div v-if="!selectedIncident">
-          <div class="filter-bar">
-            <input v-model="archiveKeyword" placeholder="搜索事件..." @input="loadIncidents" style="flex:1;" />
-            <select v-model="archiveStatus" @change="loadIncidents">
-              <option value="">全部状态</option>
-              <option value="pending">待处理</option>
-              <option value="analyzed">已分析</option>
-              <option value="dispatched">已处置</option>
-              <option value="resolved">已结案</option>
-            </select>
-          </div>
-          <div class="archive-list">
-            <div v-for="inc in incidents" :key="inc.id" class="incident-card" @click="selectIncident(inc.id)">
-              <div class="ic-header">
-                <span class="ic-id">#{{ inc.id }}</span>
-                <span v-if="inc.incident_type" class="ic-type" :class="getTypeClass(inc.incident_type)">{{ inc.incident_type }}</span>
-                <span class="ic-status" :class="'status-' + inc.status">{{ getStatusLabel(inc.status) }}</span>
-              </div>
-              <div class="ic-desc">{{ inc.description }}</div>
-              <div class="ic-meta">
-                <span v-if="inc.location">📍 {{ inc.location }}</span>
-                <span v-if="inc.severity">⚠ {{ inc.severity }}</span>
-                <span>🕐 {{ inc.created_at }}</span>
-                <span v-if="inc.dispatch_count">📋 {{ inc.dispatch_count }}条处置</span>
-                <span v-if="inc.amap_mode">🗺 {{ inc.amap_mode }}</span>
-              </div>
-            </div>
-            <div v-if="incidents.length === 0" class="empty-state">
-              <div class="icon">📋</div>
-              <p>暂无事件记录</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Incident Detail -->
-        <div v-else>
-          <div class="detail-back" @click="selectedIncident = null; selectedDispatches = []">← 返回列表</div>
-          <div class="detail-card">
-            <div class="dc-title">事件 #{{ selectedIncident.id }}</div>
-            <div class="dc-row"><span class="dc-label">描述</span><span class="dc-value">{{ selectedIncident.description }}</span></div>
-            <div class="dc-row"><span class="dc-label">类型</span><span class="dc-value">{{ selectedIncident.incident_type || '未分类' }}</span></div>
-            <div class="dc-row"><span class="dc-label">位置</span><span class="dc-value">{{ selectedIncident.location || '未知' }}</span></div>
-            <div class="dc-row"><span class="dc-label">严重程度</span><span class="dc-value">{{ selectedIncident.severity || '未评估' }}</span></div>
-            <div class="dc-row"><span class="dc-label">状态</span><span class="dc-value">{{ getStatusLabel(selectedIncident.status) }}</span></div>
-            <div class="dc-row"><span class="dc-label">高德模式</span><span class="dc-value">{{ selectedIncident.amap_mode || '-' }}</span></div>
-            <div class="dc-row"><span class="dc-label">创建时间</span><span class="dc-value">{{ selectedIncident.created_at }}</span></div>
-          </div>
-          <div v-if="selectedIncident.ai_analysis" class="detail-card">
-            <div class="dc-title">AI分析摘要</div>
-            <div style="font-size:13px;line-height:1.7;white-space:pre-wrap;">{{ selectedIncident.ai_analysis }}</div>
-          </div>
-          <div v-if="selectedDispatches.length">
-            <div style="font-size:14px;font-weight:600;margin-bottom:8px;">处置记录 ({{ selectedDispatches.length }})</div>
-            <div v-for="d in selectedDispatches" :key="d.id" class="dispatch-card">
-              <div class="dc-time">🕐 {{ d.created_at }}</div>
-              <div v-if="d.analysis_text" class="dc-section">
-                <div class="dc-section-label">事件分析</div>
-                <div class="dc-section-body">{{ d.analysis_text.substring(0, 200) }}{{ d.analysis_text.length > 200 ? '...' : '' }}</div>
-              </div>
-              <div v-if="d.dispatch_plan" class="dc-section">
-                <div class="dc-section-label">处置方案</div>
-                <div class="dc-section-body">{{ d.dispatch_plan.substring(0, 200) }}{{ d.dispatch_plan.length > 200 ? '...' : '' }}</div>
-              </div>
-              <div v-if="d.publish_text" class="dc-section">
-                <div class="dc-section-label">发布文案</div>
-                <div class="dc-section-body">{{ d.publish_text.substring(0, 150) }}{{ d.publish_text.length > 150 ? '...' : '' }}</div>
-              </div>
-              <div v-if="d.review_report" class="dc-section">
-                <div class="dc-section-label">复盘报告</div>
-                <div class="dc-section-body">{{ d.review_report.substring(0, 150) }}{{ d.review_report.length > 150 ? '...' : '' }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
+    </div>
   </div>
 </div>
 
 <script>
-const { createApp, ref, nextTick, onMounted } = Vue;
+const { createApp, ref, reactive, nextTick, onMounted, watch } = Vue;
 
 createApp({
   setup() {
@@ -330,6 +384,17 @@ createApp({
     const amapMode = ref('offline');
     const msgContainer = ref(null);
     const inputEl = ref(null);
+
+    // AMap state
+    const amapKey = ref('');
+    const amapLoaded = ref(false);
+    const amapLoading = ref(false);
+    let currentMarker = null;  // Current incident marker
+    let currentInfoWin = null; // Current info window
+    let poiMarkers = [];       // POI markers
+
+    // Map info bar
+    const mapInfo = reactive({ visible: false, title: '', address: '', severity: '', type: '' });
 
     // Archive
     const incidents = ref([]);
@@ -367,10 +432,201 @@ createApp({
     function getTypeClass(t) { return typeClassMap[t] || 'tag-accident'; }
     function getStatusLabel(s) { return statusLabelMap[s] || s; }
 
+    function severityColor(s) {
+      const m = { '轻微': '#10b981', '一般': '#f59e0b', '严重': '#ef4444', '特重大': '#dc2626' };
+      return m[s] || '#64748b';
+    }
+    function severityBg(s) {
+      const m = { '轻微': '#ecfdf5', '一般': '#fffbeb', '严重': '#fef2f2', '特重大': '#fef2f2' };
+      return m[s] || '#f1f5f9';
+    }
+
     function useSample(s) {
       input.value = s.text;
       nextTick(() => inputEl.value && inputEl.value.focus());
     }
+
+    // ======== AMap SDK Loading ========
+    function loadAmapScript(key) {
+      if (amapLoading.value || amapLoaded.value || !key) return;
+      amapLoading.value = true;
+      const script = document.createElement('script');
+      script.src = `https://webapi.amap.com/maps?v=2.0&key=${key}`;
+      script.onload = () => {
+        amapLoaded.value = true;
+        amapLoading.value = false;
+        nextTick(() => initMainMap());
+      };
+      script.onerror = () => {
+        amapLoading.value = false;
+        console.warn('[AMap] SDK load failed');
+      };
+      document.head.appendChild(script);
+    }
+
+    // ======== Main Map Init ========
+    let _mapCache = null;
+    let _mapInitialized = false;
+
+    function getMap() {
+      // Only return the cached instance, never create a new one here.
+      // This prevents AMap 2.0 from destroying the existing map instance
+      // (which happens if you call new AMap.Map() on the same container).
+      return _mapCache;
+    }
+
+    function initMainMap() {
+      if (_mapInitialized || !window.AMap) return;
+      const container = document.getElementById('main-map');
+      if (!container) return;
+      _mapCache = new AMap.Map('main-map', {
+        zoom: 12,
+        center: [104.066801, 30.662932],
+        resizeEnable: true,
+      });
+      _mapInitialized = true;
+
+      // Execute any pending map operations that were queued before the map was ready
+      if (_pendingMapOp) {
+        const op = _pendingMapOp;
+        _pendingMapOp = null;
+        setTimeout(() => op(), 100);
+      }
+    }
+
+    // Queue for map operations that arrive before the map is initialized
+    let _pendingMapOp = null;
+
+    // ======== Show incident on map ========
+    async function showOnMap(location, title, address, severity, incidentType, poiData) {
+      const map = getMap();
+      if (!map) {
+        // Map not ready yet — queue this operation for when initMainMap completes
+        _pendingMapOp = () => showOnMap(location, title, address, severity, incidentType, poiData);
+        return;
+      }
+
+      // Clear previous markers
+      if (currentMarker) { try { map.remove(currentMarker); } catch(e){} }
+      if (currentInfoWin) { try { currentInfoWin.close(); } catch(e){} }
+      poiMarkers.forEach(m => { try { map.remove(m); } catch(e){} });
+      poiMarkers = [];
+
+      // Parse location string "lng,lat" or geocode via backend
+      const parsed = parseLocation(location);
+      if (parsed) {
+        renderMapMarker(parsed, title, address, severity, incidentType, poiData);
+      } else {
+        // Use backend geocode proxy instead of JS SDK Geocoder (which is unreliable)
+        try {
+          const res = await fetch(`/api/geocode?address=${encodeURIComponent(location)}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.location) {
+              const coords = parseLocation(data.location);
+              if (coords) {
+                const formattedAddr = data.formatted_address || location;
+                renderMapMarker(coords, title, formattedAddr, severity, incidentType, poiData);
+                return;
+              }
+            }
+          }
+          // Geocode failed, use default center
+        } catch(e) {
+          // Geocode fetch failed
+        }
+        // Fallback: use default center
+        renderMapMarker([104.066801, 30.662932], title, location, severity, incidentType, poiData);
+      }
+    }
+
+    function renderMapMarker(center, title, address, severity, incidentType, poiData) {
+      const map = getMap();
+      if (!map) return;
+
+      // Incident marker (red circle with !)
+      currentMarker = new AMap.Marker({
+        position: center,
+        zIndex: 100,
+      });
+      currentMarker.setContent(
+        `<div style="background:#ef4444;color:white;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:bold;border:3px solid white;box-shadow:0 2px 12px rgba(239,68,68,0.5);">!</div>`
+      );
+      map.add(currentMarker);
+
+      // Info window
+      currentInfoWin = new AMap.InfoWindow({
+        content: `<div style="padding:10px 14px;font-size:13px;max-width:300px;">
+          <div style="font-weight:700;margin-bottom:4px;color:#1e40af;font-size:14px;">${title}</div>
+          <div style="color:#475569;line-height:1.5;">${address}</div>
+        </div>`,
+        offset: new AMap.Pixel(0, -40),
+      });
+      currentInfoWin.open(map, center);
+
+      // POI markers
+      if (poiData) {
+        const poiConfig = {
+          hospitals:     { color: '#ef4444', label: '医' },
+          fire_stations: { color: '#f59e0b', label: '消' },
+          traffic_police:{ color: '#3b82f6', label: '警' },
+          gas_stations:  { color: '#10b981', label: '油' },
+        };
+        for (const [cat, pois] of Object.entries(poiData)) {
+          if (!pois || !pois.length) continue;
+          const cfg = poiConfig[cat] || { color: '#6b7280', label: '?' };
+          pois.forEach((poi, idx) => {
+            const dist = parseFloat(poi.distance) || 500;
+            const baseAngle = (Object.keys(poiData).indexOf(cat) * 90 + idx * 35) * (Math.PI / 180);
+            const offset = dist / 111000;
+            const lng = center[0] + offset * Math.cos(baseAngle);
+            const lat = center[1] + offset * Math.sin(baseAngle);
+            const m = new AMap.Marker({ position: [lng, lat], zIndex: 50 });
+            m.setContent(
+              `<div style="background:${cfg.color};color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2);">${cfg.label}</div>`
+            );
+            // Click to show POI name
+            m.on('click', () => {
+              const win = new AMap.InfoWindow({
+                content: `<div style="padding:6px 10px;font-size:12px;"><b>${poi.name}</b><br/>${poi.address || ''} | ${poi.distance}m${poi.tel ? '<br/>' + poi.tel : ''}</div>`,
+                offset: new AMap.Pixel(0, -28),
+              });
+              win.open(map, [lng, lat]);
+            });
+            map.add(m);
+            poiMarkers.push(m);
+          });
+        }
+      }
+
+      // Fit map to show all markers
+      const allMarkers = [currentMarker, ...poiMarkers].filter(Boolean);
+      if (allMarkers.length > 1) {
+        map.setFitView(allMarkers, false, [60, 60, 60, 60]);
+      } else {
+        map.setZoomAndCenter(15, center);
+      }
+
+      // Update info bar
+      mapInfo.visible = true;
+      mapInfo.title = title;
+      mapInfo.address = address;
+      mapInfo.severity = severity || '';
+      mapInfo.type = incidentType || '';
+    }
+
+    function parseLocation(loc) {
+      if (!loc) return null;
+      const parts = loc.split(',');
+      if (parts.length === 2) {
+        const lng = parseFloat(parts[0]);
+        const lat = parseFloat(parts[1]);
+        if (!isNaN(lng) && !isNaN(lat) && lng > 73 && lng < 136 && lat > 3 && lat < 54) return [lng, lat];
+      }
+      return null;
+    }
+
+    // ======== API Methods ========
 
     async function checkHealth() {
       try {
@@ -379,6 +635,8 @@ createApp({
         const data = await res.json();
         agentReady.value = data.agent_ready;
         amapMode.value = data.amap_mode || 'offline';
+        amapKey.value = data.amap_api_key || '';
+        if (amapKey.value) loadAmapScript(amapKey.value);
       } catch (e) { /* ignore */ }
     }
 
@@ -402,18 +660,41 @@ createApp({
           throw new Error(err.detail || `HTTP ${res.status}`);
         }
         const data = await res.json();
-        messages.value.pop(); // remove loading
+        messages.value.pop();
 
         if (data.error) {
           messages.value.push({ role: 'assistant', text: data.error, results: {} });
         } else {
           const results = data.results || {};
-          messages.value.push({
+          const msg = {
             role: 'assistant',
-            results: results,
+            results,
             amapData: results._amap_data || null,
             amapMode: results._amap_mode || '',
-          });
+          };
+          messages.value.push(msg);
+
+          // Show on map immediately
+          const amap = results._amap_data;
+          if (amap && amap.geocode) {
+            const loc = parseLocation(amap.geocode.location) ? amap.geocode.location : amap.geocode.formatted_address;
+            showOnMap(
+              loc,
+              '交通事件',
+              amap.geocode.formatted_address || amap.geocode.location,
+              results.impact_assessment ? extractSeverity(results.impact_assessment) : '',
+              results.incident_analysis ? extractType(results.incident_analysis) : '',
+              amap.around || null,
+            );
+          } else {
+            // Fallback: try to extract address from user text and geocode
+            const extracted = extractAddress(text);
+            if (extracted) {
+              showOnMap(extracted, '交通事件', extracted, '', '', null);
+            }
+          }
+
+          nextTick(() => scrollBottom());
         }
       } catch (e) {
         messages.value.pop();
@@ -424,11 +705,37 @@ createApp({
       }
     }
 
+    // Simple extraction helpers
+    function extractAddress(text) {
+      // Try to find a road/intersection address from the text
+      const patterns = [
+        /([^\s,，。！！]+路[^\s,，。！]*交叉口?[^\s,，。！]*)/,
+        /([^\s,，。！！]+大道[^\s,，。！]*路口?[^\s,，。！]*)/,
+        /([^\s,，。！！]+高速[^\s,，。！]*处[^\s,，。！]*)/,
+      ];
+      for (const p of patterns) {
+        const m = text.match(p);
+        if (m) return m[1];
+      }
+      return '';
+    }
+
+    function extractSeverity(text) {
+      const m = text.match(/严重程度[：:]\s*(轻微|一般|严重|特重大)/);
+      return m ? m[1] : '';
+    }
+
+    function extractType(text) {
+      const types = ['交通事故', '道路施工', '恶劣天气', '设施故障', '交通拥堵'];
+      for (const t of types) {
+        if (text.includes(t)) return t;
+      }
+      return '';
+    }
+
     async function scrollBottom() {
       await nextTick();
-      if (msgContainer.value) {
-        msgContainer.value.scrollTop = msgContainer.value.scrollHeight;
-      }
+      if (msgContainer.value) msgContainer.value.scrollTop = msgContainer.value.scrollHeight;
     }
 
     async function loadIncidents() {
@@ -449,6 +756,19 @@ createApp({
         selectedIncident.value = await res.json();
         const res2 = await fetch(`/api/incidents/${id}/dispatches`);
         if (res2.ok) selectedDispatches.value = await res2.json();
+
+        // Show on map
+        const inc = selectedIncident.value;
+        if (inc && inc.location) {
+          showOnMap(
+            inc.location,
+            `事件 #${inc.id}`,
+            inc.location,
+            inc.severity || '',
+            inc.incident_type || '',
+            null,
+          );
+        }
       } catch (e) { /* ignore */ }
     }
 
@@ -459,9 +779,10 @@ createApp({
     return {
       tab, input, loading, messages, agentReady, amapMode, msgContainer, inputEl,
       agentKeys, agentLabels, amapLabels, samples,
+      amapLoaded, mapInfo,
       incidents, archiveKeyword, archiveStatus, selectedIncident, selectedDispatches,
       useSample, send, loadIncidents, selectIncident,
-      getTypeClass, getStatusLabel,
+      getTypeClass, getStatusLabel, severityColor, severityBg,
     };
   }
 }).mount('#app');

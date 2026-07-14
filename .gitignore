@@ -29,6 +29,7 @@ skill-examples/
 
 # Office documents
 *.docx
+*.xlsx
 
 # PDF documents
 *.pdf
@@ -37,3 +38,8 @@ skill-examples/
 16个AI场景.png
 *.db
 *.db-journal
+
+# Binary archives
+*.rar
+*.zip
+*.7z

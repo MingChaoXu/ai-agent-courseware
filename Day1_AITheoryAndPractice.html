@@ -193,10 +193,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <a class="nav-item" href="#s5-1" onclick="navClick(this)">├ Thought-Action-Observation</a>
 <a class="nav-item" href="#s5-2" onclick="navClick(this)">├ 完整循环演示</a>
 <a class="nav-item" href="#s5-3" onclick="navClick(this)">└ 上下文消融实验</a>
-<a class="nav-item" href="#s6" onclick="navClick(this)">2.3 RAG原理与检索策略<span class="time-badge">30min</span></a>
-<a class="nav-item" href="#s6-1" onclick="navClick(this)">├ 嵌入向量与语义检索</a>
-<a class="nav-item" href="#s6-2" onclick="navClick(this)">├ 三种检索策略对比</a>
-<a class="nav-item" href="#s6-3" onclick="navClick(this)">└ 被动RAG vs Agentic RAG</a>
+<a class="nav-item" href="#s6" onclick="navClick(this)">2.3 RAG原理与知识系统<span class="time-badge">50min</span></a>
+<a class="nav-item" href="#s6-1" onclick="navClick(this)">├ RAG构建全流程</a>
+<a class="nav-item" href="#s6-2" onclick="navClick(this)">├ 嵌入向量与语义检索</a>
+<a class="nav-item" href="#s6-3" onclick="navClick(this)">├ 检索策略与Reranker</a>
+<a class="nav-item" href="#s6-4" onclick="navClick(this)">├ RAG四代演进</a>
+<a class="nav-item" href="#s6-5" onclick="navClick(this)">├ GraphRAG知识图谱增强</a>
+<a class="nav-item" href="#s6-6" onclick="navClick(this)">├ CAG与LLM Wiki</a>
+<a class="nav-item" href="#s6-7" onclick="navClick(this)">└ 企业选型与落地</a>
 <a class="nav-item" href="#s7" onclick="navClick(this)">2.4 TeleAgent平台概览<span class="time-badge">30min</span></a>
 <a class="nav-item" href="#s7-1" onclick="navClick(this)">├ API架构与客户端</a>
 <a class="nav-item" href="#s7-2" onclick="navClick(this)">├ 智能体创建流程</a>
@@ -1199,17 +1203,93 @@ results = sim.context_ablation(<span class="str">"外地户口迁移苏州"</spa
 </div>
 
 <!-- ============================================================ -->
-<!-- SECTION 6: RAG原理与检索策略 -->
+<!-- ============================================================ -->
+<!-- SECTION 6: RAG原理与知识系统演进 -->
 <!-- ============================================================ -->
 <div class="section" id="s6">
 <div class="section-header">
 <span class="section-tag afternoon">下午 · 2.3</span>
-<h2>RAG原理与检索策略</h2>
-<p>嵌入向量、三种检索策略、被动RAG vs Agentic RAG · 30分钟</p>
+<h2>RAG原理与知识系统演进</h2>
+<p>从RAG构建全流程，到四代演进，到CAG/GraphRAG/LLM Wiki，再到企业选型落地 · 50分钟</p>
 </div>
 
+<!-- s6-1: RAG构建全流程 -->
 <div class="topic-card" id="s6-1">
-<h3>嵌入向量与语义检索</h3>
+<h3>步骤1: RAG构建全流程——文档到答案的7道关卡</h3>
+<p>写一个RAG Demo只要50行代码，做一个能上生产的RAG系统要50000行。生产级RAG是一个7环节的精密流水线，每一步都决定最终质量。</p>
+
+<div class="flow-diagram">╔══════════════════════════════════════════════════════════════════════╗
+║                    数据入库流水线（离线）                               ║
+║                                                                        ║
+║  原始文档(PDF/Word/HTML/数据库)                                        ║
+║     ↓                                                                  ║
+║  ❶ 文档解析（Docling/MinerU/Unstructured）                            ║
+║     ↓                                                                  ║
+║  ❷ Chunking分块（递归/语义/Late Chunking）                            ║
+║     ↓                                                                  ║
+║  ❸ Embedding向量化（BGE-M3/OpenAI/Voyage）                            ║
+║     ↓                                                                  ║
+║  ❹ 向量库存储（pgvector/Milvus/Qdrant）                               ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+╔══════════════════════════════════════════════════════════════════════╗
+║                    查询流水线（在线）                                   ║
+║                                                                        ║
+║  用户问题                                                               ║
+║     ↓                                                                  ║
+║  查询改写（HyDE / Multi-Query）                                       ║
+║     ↓                                                                  ║
+║  ❺ 混合检索（向量 + BM25 + 图）→ RRF融合                              ║
+║     ↓                                                                  ║
+║  ❻ Reranker重排序（bge-reranker / Cohere Rerank 3）                  ║
+║     ↓                                                                  ║
+║  ❼ LLM生成（带引用注入）                                              ║
+╚══════════════════════════════════════════════════════════════════════╝</div>
+
+<table class="compare-table">
+<thead><tr><th>环节</th><th>权重</th><th>2026主流选型</th><th>关键原则</th></tr></thead>
+<tbody>
+<tr><td>❶ 文档解析</td><td>50%</td><td>Docling / MinerU / Unstructured</td><td>垃圾进垃圾出，表格被切碎=后续全白干</td></tr>
+<tr><td>❷ Chunking分块</td><td>20%</td><td>语义切分 / Late Chunking</td><td>不是越小越好，需A/B测试</td></tr>
+<tr><td>❸ Embedding嵌入</td><td>15%</td><td>BGE-M3 / OpenAI v3 / Voyage-3</td><td>1024维是甜点，3072维收益递减</td></tr>
+<tr><td>❹ 向量库</td><td>5%</td><td>pgvector(&lt;1亿) / Milvus(&gt;1亿)</td><td>90%场景pgvector够用</td></tr>
+<tr><td>❺ 混合检索</td><td>-</td><td>稠密+稀疏→RRF融合</td><td>2026标配，纯向量是2023年的玩法</td></tr>
+<tr><td>❻ Reranker重排</td><td>10%</td><td>bge-reranker-v2-m3 / Cohere Rerank 3</td><td>必加！不加=裸跑</td></tr>
+<tr><td>❼ LLM生成</td><td>-</td><td>带引用注入的Prompt模板</td><td>要求LLM输出引用编号[1][2]</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888;&#65039; 文档解析占RAG成败的50%</div>
+<div class="pc-body">
+常见坑：表格被切碎、多栏布局混乱、OCR错误、公式丢失、页眉页脚污染<br><br>
+<strong>选型建议</strong>：PDF+大量表格→Docling；学术论文→MinerU；多格式(Word/PPT/HTML)→Unstructured；预算充足→LlamaParse
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128161; Chunking分块策略与Late Chunking</div>
+<div class="pc-body">
+<strong>经验值（用BGE-M3）</strong>：FAQ→200-400 Token，长文档→500-800，代码→800-1500。重叠取chunk的10-20%。<br><br>
+<strong>Late Chunking（Jina AI 2024）</strong>：传统是「先切再嵌入」，每个chunk独立编码丢失上下文。Late Chunking是「先嵌入全文，再切分Token级向量」——每个chunk的向量保留了全文上下文。长文档场景召回率提升15-30%。
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#9733; BGE-M3：2026年RAG事实标准</div>
+<div class="pc-body">
+BGE-M3原生支持<strong>三种检索模式</strong>，一个模型搞定混合检索：<br>
+1. <strong>Dense Retrieval</strong>（稠密向量）→ 语义相似度<br>
+2. <strong>Sparse Retrieval</strong>（稀疏向量）→ 关键词匹配（类似BM25）<br>
+3. <strong>Multi-vector</strong>（多向量）→ ColBERT式精排<br><br>
+选型决策：中文为主→bge-large-zh-v1.5；多语言+开源→BGE-M3；商业最强→OpenAI text-embedding-3-large；长文档→Voyage-3
+</div>
+</div>
+</div>
+
+<!-- s6-2: 嵌入向量与语义检索 -->
+<div class="topic-card" id="s6-2">
+<h3>步骤2: 嵌入向量与语义检索——RAG的底层原理</h3>
 
 <div class="principle-card">
 <div class="pc-title">&#9889; 嵌入（Embedding）：文本→向量，语义相近→向量相近</div>
@@ -1248,37 +1328,57 @@ sim = viz.cosine_similarity(v1, v2)
 </div>
 </div>
 
-<div class="topic-card" id="s6-2">
-<h3>三种检索策略对比</h3>
+<!-- s6-3: 三种检索策略 -->
+<div class="topic-card" id="s6-3">
+<h3>步骤3: 三种检索策略与Reranker重排序</h3>
 
 <table class="compare-table">
-<thead>
-<tr><th>检索方式</th><th>原理</th><th>优势</th><th>劣势</th></tr>
-</thead>
+<thead><tr><th>检索方式</th><th>原理</th><th>优势</th><th>劣势</th></tr></thead>
 <tbody>
 <tr><td>稀疏检索(BM25)</td><td>关键词TF-IDF匹配</td><td>精确术语匹配强</td><td>无法理解同义词</td></tr>
 <tr><td>稠密检索</td><td>语义向量相似度</td><td>模糊语义匹配强</td><td>精确术语可能遗漏</td></tr>
-<tr><td>混合检索</td><td>两路融合+重排序</td><td>兼顾精确和模糊</td><td>计算成本更高</td></tr>
+<tr><td>混合检索 ★</td><td>两路融合+重排序</td><td>兼顾精确和模糊</td><td>计算成本更高</td></tr>
 </tbody>
 </table>
 
 <div class="principle-card">
-<div class="pc-title">&#128161; 实战建议：优先混合检索</div>
+<div class="pc-title">&#128161; 混合检索 + Reranker = 2026标配</div>
 <div class="pc-body">
 查询「公积金怎么取出来」：<br><br>
 <strong>稀疏检索</strong>命中"公积金贷款额度计算方法"（精确匹配"公积金"但不相关）<br>
 <strong>稠密检索</strong>命中"住房公积金提取条件及流程"（语义匹配"取出来→提取"）<br>
 <strong>混合检索</strong>：两路结果通过RRF（Reciprocal Rank Fusion）融合，再用Cross-Encoder重排序 → 最终"住房公积金提取条件"排第一<br><br>
-生产环境推荐：<code>混合检索 = 稠密(语义) + 稀疏(关键词) + 重排序</code>
+Reranker是检索的"精排"环节——粗排召回Top-100，精排选Top-10。延迟+100ms，但召回质量+15-25%。<code>不加Reranker的RAG等于裸跑</code>
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128270; Anthropic Contextual Retrieval：检索准确率提升67%</div>
+<div class="pc-body">
+传统RAG痛点：文档被切分为短文本块后，单个chunk丢失关键背景（如主体、时间、场景），导致"有相关信息但检索不到"。<br><br>
+<strong>解法</strong>：切分后用LLM为每个chunk生成一段简短的上下文描述（context），将context+chunk一起嵌入向量。每个chunk的向量既保留局部信息，又携带文档级上下文。<br>
+实测：检索失败率从5.7%降至1.9%，结合prompt caching，每百万tokens成本仅$1.02。
 </div>
 </div>
 </div>
 
-<div class="topic-card" id="s6-3">
-<h3>被动RAG vs Agentic RAG</h3>
+<!-- s6-4: RAG四代演进 -->
+<div class="topic-card" id="s6-4">
+<h3>步骤4: RAG四代演进——从Naive到Agentic</h3>
+<p>RAG技术在短短两年内经历了四代演进。每一代都在解决上一代的核心缺陷。</p>
 
-<div class="flow-diagram">
-╔══════════════════════════════════════════════════════════════╗
+<div class="flow-diagram">  Naive RAG          Advanced RAG        Modular RAG       Agentic RAG
+  (2022-2023)        (2023-2024)         (2024)            (2024-2026)
+ ┌──────────┐      ┌──────────────┐    ┌──────────────┐  ┌──────────────┐
+ │ 检索→拼接 │      │ +查询改写    │    │ 模块可替换   │  │ Agent自主决策 │
+ │ →生成    │  →   │ +混合检索    │ →  │ 流水线定制   │ →│ 多轮检索纠错  │
+ │ 单次检索  │      │ +Reranker    │    │ 灵活组合     │  │ 自主拒绝幻觉  │
+ │ 无优化   │      │ +上下文压缩  │    │ A/B测试     │  │ 有判断力的检索│
+ └──────────┘      └──────────────┘    └──────────────┘  └──────────────┘
+    ↓                   ↓                    ↓                  ↓
+ 简单FAQ问答        企业知识库           定制化业务场景     复杂多跳推理</div>
+
+<div class="flow-diagram">╔══════════════════════════════════════════════════════════════╗
 ║                    传统被动 RAG 流程                         ║
 ║                                                              ║
 ║   用户问题 ──► 检索1次 ──► 拼接上下文 ──► LLM生成回答       ║
@@ -1304,26 +1404,217 @@ sim = viz.cosine_similarity(v1, v2)
 ╚══════════════════════════════════════════════════════════════╝</div>
 
 <table class="compare-table">
-<thead>
-<tr><th>场景</th><th>被动RAG</th><th>Agentic RAG</th></tr>
-</thead>
+<thead><tr><th>场景</th><th>被动RAG</th><th>Agentic RAG</th></tr></thead>
 <tbody>
-<tr><td>简单问题</td><td>检索1次→命中→回答 ✅</td><td>思考→检索→评估(够了)→回答 ✅</td></tr>
-<tr><td>复杂问题</td><td>检索1次→信息不全→回答不完整 ❌</td><td>检索→评估(不够)→再检索→完整回答 ✅</td></tr>
-<tr><td>超出范围</td><td>检索无命中→仍尝试生成→可能幻觉 ⚠️</td><td>思考→决定不检索→告知超出范围 ✅</td></tr>
+<tr><td>简单：「新生儿落户要什么材料？」</td><td>检索1次→命中→回答 ✅</td><td>思考→检索→评估(够了)→回答 ✅</td></tr>
+<tr><td>复杂：「外地户口迁苏州，社保转移能一起办吗？」</td><td>检索1次→命中户口但漏社保时限→不完整 ❌</td><td>检索户口→评估(缺社保)→检索社保→完整回答 ✅</td></tr>
+<tr><td>超范围：「苏州哪里有好吃的？」</td><td>检索1次→无命中→仍尝试生成→可能幻觉 ⚠️</td><td>思考→决定不检索→告知超出范围 ✅</td></tr>
 </tbody>
 </table>
 
 <div class="principle-card green">
 <div class="pc-title">&#9989; Agentic RAG三大核心能力</div>
 <div class="pc-body">
-1. <strong>自主决策</strong>：判断是否需要检索（节省不必要的检索开销）<br>
-2. <strong>自主迭代</strong>：检索结果不够时自动换关键词再检索<br>
+1. <strong>自主决策</strong>：判断是否需要检索（简单问题直接回答，节省检索开销）<br>
+2. <strong>自主迭代</strong>：检索结果不够时自动换关键词再检索（多轮检索确保完整性）<br>
 3. <strong>自主拒绝</strong>：超出知识范围时直接说"不知道"，避免幻觉<br><br>
-本质区别：被动RAG是"检索管道"，Agentic RAG是"有判断力的检索员"。
+本质区别：<strong>被动RAG是"检索管道"，Agentic RAG是"有判断力的检索员"</strong>。
 </div>
 </div>
 </div>
+
+<!-- s6-5: GraphRAG -->
+<div class="topic-card" id="s6-5">
+<h3>步骤5: GraphRAG——知识图谱增强检索</h3>
+<p>传统RAG只能做「扁平的语义相似度匹配」，GraphRAG能做「多跳关系推理」——沿着实体间的关系链找到传统检索无法触达的答案。</p>
+
+<div class="flow-diagram">  传统RAG                              GraphRAG
+
+  文档 → chunk → 嵌入 → 向量索引       文档 → LLM提取实体关系 → 知识图谱
+                                          ↓
+  查询时：语义相似度匹配                查询时：图遍历 + 子图提取 + 语义匹配
+
+  "A和B有什么关系？" → 碎片拼接          "A和B有什么关系？" → 沿关系链推理 → 完整路径
+      可能答不出来                            精准回答</div>
+
+<table class="compare-table">
+<thead><tr><th>维度</th><th>传统RAG</th><th>GraphRAG</th></tr></thead>
+<tbody>
+<tr><td>知识表示</td><td>扁平文本chunk + 向量</td><td>实体+关系+属性的三元组图谱</td></tr>
+<tr><td>检索方式</td><td>语义相似度匹配</td><td>图遍历 + 子图提取 + 语义匹配</td></tr>
+<tr><td>跨文档推理</td><td>弱——碎片拼接易断裂</td><td>强——沿关系链多跳推理</td></tr>
+<tr><td>全局性问题</td><td>难以回答</td><td>擅长——社区摘要支持全局分析</td></tr>
+<tr><td>构建成本</td><td>低——分块+嵌入即可</td><td>高——需LLM提取实体关系构建图谱</td></tr>
+<tr><td>适用场景</td><td>精准事实检索、FAQ</td><td>关系推理、全局分析、多跳问答</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card">
+<div class="pc-title">&#128736;&#65039; GraphRAG选型建议</div>
+<div class="pc-body">
+<strong>微软GraphRAG</strong>：全量构建图谱+社区摘要 → 需要全局分析的场景<br>
+<strong>LazyGraphRAG</strong>（微软2024）：延迟构建，按需提取子图 → 成本敏感+偶尔需要图推理<br>
+<strong>LightRAG</strong>：轻量级，增量更新友好 → 文档频繁更新的场景<br>
+<strong>Neo4j+LangChain</strong>：自定义知识图谱+RAG → 已有领域知识图谱的场景<br><br>
+<strong>工程挑战</strong>：成本高（1万chunk索引约$0.17-0.46）、权限控制复杂（需细粒度节点/边级权限）、LLM提取的实体关系有噪声需审核
+</div>
+</div>
+</div>
+
+<!-- s6-6: CAG与LLM Wiki -->
+<div class="topic-card" id="s6-6">
+<h3>步骤6: 知识系统新范式——CAG与LLM Wiki</h3>
+<p>RAG解决了"大模型无法访问私有知识"的问题，但它不是终点。随着上下文窗口扩大和LLM能力提升，两种新范式正在涌现。</p>
+
+<div class="flow-diagram">╔══════════════════════════════════════════════════════════════════════╗
+║               AI知识系统三范式演进                                      ║
+║                                                                        ║
+║  RAG (2023)              CAG (2025)             LLM Wiki (2026)        ║
+║  ┌──────────┐           ┌──────────┐           ┌──────────────┐       ║
+║  │ 按需检索  │           │ 全量缓存  │           │ 预编译沉淀    │       ║
+║  │          │           │          │           │              │       ║
+║  │ 解释器    │           │ 缓存直读  │           │ 编译器        │       ║
+║  │ 运行时检索 │           │ 全量加载  │           │ 入库时编译    │       ║
+║  │ 碎片拼接  │           │ 直接生成  │           │ 持续进化      │       ║
+║  └──────────┘           └──────────┘           └──────────────┘       ║
+║      ↓                      ↓                       ↓                ║
+║  任意规模知识库           知识量<上下文窗口         核心高频知识         ║
+║  查时做苦力              小而精的知识集            存时做苦力           ║
+╚══════════════════════════════════════════════════════════════════════╝</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128218; CAG（Cache-Augmented Generation）：全量缓存，无需检索</div>
+<div class="pc-body">
+<strong>核心思想</strong>：如果知识库不大（能塞进上下文窗口），就不做检索了——直接把全部知识缓存进KV-Cache，让模型一次看完再回答。<br><br>
+<strong>优势</strong>：无检索损失，信息完整，延迟最低（省去检索+重排步骤）<br>
+<strong>局限</strong>：知识量必须 &lt; 上下文窗口（目前约10万-20万Token），超出则无法使用<br><br>
+<strong>类比</strong>：RAG是"查字典"（按需翻页），CAG是"背下来"（全量记忆）<br><br>
+<strong>与RAG的关系</strong>：不是替代，而是<strong>错位竞争</strong>。知识量小、查询频繁→CAG更优；知识量大、长尾查询多→RAG更优。
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128640; LLM Wiki（Karpathy, 2026.04）：知识编译器范式</div>
+<div class="pc-body">
+<strong>核心范式转变</strong>：不是因为"用不用向量库"，而是<strong>"知识处理时机"的根本变化</strong><br><br>
+传统RAG是<strong>解释器</strong>——每次查询临时检索碎片+拼接回答，查询结束知识不沉淀<br>
+LLM Wiki是<strong>编译器</strong>——资料入库时一次性结构化编译，产出永久Wiki页面<br><br>
+<strong>三层标准架构</strong>：<br>
+<code>llm-wiki/</code><br>
+<code>├── raw/</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← 第一层：原始文档（PDF/MD/网页），<strong>只读</strong>，Source of Truth<br>
+<code>├── wiki/</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;← 第二层：LLM编译产出的结构化Markdown页面，<strong>双向链接</strong><br>
+<code>└── schema.yaml</code> ← 第三层：人类定义的入库规则、命名规范、巡检策略<br><br>
+<strong>工作流程闭环</strong>：Ingest（入库编译）→ Query（查询Wiki）→ Lint（健康巡检）→ 回到入库<br><br>
+入库时发生了什么：新资料丢进raw/ → LLM自动提取核心观点 → 关联检索已有词条 → 批量更新Wiki → 标注冲突<br>
+查询时怎么找相关页面：小规模全量加载，中大规模仍需全文/向量检索 → <strong>这里会复用RAG技术栈</strong>
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; LLM Wiki 底层技术栈详解</div>
+<div class="pc-body">
+<strong>入库（编译）阶段——极简方案</strong>：<br>
+- <strong>LLM</strong>：编译引擎，把raw文档转为wiki页面（入库可用强模型保证质量）<br>
+- <strong>文件系统</strong>：存储raw/wiki/schema，纯Markdown文本<br>
+- <strong>Git</strong>：版本控制、溯源、回滚（强烈推荐）<br>
+<strong>不需要</strong>：向量数据库、Embedding模型、Reranker、BM25引擎<br><br>
+<strong>查询阶段——规模决定是否需要RAG</strong>：<br>
+- 小规模wiki（&lt;10万字）→ 全量塞进上下文窗口 → <strong>不需要RAG</strong>（本质是CAG）<br>
+- 中等规模wiki（10万-100万字）→ 需要检索wiki页面 → <strong>可能需要RAG技术栈</strong>（对wiki页面做Embedding+向量检索，或ES全文搜索）<br>
+- 大规模wiki（&gt;100万字）→ 几乎必然需要Embedding+向量检索wiki页面<br><br>
+<strong>关键洞察</strong>：RAG技术栈在这里换了检索目标——从"原始碎片chunk"变成"结构化wiki页面"。检索粒度更粗（whole page vs chunk），但质量更高（结构化 vs 碎片）。
+</div>
+</div>
+
+<table class="compare-table">
+<thead><tr><th>维度</th><th>RAG</th><th>CAG</th><th>LLM Wiki</th></tr></thead>
+<tbody>
+<tr><td>核心类比</td><td>解释器——查时临时检索</td><td>缓存——全量加载直读</td><td>编译器——存时预编译</td></tr>
+<tr><td>知识处理时机</td><td>查询时（在线）</td><td>首次加载时</td><td>入库时（离线编译）</td></tr>
+<tr><td>知识形态</td><td>碎片chunk + 向量索引</td><td>原文全量 + KV-Cache</td><td>结构化Wiki页面 + 双向链接</td></tr>
+<tr><td>查询后留存</td><td>销毁，下次从头检索</td><td>缓存复用</td><td>永久保存，持续进化</td></tr>
+<tr><td>第101篇进来</td><td>前100篇不变</td><td>需重新缓存</td><td>前100篇相关页面自动更新</td></tr>
+<tr><td>跨文档推理</td><td>弱——碎片拼接易断裂</td><td>强——信息完整</td><td>强——完整词条支持深度综合</td></tr>
+<tr><td>入库技术栈</td><td>文档解析+Chunking+Embedding+向量库</td><td>全量加载到上下文</td><td>LLM + 文件系统 + Git</td></tr>
+<tr><td>查询技术栈</td><td>混合检索+Reranker+LLM生成</td><td>直接生成</td><td>全文/向量检索Wiki页面+LLM生成</td></tr>
+<tr><td>适用规模</td><td>任意规模</td><td>&lt; 上下文窗口</td><td>核心高频知识（中大规模仍需RAG辅助查询）</td></tr>
+<tr><td>成本特征</td><td>查询成本高（重复检索）</td><td>查询成本极低</td><td>入库成本中高（一次性），查询成本低</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888;&#65039; 客户问"用LLM Wiki还需要RAG吗？"——大概率还是需要</div>
+<div class="pc-body">
+LLM Wiki替代的不是RAG的全部，而是<strong>"对原始文档做chunk+嵌入"这步低效操作</strong>。但"找到相关知识再回答"这个检索动作本身，在企业规模下仍然需要——只是换了检索目标。<br><br>
+<strong>三种情况</strong>：<br>
+1. <strong>企业核心知识库</strong>（高频、稳定、深度综合）→ LLM Wiki为主 + 轻量检索Wiki页面为辅。RAG技术栈仍然用得上，但检索对象从"原始chunk"变成"wiki页面"——不再需要复杂的chunking策略和reranker了<br><br>
+2. <strong>混合场景</strong>（核心知识+长尾临时查询）→ Wiki(核心80%) + RAG(长尾20%)。高频问题查Wiki，临时新增通知直接RAG检索原始文档<br><br>
+3. <strong>纯LLM Wiki</strong>（极小规模）→ wiki规模&lt;上下文窗口，全量加载，确实不需要RAG。但企业场景几乎不可能这么小
+</div>
+</div>
+</div>
+
+<!-- s6-7: 企业选型落地 -->
+<div class="topic-card" id="s6-7">
+<h3>步骤7: 企业知识库选型与落地路径</h3>
+
+<div class="flow-diagram">╔══════════════════════════════════════════════════════════════════╗
+║              企业知识库最佳实践：Wiki + RAG 双层架构                 ║
+║                                                                    ║
+║   ┌─────────────────────────────────────────────────────┐         ║
+║   │  Wiki层（核心80%）                                    │         ║
+║   │  政策文件/产品文档/技术标准 → LLM编译 → 结构化Wiki   │         ║
+║   │  高频稳定知识 · 深度综合 · 知识复利                    │         ║
+║   └──────────────────────────┬──────────────────────────┘         ║
+║                              │ 查询时：全文/向量检索wiki页面        ║
+║                              ▼                                     ║
+║   ┌─────────────────────────────────────────────────────┐         ║
+║   │  RAG层（长尾20%）                                    │         ║
+║   │  新增通知/临时文件 → 直接向量索引 → 实时检索          │         ║
+║   │  变化频繁 · 长尾查询 · 不值得编译                      │         ║
+║   └─────────────────────────────────────────────────────┘         ║
+╚══════════════════════════════════════════════════════════════════╝</div>
+
+<table class="compare-table">
+<thead><tr><th>你的场景</th><th>推荐方案</th><th>原因</th></tr></thead>
+<tbody>
+<tr><td>简单FAQ（&lt;500文档）</td><td>Naive RAG + pgvector</td><td>简单够用，维护成本低</td></tr>
+<tr><td>企业知识库（500-5万文档）</td><td>Advanced RAG + 混合检索 + Reranker</td><td>兼顾质量和成本，2026标配</td></tr>
+<tr><td>复杂多跳推理</td><td>Agentic RAG + GraphRAG</td><td>Agent自主决策+图推理双保险</td></tr>
+<tr><td>核心知识+长尾查询</td><td>LLM Wiki(核心80%) + RAG(长尾20%)</td><td>知识复利+灵活检索</td></tr>
+<tr><td>小规模高频查询</td><td>CAG</td><td>无检索损失，延迟最低</td></tr>
+<tr><td>需要关系推理+全局分析</td><td>GraphRAG / LazyGraphRAG</td><td>图结构支持多跳推理</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card green">
+<div class="pc-title">&#9989; 务实落地路径</div>
+<div class="pc-body">
+<strong>不要问"用LLM Wiki还是用RAG"，要问"你的知识哪部分值得编译，哪部分只值得检索"</strong><br><br>
+<strong>Step 1</strong>：先用RAG跑通（快速交付，验证场景价值）<br>
+<strong>Step 2</strong>：识别出高频核心知识，逐步迁移到LLM Wiki编译沉淀<br>
+<strong>Step 3</strong>：形成 Wiki(核心) + RAG(长尾) 的双层架构<br><br>
+<strong>核心原则</strong>：LLM Wiki替代的不是RAG，而是"对原始文档做chunk+嵌入"这步低效操作。但"找到相关知识再回答"这个检索动作本身，在企业规模下仍然需要——只是检索对象从碎片chunk变成了结构化Wiki页面。
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#128200; 成本对比示意（100篇论文知识库，日均50次查询）</div>
+<div class="pc-body">
+<table class="compare-table">
+<thead><tr><th>方案</th><th>入库成本</th><th>单次查询成本</th><th>月度总成本</th><th>规模效应</th></tr></thead>
+<tbody>
+<tr><td>RAG</td><td>低（嵌入向量化）</td><td>高（检索+重排+生成）</td><td>$200-500</td><td>文档越多，查询成本越高</td></tr>
+<tr><td>LLM Wiki</td><td>中高（LLM编译，一次性）</td><td>低（直接读Wiki生成）</td><td>$50-150</td><td>文档越多，单次查询成本越低</td></tr>
+<tr><td>CAG</td><td>中（全量缓存）</td><td>极低（直接生成）</td><td>$30-80</td><td>受限于上下文窗口大小</td></tr>
+<tr><td>GraphRAG</td><td>高（构建图谱）</td><td>中（图遍历+生成）</td><td>$300-600</td><td>图谱构建成本高但推理能力强</td></tr>
+</tbody>
+</table>
+结论：查询频率越高、资料越多，LLM Wiki成本优势越明显。高频企业知识库长期成本可降至RAG的1/3-1/5。
+</div>
+</div>
+</div>
+
 </div>
 
 <!-- ============================================================ -->
