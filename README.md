@@ -49,7 +49,6 @@
 | ex1 | 政务智能问答 | ex1_gov_qa/ |
 | ex2 | 工业知识库检索 | ex2_industrial_kb/ |
 | ex3 | 基层门诊AI辅助诊疗 | ex3_medical_record/ |
-| ex3.5 | 上下文压缩 | ex3_5_context_compress/ |
 
 ### Day 3 — 上下文工程与文档审核
 
@@ -83,7 +82,9 @@
 | ex15.5 | 事件驱动架构 | ex15_5_event_driven/ |
 | ex17 | 综合路演 | ex17_roadshow/ |
 | ex18 | 交通事件智能处置 | ex18_traffic_incident/ |
+| ex19 | 低空智能体协同管控 | ex19_low_altitude/ |
 | ex20 | 消费领域AI智能运营 | ex20_consumer_ai_ops/ |
+| ex21 | 招投标智能助手 | ex21_bidding_assistant/ |
 
 ## 快速开始
 
