@@ -81,7 +81,6 @@
 | ex14 | 政务服务智能体 | ex14_gov_service/ |
 | ex15 | 治理多智能体 | ex15_governance_agent/ |
 | ex15.5 | 事件驱动架构 | ex15_5_event_driven/ |
-| ex16 | 消融评估框架 | ex16_ablation_eval/ |
 | ex17 | 综合路演 | ex17_roadshow/ |
 | ex18 | 交通事件智能处置 | ex18_traffic_incident/ |
 | ex20 | 消费领域AI智能运营 | ex20_consumer_ai_ops/ |
