@@ -3,6 +3,17 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
+  ProduceID: '35e02f1d-1bd3-404c-8a54-aca20e4f94ef'
+  PropagateID: '35e02f1d-1bd3-404c-8a54-aca20e4f94ef'
+  ReservedCode1: 'c1165203-4d18-4a0e-8a49-2b4dd7ab934a'
+  ReservedCode2: 'c1165203-4d18-4a0e-8a49-2b4dd7ab934a'
+---
+
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
   ProduceID: 'be8c4b81-df4a-49b4-bba4-92574b8cc308'
   PropagateID: 'be8c4b81-df4a-49b4-bba4-92574b8cc308'
   ReservedCode1: '759dd7e6-6e6d-4f58-aed6-ed2c8889f856'

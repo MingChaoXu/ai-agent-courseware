@@ -1,56 +1,37 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '1ec0e543-9f5e-4e59-a03b-b994a339a3dc'
+  PropagateID: '1ec0e543-9f5e-4e59-a03b-b994a339a3dc'
+  ReservedCode1: 'a564f03c-b73c-4d1d-8bee-73f8d090d394'
+  ReservedCode2: 'a564f03c-b73c-4d1d-8bee-73f8d090d394'
+---
+
 ## 课题名称
 
 工业运维知识库检索
 
-## 学习目标
+## 项目背景
 
-- 掌握RAG（检索增强生成）全流程，理解FAISS向量检索与top_k参数调优
+工厂设备故障停机一小时就是几万块。老工程师脑子里的经验散落在维修记录和操作手册里，新人遇到故障翻文档翻不到关键信息。把运维文档建成知识库，提问时自动检索相关段落，让AI按"故障现象→可能原因→处理步骤→预防措施"的格式生成回答。
 
-## 项目概述
+## 功能需求
 
-工业设备运维知识助手，回答格式：故障现象 → 可能原因 → 处理步骤 → 预防措施。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
+- 将工业运维文档向量化并构建可检索的知识库
+- 输入故障描述，自动检索相关文档并按规范格式生成回答
+- 支持上传新文档扩充知识库，支持 top_k 参数调节检索范围
+- 对话历史管理，支持连续追问
 
-## 任务要求
+## 实验任务
 
-### 步骤1：构建知识库
-
-- 使用OpenAIEmbeddings将文档向量化
-- 使用FAISS构建向量索引
-- 使用RecursiveCharacterTextSplitter分块（chunk_size=800, overlap=80）
-
-### 步骤2：实现KnowledgeBase类：upload_text()上传文档、search()向量检索、save_index()/load_index()持久化
-
-### 步骤3：使用RecursiveCharacterTextSplitter对文档分块（chunk_size=800, overlap=80）
-
-### 步骤4：组装RAG Chain：检索相关文档 → 拼接context → ChatPromptTemplate → LLM生成
-
-### 步骤5：实现ConversationMemory对话历史管理（滑动窗口）
-
-### 步骤6：支持top_k参数调节检索数量（1/3/5）
-
-- 支持top_k参数调节检索数量（1/3/5），对比检索效果
-
-### 步骤7：构建FastAPI后端 + Vue前端（含知识库管理侧边栏）
-
-## 技术栈
-
-- `OpenAIEmbeddings` + `FAISS`（向量检索）
-- `RecursiveCharacterTextSplitter`（文档分块）
-- LCEL RAG Chain
-- FastAPI + Vue 3 CDN
-
-## 输入数据
-
-- 测试样本位于 `data/` 目录下
-- 运行后可通过前端界面选择样本快速体验
-
-## 预期输出
-
-- 对话式交互界面，用户输入文本后返回AI分析结果
-- LLM生成的文本回答
+1. 输入"电机运行时振动异常且温度偏高"，验证系统按"故障→原因→处理→预防"四段式输出
+2. 将 top_k 从 1 调到 5，对同一问题对比回答的完整度和准确性
+3. 上传一份新的设备维护手册，针对新内容提问，验证知识库已更新
 
 ## 提示与思考
 
-- chunk_size和overlap的大小如何影响检索精度？
-- top_k=1和top_k=5在什么场景下各有优势？
-- FAISS索引持久化到磁盘后，如何处理路径中的非ASCII字符问题？
+- chunk_size 和 overlap 的大小如何影响检索精度？太大或太小会怎样？
+- top_k=1 和 top_k=5 在什么场景下各有优势？
+- 如果检索到的文档和问题不相关，RAG链条会产生什么问题？如何缓解？

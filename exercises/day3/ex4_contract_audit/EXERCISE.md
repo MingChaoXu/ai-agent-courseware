@@ -1,50 +1,37 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '6bb35c0f-15aa-4db6-a6ac-3521256fc701'
+  PropagateID: '6bb35c0f-15aa-4db6-a6ac-3521256fc701'
+  ReservedCode1: '0aef56e7-10db-4662-9f19-b0f40de92043'
+  ReservedCode2: '0aef56e7-10db-4662-9f19-b0f40de92043'
+---
+
 ## 课题名称
 
 合同风险智能审查
 
-## 学习目标
+## 项目背景
 
-- 掌握PydanticOutputParser实现合同风险审查的结构化输出
+合同条款一多，法务人员逐条审阅耗时费力，遗漏风险条款更是后患无穷。让AI按固定审查维度逐项扫描合同，自动标注风险点和缺失条款，把"逐行肉眼审查"变成"结构化智能筛查"。
 
-## 项目概述
+## 功能需求
 
-合同风险审查助手，审查6个维度（违约责任/付款条件/知识产权/争议解决/保密条款/终止条款）。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
+- 从6个维度（违约责任、付款条件、知识产权、争议解决、保密条款、终止条款）审查合同，输出结构化审查结果
+- 每个风险点标注风险等级（低/中/高），并给出修改建议
+- 识别合同中缺失的关键条款并提醒
+- 结构化输出解析失败时，自动降级为纯文本返回
 
-## 任务要求
+## 实验任务
 
-### 步骤1：定义Pydantic模型
-
-  - `ContractAuditResult`: overall_risk_level(低/中/高), risk_items, missing_clauses, recommendations, summary
-
-### 步骤2：使用PydanticOutputParser构建结构化输出Chain（Prompt + Parser + LLM）
-
-### 步骤3：配置fallback_chain（StrOutputParser）
-
-- 配置fallback_chain（StrOutputParser），解析失败时返回纯文本
-
-### 步骤4：System Prompt中注入6个审查维度的规则
-
-### 步骤5：构建FastAPI后端 + Vue前端（含合同样本选择卡片）
-
-## 技术栈
-
-- `PydanticOutputParser`（结构化输出解析）
-- `ChatPromptTemplate`（提示模板）
-- LCEL（管道式Chain组装）
-- FastAPI + Vue 3 CDN
-
-## 输入数据
-
-- 测试样本位于 `data/` 目录下
-- 运行后可通过前端界面选择样本快速体验
-
-## 预期输出
-
-- 对话式交互界面，用户输入文本后返回AI分析结果
-- 结构化JSON输出，前端渲染为卡片式展示
+1. 输入一份含违约条款但缺少保密条款的合同样本，验证系统标注出缺失条款并给出风险等级
+2. 输入一份条款较完整的合同样本，对比AI审查结果与人工标注，观察差异
+3. 故意构造一份超长或格式混乱的合同文本，观察结构化解析是否稳定降级为纯文本输出
 
 ## 提示与思考
 
-- PydanticOutputParser生成的format_instructions具体长什么样？
 - 风险等级（低/中/高）是LLM判断的还是规则计算的？各有什么优劣？
+- PydanticOutputParser生成的format_instructions具体长什么样？它如何约束LLM输出格式？
 - 如何设计HITL（Human-in-the-Loop）流程让法务人员审核AI结果？

@@ -1,54 +1,36 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '46f919b1-5c89-46fa-baa9-827e07c118a4'
+  PropagateID: '46f919b1-5c89-46fa-baa9-827e07c118a4'
+  ReservedCode1: '7c767944-7224-4ca5-9e23-b200a068e4a8'
+  ReservedCode2: '7c767944-7224-4ca5-9e23-b200a068e4a8'
+---
+
 ## 课题名称
 
 ReAct推理原理实验
 
-## 学习目标
+## 项目背景
 
-- 理解ReAct（Reasoning + Acting）推理范式，掌握LangGraph create_react_agent实现工具调用循环
+大模型能"说"但不擅长"做"——算不了数学、查不了实时信息。ReAct范式让AI在推理和行动之间交替循环：先想该用什么工具，再调用工具拿结果，再基于结果继续推理，直到得出最终答案。
 
-## 项目概述
+## 功能需求
 
-政务咨询助手，使用Thought → Action → Observation循环推理。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
+- 提供可被AI调用的工具（如政策搜索、数学计算），AI自主判断何时调用哪个工具
+- 展示完整的 Thought → Action → Observation 推理链路，而非只给最终答案
+- 交互式对话界面，用户自由提问，系统自动选择合适工具作答
 
-## 任务要求
+## 实验任务
 
-### 步骤1：定义工具函数
-
-  - `search_policy`: 搜索政务政策信息，输入关键词返回政策内容
-  - `calculate`: 计算数学表达式，输入表达式字符串返回结果
-
-### 步骤2：使用langgraph.prebuilt.create_react_agent创建Agent
-
-- 使用langgraph.prebuilt.create_react_agent创建Agent，传入LLM和工具列表
-
-### 步骤3：在Agent的prompt中指定ReAct推理流程（Thought → Action → Observation）
-
-### 步骤4：实现chat()函数
-
-- 实现chat()函数，通过agent.invoke()传入messages获取最终回答
-
-### 步骤5：构建FastAPI后端 + Vue前端
-
-- 构建FastAPI后端 + Vue前端，实现交互式对话界面
-
-## 技术栈
-
-- LangGraph `create_react_agent`
-- `langchain_core.tools.Tool`（工具定义）
-- FastAPI + Vue 3 CDN
-
-## 输入数据
-
-- 测试样本位于 `data/` 目录下
-- 运行后可通过前端界面选择样本快速体验
-
-## 预期输出
-
-- 对话式交互界面，用户输入文本后返回AI分析结果
-- 工具调用过程可视化，展示Thought → Action → Observation
+1. 输入"帮我查一下医保报销比例，然后算一个月薪8000的人最多能报多少"，验证系统同时调用搜索和计算两个工具
+2. 输入"今天天气怎么样？"，观察系统在无可用工具时的行为
+3. 对比同一问题分别用 ReAct 模式和纯 LLM 直接回答，观察结果差异
 
 ## 提示与思考
 
 - ReAct循环中，LLM是如何决定调用哪个工具的？
-- 如果工具返回错误信息，Agent会如何处理？
+- 如果工具返回错误信息，Agent会如何处理？它能自己修正吗？
 - 对比直接调用LLM，ReAct模式在什么场景下更有优势？

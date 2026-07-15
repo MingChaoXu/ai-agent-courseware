@@ -1,48 +1,37 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: 'cf972833-3f9f-40ff-9f64-c56fae703b3b'
+  PropagateID: 'cf972833-3f9f-40ff-9f64-c56fae703b3b'
+  ReservedCode1: '10b18829-26c8-4880-9d2d-ddf7c43c9cd8'
+  ReservedCode2: '10b18829-26c8-4880-9d2d-ddf7c43c9cd8'
+---
+
 ## 课题名称
 
 招标文件智能分析
 
-## 学习目标
+## 项目背景
 
-- 掌握PydanticOutputParser实现招标文件的结构化分析
+招标文件动辄几十页，技术要求、评分标准、资格条件分散在各处，投标团队花大量时间"找重点"。让AI一次性提取关键信息并标注风险点，帮团队快速判断"投不投、怎么投"。
 
-## 项目概述
+## 功能需求
 
-招标文件分析助手，分析6个维度（项目信息/资格要求/技术要求/评分标准/截止时间/风险提示）。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
+- 从招标文件中提取项目信息、资格要求、技术要求、评分标准、截止时间等关键要素
+- 自动识别招标文件中的倾向性条款、不合理要求等风险点，给出风险提示
+- 基于分析结果给出投标建议（是否投标、需重点关注的评分项）
+- 结构化输出解析失败时，自动降级为纯文本返回
 
-## 任务要求
+## 实验任务
 
-### 步骤1：定义Pydantic模型
-
-  - `BiddingAnalysisResult`: project_info, qualification_req, technical_summary, scoring_criteria, deadline_info, risk_alerts, recommendations
-
-### 步骤2：使用PydanticOutputParser构建结构化输出Chain
-
-### 步骤3：配置fallback_chain处理解析失败
-
-### 步骤4：System Prompt中注入招标文件分析规则
-
-### 步骤5：构建FastAPI后端 + Vue前端（含招标样本选择卡片）
-
-## 技术栈
-
-- `PydanticOutputParser`（结构化输出解析）
-- `ChatPromptTemplate`（提示模板）
-- LCEL（管道式Chain组装）
-- FastAPI + Vue 3 CDN
-
-## 输入数据
-
-- 测试样本位于 `data/` 目录下
-- 运行后可通过前端界面选择样本快速体验
-
-## 预期输出
-
-- 对话式交互界面，用户输入文本后返回AI分析结果
-- 结构化JSON输出，前端渲染为卡片式展示
+1. 输入一份完整招标文件样本，验证系统准确提取评分标准和截止时间
+2. 输入一份含倾向性条款的招标文件，验证系统识别出风险提示（如"指定品牌"等排他性要求）
+3. 对比AI提取的项目信息与招标文件原文，检查是否有遗漏或编造
 
 ## 提示与思考
 
-- 如何从非结构化的招标文件中提取结构化信息？Prompt设计有什么技巧？
 - 评分标准分析如何量化？LLM能准确计算得分吗？
 - 如果招标文件很长（超过上下文窗口），应该如何处理？
+- 如何从非结构化的招标文件中提取结构化信息？Prompt设计有什么技巧？

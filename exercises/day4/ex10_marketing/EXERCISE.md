@@ -1,48 +1,38 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: 'dcc83bff-7377-4d87-b4fb-c01e8ec7d8ec'
+  PropagateID: 'dcc83bff-7377-4d87-b4fb-c01e8ec7d8ec'
+  ReservedCode1: '1dd130e0-8120-4557-bf57-449459204783'
+  ReservedCode2: '1dd130e0-8120-4557-bf57-449459204783'
+---
+
 ## 课题名称
 
 精准营销RFM分析
 
-## 学习目标
+## 项目背景
 
-- 掌握PydanticOutputParser实现RFM客户分群与营销策略推荐
+电商平台的客户少则几万多则百万，营销预算有限不可能"撒胡椒面"。RFM模型把客户按最近消费、消费频次、消费金额三个维度分群，让AI自动分析客户画像并推荐针对性营销策略——把每一分钱花在刀刃上。
 
-## 项目概述
+## 功能需求
 
-精准营销分析助手，基于RFM模型分析客户数据并制定个性化策略。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
+- 基于RFM模型对客户自动分群（高价值、成长、流失风险、沉睡等）
+- 为每个客群生成个性化营销策略和预期ROI
+- 输出结构化JSON，前端可渲染为卡片式分析报告
+- 解析失败时自动降级重试，不丢失用户请求
 
-## 任务要求
+## 实验任务
 
-### 步骤1：定义Pydantic模型
-
-  - `CustomerProfile`: customer_id, rfm_segment(高价值/成长/流失风险/沉睡), consumption_preference, shopping_habit, marketing_strategy, expected_roi
-
-### 步骤2：使用PydanticOutputParser构建结构化输出Chain
-
-### 步骤3：配置fallback_chain处理解析失败
-
-### 步骤4：System Prompt中注入RFM分析规则和营销策略框架
-
-### 步骤5：构建FastAPI后端 + Vue前端
-
-## 技术栈
-
-- `PydanticOutputParser`（结构化输出解析）
-- `ChatPromptTemplate`（提示模板）
-- LCEL（管道式Chain组装）
-- FastAPI + Vue 3 CDN
-
-## 输入数据
-
-- 测试样本位于 `data/` 目录下
-- 运行后可通过前端界面选择样本快速体验
-
-## 预期输出
-
-- 对话式交互界面，用户输入文本后返回AI分析结果
-- 结构化JSON输出，前端渲染为卡片式展示
+1. 输入一位高频高消费客户数据，验证系统判定为"高价值"并推荐留存策略
+2. 输入一位半年未消费的老客户数据，验证系统识别为"流失风险"并推荐召回策略
+3. 输入边界数据（如频次和金额都很低的客户），观察系统如何归类
+4. 检查返回的JSON结构是否完整、字段类型是否正确
 
 ## 提示与思考
 
-- RFM分群的R/F/M三个维度如何量化打分？
-- LLM生成的营销策略如何保证可执行性？
-- 预期ROI是LLM估算的还是基于历史数据计算的？
+- R/F/M三个维度的分值怎么量化？不同行业阈值一样吗？
+- LLM给出的营销策略和预期ROI，可信度如何？怎么提升？
+- 结构化输出解析失败时，fallback策略该怎么设计？

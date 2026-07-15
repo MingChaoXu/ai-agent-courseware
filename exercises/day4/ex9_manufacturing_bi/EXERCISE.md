@@ -1,48 +1,38 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: 'bcc345b8-48dc-40a6-bd69-20593f51ff9b'
+  PropagateID: 'bcc345b8-48dc-40a6-bd69-20593f51ff9b'
+  ReservedCode1: '001fc107-d282-453b-b0c2-457deaa1ca35'
+  ReservedCode2: '001fc107-d282-453b-b0c2-457deaa1ca35'
+---
+
 ## 课题名称
 
 制造业BI分析Agent
 
-## 学习目标
+## 项目背景
 
-- 掌握LangGraph create_react_agent实现制造业BI分析，对比Agent与Chain模式
+工厂每天产生大量生产数据，但管理人员看报表时常常"有数据没结论"——哪条产线良品率下滑、要不要停机检修，全靠经验拍脑袋。让AI Agent自主查询数据、执行分析代码、给出决策建议，把"看报表"变成"问报表"。
 
-## 项目概述
+## 功能需求
 
-制造业BI分析助手，使用数据查询和代码执行工具分析生产数据。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
+- 支持自然语言查询生产数据（产量、良品率、设备状态等）
+- 能够执行数据分析代码，自动计算趋势、对比、异常检测等
+- Agent根据问题自主决定调用哪些工具，无需人工指定分析步骤
+- 工具调用过程可视化，展示推理链路
 
-## 任务要求
+## 实验任务
 
-### 步骤1：定义工具函数
-
-  - `query_production_data`: 查询生产数据，输入查询条件返回产线产量、良品率等
-  - `execute_code`: 执行Python代码进行数据分析，输入代码字符串返回结果
-
-### 步骤2：使用langgraph.prebuilt.create_react_agent创建Agent
-
-### 步骤3：实现chat()函数通过agent.invoke()获取回答
-
-### 步骤4：对比ReAct Agent与普通LCEL Chain在数据分析场景下的差异
-
-### 步骤5：构建FastAPI后端 + Vue前端
-
-## 技术栈
-
-- LangGraph `create_react_agent`
-- `langchain_core.tools.Tool`（工具定义）
-- FastAPI + Vue 3 CDN
-
-## 输入数据
-
-- 测试样本位于 `data/` 目录下
-- 运行后可通过前端界面选择样本快速体验
-
-## 预期输出
-
-- 对话式交互界面，用户输入文本后返回AI分析结果
-- 工具调用过程可视化，展示Thought → Action → Observation
+1. 输入"上个月各产线良品率排名"，验证系统自动查询数据并给出分析
+2. 输入"3号产线产量异常的原因分析"，验证系统执行代码进行深入分析
+3. 输入简单问候语（如"你好"），验证系统不误调用工具
+4. 对比同一问题下Agent模式与直接Chain模式的回答差异
 
 ## 提示与思考
 
-- execute_code工具的安全沙箱如何设计？如何防止恶意代码？
-- Agent模式vs直接写SQL查询，在什么场景下各有什么优势？
-- 如何扩展更多工具（如生成图表、发送报告）？
+- 让AI执行代码有什么安全风险？如何防止恶意代码？
+- Agent自己决定调用工具的依据是什么？工具描述怎么写才能帮它选对？
+- 如果数据查询结果为空，Agent应该怎么处理？

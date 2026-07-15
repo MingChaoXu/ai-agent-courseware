@@ -1,49 +1,38 @@
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '7e071081-a1c0-4e0e-96a5-a41db75bf695'
+  PropagateID: '7e071081-a1c0-4e0e-96a5-a41db75bf695'
+  ReservedCode1: 'a99cc8d6-2763-4ebd-aabb-3d33d3551bf7'
+  ReservedCode2: 'a99cc8d6-2763-4ebd-aabb-3d33d3551bf7'
+---
+
 ## 课题名称
 
 PCB质量AI检测Agent
 
-## 学习目标
+## 项目背景
 
-- 掌握LangGraph create_react_agent实现PCB电路板质量检测
+PCB电路板出厂前要过三道关：焊点有没有连锡偏移、丝印文字是否清晰、元件数量对不对——全靠人工肉眼检查，慢且容易漏。让AI Agent像质检员一样，根据检测需求自主调用缺陷检测、OCR识别、元件计数等工具，自动完成多维度质检。
 
-## 项目概述
+## 功能需求
 
-PCB电路板质量检测助手，使用缺陷检测、OCR识别和元件计数工具。构建FastAPI后端 + Vue前端的完整全栈项目，通过本课题掌握相关技术的实战应用。
+- 支持PCB板焊接缺陷检测（连锡、偏移、划痕等），输出缺陷类型和位置
+- 支持OCR识别PCB板丝印文字（型号、序列号、认证标识）
+- 支持PCB板元件计数统计
+- Agent根据用户问题自主组合多个工具完成综合检测
 
-## 任务要求
+## 实验任务
 
-### 步骤1：定义工具函数
-
-  - `defect_detect`: 检测PCB板焊接缺陷（连锡/偏移/划痕），输入图像描述返回缺陷类型和位置
-  - `ocr_extract`: OCR识别PCB板丝印文字，输入图像描述返回型号/序列号/认证标识
-  - `component_count`: 统计PCB板元件数量，输入图像描述返回元件统计结果
-
-### 步骤2：使用langgraph.prebuilt.create_react_agent创建Agent
-
-### 步骤3：实现chat()函数通过agent.invoke()获取回答
-
-### 步骤4：对比三种多模态处理模式（NATIVE/EXTRACT/TOOL）在质量检测场景的应用
-
-### 步骤5：构建FastAPI后端 + Vue前端
-
-## 技术栈
-
-- LangGraph `create_react_agent`
-- `langchain_core.tools.Tool`（工具定义）
-- FastAPI + Vue 3 CDN
-
-## 输入数据
-
-- 测试样本位于 `data/` 目录下
-- 运行后可通过前端界面选择样本快速体验
-
-## 预期输出
-
-- 对话式交互界面，用户输入文本后返回AI分析结果
-- 工具调用过程可视化，展示Thought → Action → Observation
+1. 输入"检查这块PCB板的焊接缺陷"，验证系统调用缺陷检测工具并返回结果
+2. 输入"识别这块板子上的丝印文字"，验证系统调用OCR工具提取型号信息
+3. 输入"对这块PCB板做全面质检"，验证系统自主依次调用多个工具完成综合检测
+4. 观察Agent调用工具的顺序，思考它是如何决定先调哪个后调哪个
 
 ## 提示与思考
 
-- Mock工具返回的是固定结果，如何替换为真实的CV模型API？
-- Agent如何决定先调用哪个工具？工具描述如何影响选择？
-- 多工具协作时，如何保证检测结果的一致性？
+- 工具的description描述如何影响Agent的工具选择？试试改写描述看效果变化
+- 多工具协作检测时，结果矛盾怎么办？
+- Mock工具返回固定结果，换成真实CV模型API需要考虑什么？
