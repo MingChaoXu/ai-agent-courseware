@@ -397,17 +397,17 @@ BERT系列 = Transformer编码器堆叠</div>
 
 <div class="vis-grid">
 <div class="vis-figure">
-<img src="https://jalammar.github.io/images/xlnet/transformer-encoder-decoder.png" alt="Transformer Encoder-Decoder架构" loading="lazy">
+<img src="images/transformer-encoder-decoder.png" alt="Transformer Encoder-Decoder架构">
 <div class="vis-caption"><strong>原始Transformer架构</strong>：左侧编码器栈 + 右侧解码器栈，用于机器翻译等序列到序列任务。<a href="https://jalammar.github.io/illustrated-transformer/" target="_blank">来源：Jay Alammar</a></div>
 </div>
 <div class="vis-figure">
-<img src="https://jalammar.github.io/images/gpt2/gpt-2-transformer-xl-bert-3.png" alt="GPT-2 BERT Transformer-XL对比" loading="lazy">
+<img src="images/gpt-2-transformer-xl-bert-3.png" alt="GPT-2 BERT Transformer-XL对比">
 <div class="vis-caption"><strong>三大家族对比</strong>：GPT-2 仅用解码器栈（自回归）、BERT 仅用编码器栈（双向）、Transformer-XL 解码器+片段递归。<a href="https://jalammar.github.io/illustrated-gpt2/" target="_blank">来源：Jay Alammar</a></div>
 </div>
 </div>
 
 <div class="vis-figure">
-<img src="https://jalammar.github.io/images/gpt2/self-attention-and-masked-self-attention.png" alt="自注意力 vs 掩码自注意力" loading="lazy">
+<img src="images/self-attention-and-masked-self-attention.png" alt="自注意力 vs 掩码自注意力">
 <div class="vis-caption"><strong>自注意力 vs 掩码自注意力</strong>：左图普通自注意力（BERT）可以看到所有位置；右图掩码自注意力（GPT）只能看到当前及之前的Token，防止"偷看"未来。这是 GPT 自回归生成的关键机制。<a href="https://jalammar.github.io/illustrated-gpt2/" target="_blank">来源：Jay Alammar</a></div>
 </div>
 </div>
@@ -432,23 +432,23 @@ Step 3: 输入变为「公积金提取需要哪些材料」→ 预测 → 「？
 </div>
 
 <div class="vis-figure">
-<img src="https://jalammar.github.io/images/xlnet/gpt-2-output.gif" alt="GPT-2逐Token输出过程" loading="lazy">
+<img src="images/gpt-2-output.gif" alt="GPT-2逐Token输出过程">
 <div class="vis-caption"><strong>GPT-2 逐Token输出</strong>：模型每次只生成一个Token，生成后立刻拼入输入序列，作为下一步的输入。这就是"自回归"的核心过程。<a href="https://jalammar.github.io/illustrated-gpt2/" target="_blank">来源：Jay Alammar</a></div>
 </div>
 
 <div class="vis-grid">
 <div class="vis-figure">
-<img src="https://jalammar.github.io/images/gpt2/gpt2-simple-output-2.gif" alt="GPT-2第一步生成" loading="lazy">
+<img src="images/gpt2-simple-output-2.gif" alt="GPT-2第一步生成">
 <div class="vis-caption"><strong>Step 1</strong>：输入起始Token &lt;s&gt;，经过所有解码器层后，对词表打分，选出概率最高的Token（如"the"）。</div>
 </div>
 <div class="vis-figure">
-<img src="https://jalammar.github.io/images/gpt2/gpt-2-simple-output-3.gif" alt="GPT-2第二步生成" loading="lazy">
+<img src="images/gpt-2-simple-output-3.gif" alt="GPT-2第二步生成">
 <div class="vis-caption"><strong>Step 2</strong>：将上一步的输出拼入输入，新的Token路径被激活，各层复用已有Key/Value，预测下一个Token。</div>
 </div>
 </div>
 
 <div class="vis-figure">
-<img src="https://jalammar.github.io/images/xlnet/gpt-2-autoregression-2.gif" alt="GPT-2自回归循环" loading="lazy">
+<img src="images/gpt-2-autoregression-2.gif" alt="GPT-2自回归循环">
 <div class="vis-caption"><strong>自回归循环</strong>：每一步的输出Token都会"反馈"到输入端，形成"输入→预测→拼入→再预测"的循环，直到生成结束符或达到 <code>max_tokens</code> 上限。这也解释了为什么生成速度与输出长度成正比。<a href="https://jalammar.github.io/illustrated-gpt2/" target="_blank">来源：Jay Alammar</a></div>
 </div>
 </div>
