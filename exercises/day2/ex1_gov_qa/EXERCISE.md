@@ -8,118 +8,84 @@
 - 理解RAG全流程（检索 → 注入 → 生成）
 - 学会用FAISS构建向量知识库
 
-## 任务要求
+## 项目背景
 
-### 步骤1：初始化ChatOpenAI
+市民办事最头疼的就是"政策看不懂、电话打不通、窗口跑多趟"。你将构建一个政务服务智能问答系统：把常见的政务办事指南整理成知识库，当市民提问时，系统自动从知识库中检索相关政策，再由AI基于检索结果生成准确回答——既不会编造不存在的政策，也能给出有据可查的答复。
 
-- 配置API Key和模型参数
-- 发送一条测试消息，验证LLM连接正常
+## 功能需求
 
-### 步骤2：定义RAG提示模板
+### 知识库构建
 
-- 使用 `ChatPromptTemplate` 定义提示模板
-- 包含 `{context}` 和 `{question}` 两个占位符
-- 在模板中指示LLM只根据context回答，不知道就说不知道
+将政务办事指南文档转化为可检索的向量知识库：
+- 支持加载FAQ格式的政务问答对（JSON）
+- 支持加载办事指南文档（TXT/MD格式）
+- 对长文档自动进行文本分块，保证检索粒度合适
+- 生成的向量索引可持久化保存，避免每次重新计算
 
-### 步骤3：构建FAISS向量索引
+### 智能问答
 
-- 加载 `data/gov_faq.json`
-- 使用 `RecursiveCharacterTextSplitter` 进行文本分块
-- 使用 `OpenAIEmbeddings` 生成嵌入向量
-- 构建FAISS索引并保存
+市民输入问题后，系统完成"检索→注入→生成"全流程：
+- 根据问题从知识库中检索最相关的政策文档片段
+- 将检索到的内容作为上下文注入提示模板，让LLM仅依据这些内容作答
+- 如果检索到的内容与问题无关，系统应明确表示"未找到相关信息"，而不是编造政策
+- 支持多轮对话，保留上下文连贯性
 
-### 步骤4：用LCEL管道组装RAG链
+### 知识库管理
 
-- 用管道操作符 `|` 组装：`rag_chain = retriever | prompt | llm | parser`
-- 理解每个环节的数据流向
+提供知识库的增删查功能：
+- 列出当前知识库中的所有文档
+- 支持上传新的政务文档扩充知识库
+- 新文档自动完成分块、向量化、索引更新
 
-### 步骤5：多轮问答测试
+## 实验任务
 
-- 测试知识库内的问题（应准确回答）
-- 测试知识库外的问题（应拒绝编造）
-- 验证RAG系统既准确又不幻觉
+### 基础：连接LLM并验证
 
-## 技术栈
+1. 配置API Key和模型参数
+2. 发送一条测试消息（如"你好"），确认LLM连接正常
 
-- LangChain 1.x
-- `ChatOpenAI`（LLM调用）
-- `ChatPromptTemplate`（提示模板）
-- `FAISS`（向量存储）
-- `OpenAIEmbeddings`（嵌入模型）
-- `RecursiveCharacterTextSplitter`（文本分块）
-- `StrOutputParser`（输出解析）
-- `RunnablePassthrough`（数据透传）
+### 核心体验：构建RAG问答链
+
+1. 定义提示模板，包含上下文占位符和问题占位符，并指示LLM只根据上下文回答
+2. 加载政务FAQ数据，进行文本分块，生成嵌入向量，构建FAISS索引
+3. 用LCEL管道将"检索器 → 提示模板 → LLM → 输出解析"组装成完整链
+
+### 效果验证：知识库内外测试
+
+1. 输入知识库内的问题（如"新生儿落户需要什么材料？"），观察系统准确引用原文作答
+2. 输入知识库外的问题（如"如何办理离婚手续？"），观察系统拒绝编造、明确表示未找到相关信息
+3. 对比两种情况下检索到的上下文，理解RAG"有据才答"的机制
+
+### 扩展：知识库扩充
+
+1. 上传一份新的办事指南文档到知识库
+2. 针对新文档内容提问，验证知识库已生效
+
+## 技术要求
+
+- 使用 LangChain 1.x 的 LCEL 管道操作符 `|` 组装 RAG 链
+- LLM 调用使用 `ChatOpenAI`，提示模板使用 `ChatPromptTemplate`
+- 向量存储使用 `FAISS`，嵌入模型使用 `OpenAIEmbeddings`
+- 文本分块使用 `RecursiveCharacterTextSplitter`
+- 输出解析使用 `StrOutputParser`，数据透传使用 `RunnablePassthrough`
 
 ## 输入数据
 
-- `data/gov_faq.json`（35条政务FAQ，覆盖户籍、社保、公积金、不动产6大类别）
+- `data/gov_faq.json`（50条政务FAQ，覆盖户籍、社保、公积金、不动产等10大类别）
+- `data/test_户政业务网上办理指引.md`（广州番禺户政网上办理指引）
+- `data/test_居住证申领指南.md`（凉山居住证申领指南）
+- `data/test_住房公积金贷款指南.md`（韶关公积金贷款指南）
+- `data/test_社会保险参保办事指南.md`（淮北相山区社保参保指南）
 
-## 预期输出
+## 预期效果
 
-- 4个测试问题的回答，包含：
-  - 知识库内问题：准确引用原文作答
-  - 知识库外问题：明确表示未找到相关信息，不编造政策
+- 知识库内问题：准确引用相关文档内容作答，附带参考来源
+- 知识库外问题：明确表示未找到相关信息，不编造政策
+- 新上传文档后可即时检索和回答相关内容
 
 ## 提示与思考
 
-- RAG的三个阶段（检索、注入、生成）各自解决什么问题？
-- 如果检索到的上下文与问题无关，LLM会怎样？如何缓解？
-- `FAISS` 的相似度搜索和关键词搜索有什么本质区别？
+- RAG 的"检索→注入→生成"三步，如果去掉检索直接让 LLM 回答政务问题，会出什么问题？如果去掉注入呢？
+- 如果市民问了一个知识库里没有的问题，你希望系统怎么回答？提示模板该怎么写才能让 LLM "知道就说知道，不知道就说不知道"？
+- 同一个问题，用关键词搜索和用向量相似度搜索，结果可能有什么不同？哪种更适合政务问答场景？
 
-## 全栈项目
-
-本课题附带一个完整的全栈演示项目，将 `run.py` 中的 RAG Chain 封装为可交互的 Web 应用。
-
-### 项目结构
-
-```
-ex1_gov_qa/
-├── run.py              # 训练脚本（5步教程）
-├── EXERCISE.md         # 本文件
-├── PROJECT_README.md   # 全栈项目详细文档
-├── .env.example        # API 配置模板
-├── .gitignore
-├── backend/            # FastAPI 后端
-│   ├── main.py         # 入口：启动时加载知识库，挂载 API 路由
-│   ├── config.py       # 配置项（LLM / Embedding / RAG 参数）
-│   ├── agent/          # RAG 核心
-│   │   ├── rag_chain.py        # RAGChain: retrieve → prompt → LLM → answer
-│   │   ├── knowledge_base.py   # KnowledgeBase: FAISS 向量库管理
-│   │   └── prompts.py          # 系统提示模板
-│   ├── api/            # REST API
-│   │   ├── chat.py     # POST /api/chat, DELETE /api/chat/{id}
-│   │   ├── knowledge.py # GET/POST /api/knowledge/*
-│   │   └── health.py   # GET /api/health
-│   └── models/         # Pydantic 数据模型
-├── frontend/           # Vue 3 单页应用（CDN）
-│   └── index.html      # 侧边栏知识库管理 + 对话 + 来源卡片
-├── data/               # 测试数据
-│   └── gov_faq.json    # 50 条真实政务 FAQ（10 大类别）
-└── skill/              # TeleAgent 技能包
-    ├── SKILL.md        # 技能描述
-    └── tools/gov_qa.py # GovQATool + CLI
-```
-
-### 快速启动
-
-```bash
-# 1. 配置 API
-cp .env.example .env
-# 编辑 .env 填入 API Key
-
-# 2. 安装后端依赖
-pip install -r backend/requirements.txt
-
-# 3. 启动服务
-cd backend
-python main.py
-# 浏览器打开 http://localhost:8000
-```
-
-### 技术架构
-
-- **后端**: FastAPI + LangChain 1.x + FAISS
-- **前端**: Vue 3 (CDN) + Tailwind CSS
-- **技能**: TeleAgent Skill（可安装到智能体平台）
-
-> AI生成
