@@ -556,46 +556,50 @@ API中通常同时设置，<strong>更严格的那个生效</strong>。实战建
 </div>
 
 <div class="principle-card">
-<div class="pc-title">&#9881; 部署关键参数：从API调用到生产服务</div>
+<div class="pc-title">&#9881; vLLM 部署核心参数</div>
 <div class="pc-body">
-调用大模型API时，除了采样参数，还有一组<strong>控制生成边界和推理行为</strong>的参数，直接影响成本、延迟和并发能力：<br><br>
-<strong>一、生成边界参数</strong><br>
-&bull; <code>max_tokens</code>：单次请求最多生成的Token数。设太小→回答被截断；设太大→浪费配额/成本失控。<br>
-&nbsp;&nbsp;实战：问答类设256-512，报告生成设2048-4096，代码生成设1024<br>
-&bull; <code>stop</code>：自定义停止序列（如<code>["\n\n", "观察："]</code>），生成到该序列时提前终止<br>
-&bull; <code>presence_penalty / frequency_penalty</code>：抑制重复。值越大越不容易重复用词，0=不抑制<br><br>
-<strong>二、推理模式参数</strong><br>
-&bull; <code>stream=true</code>：流式输出，逐Token返回（SSE协议），首Token延迟从数秒降至数百毫秒，<strong>用户体验质变</strong><br>
-&bull; <code>reasoning_effort</code>（o3/gpt-5系列）：控制"思考深度"——<code>low/medium/high</code>，深度越高推理越强但成本和延迟指数增长<br><br>
-<strong>三、并发与吞吐参数</strong><br>
-&bull; <code>concurrency</code>（并发数）：同时处理的请求数。受GPU显存约束，通常vLLM部署单卡A100并发=8-16<br>
-&bull; <code>max_batch_size</code>：单批最大请求合并数。Continuous Batching下动态组批，越大吞吐越高，但延迟也略增<br>
-&bull; <strong>推理引擎选择</strong>：vLLM（PagedAttention，吞吐最优）/ TensorRT-LLM（NVIDIA官方，延迟最低）/ LMDeploy（国产，TurboMind引擎）<br><br>
-<strong>四、生产部署速查表</strong>
+vLLM是当前最流行的开源推理引擎，基于<strong>PagedAttention</strong>技术实现高效KV Cache管理。以下是<code>vllm serve</code>启动时最关键的参数：<br><br>
+<strong>一、模型与加载</strong><br>
+&bull; <code>--model</code>：模型路径或HuggingFace ID（如<code>Qwen/Qwen2.5-72B-Instruct</code>）<br>
+&bull; <code>--tensor-parallel-size</code>（<code>-tp</code>）：张量并行度，模型分层放到多张GPU上。72B模型需tp=2（2×A100），7B/14B单卡即可tp=1<br>
+&bull; <code>--pipeline-parallel-size</code>（<code>-pp</code>）：流水线并行度，按层切分到不同GPU。通常tp优先，pp在跨节点时使用<br>
+&bull; <code>--quantization</code>：量化方式。<code>awq</code>（4bit，A100/WIDER适用）/ <code>gptq</code>（4bit）/ <code>fp8</code>（H100原生支持）。量化后显存降50-75%，吞吐提升但精度略损<br><br>
+<strong>二、KV Cache 与显存</strong><br>
+&bull; <code>--gpu-memory-utilization</code>：GPU显存利用率，默认0.9（90%给KV Cache，10%给模型权重和安全余量）。调高→更多并发，调低→更稳不易OOM<br>
+&bull; <code>--max-model-len</code>：模型支持的最大序列长度。设小→KV Cache占用少→并发更高。如模型支持128K但你只需要4K，设4096可大幅提升并发<br>
+&bull; <code>--block-size</code>：PagedAttention的内存块大小（默认16 Token），一般不需调整<br><br>
+<strong>三、调度与并发</strong><br>
+&bull; <code>--max-num-seqs</code>：单批次最大并发序列数，默认256。受显存约束，实际并发=可用KV Cache ÷ 平均序列长度<br>
+&bull; <code>--max-num-batched-tokens</code>：单批最大Token总数（prefill阶段），默认自动推算。越大吞吐越高，但prefill延迟也增<br>
+&bull; <code>--enable-chunked-prefill</code>：分块预填充，将长prompt的prefill拆成小块与decode交替执行，避免长请求阻塞短请求<br><br>
+<strong>四、服务与输出</strong><br>
+&bull; <code>--host / --port</code>：监听地址，默认<code>0.0.0.0:8000</code>，兼容OpenAI API格式<br>
+&bull; <code>--served-model-name</code>：对外暴露的模型名（API中<code>model</code>字段），可与实际模型名不同，方便迁移切换<br>
+&bull; <code>--enable-prefix-caching</code>：前缀缓存（APC），相同System Prompt的请求复用KV Cache，多轮对话/批量场景提速显著<br>
+&bull; <code>--disable-log-requests</code>：关闭请求日志（生产环境建议关闭，减少IO开销）
 </div>
 </div>
 
 <table class="compare-table">
 <thead>
-<tr><th>场景</th><th>temperature</th><th>top_p</th><th>max_tokens</th><th>stream</th><th>推理引擎</th></tr>
+<tr><th>部署场景</th><th>模型</th><th>tp</th><th>quantization</th><th>gpu-mem-util</th><th>max-model-len</th><th>关键优化</th></tr>
 </thead>
 <tbody>
-<tr><td>政务FAQ问答</td><td>0.1</td><td>0.9</td><td>512</td><td>true</td><td>vLLM</td></tr>
-<tr><td>合同风险审查</td><td>0</td><td>1</td><td>2048</td><td>false</td><td>TensorRT-LLM</td></tr>
-<tr><td>营销文案生成</td><td>0.8</td><td>0.95</td><td>1024</td><td>true</td><td>vLLM</td></tr>
-<tr><td>BI数据分析</td><td>0</td><td>1</td><td>4096</td><td>false</td><td>TensorRT-LLM</td></tr>
-<tr><td>代码生成</td><td>0.2</td><td>0.9</td><td>1024</td><td>true</td><td>vLLM</td></tr>
-<tr><td>多轮对话（客服）</td><td>0.5</td><td>0.9</td><td>256</td><td>true</td><td>vLLM</td></tr>
+<tr><td>单卡A100问答服务</td><td>Qwen2.5-72B</td><td>1</td><td>awq</td><td>0.9</td><td>8192</td><td>量化+截短窗口</td></tr>
+<tr><td>双卡A100全精度</td><td>Qwen2.5-72B</td><td>2</td><td>无</td><td>0.9</td><td>32768</td><td>tp=2张量并行</td></tr>
+<tr><td>单卡4090小模型</td><td>Qwen2.5-14B</td><td>1</td><td>无</td><td>0.85</td><td>4096</td><td>截短窗口提升并发</td></tr>
+<tr><td>H100 fp8高速</td><td>Qwen2.5-72B</td><td>1</td><td>fp8</td><td>0.9</td><td>16384</td><td>fp8原生加速</td></tr>
+<tr><td>批量多轮对话</td><td>Qwen2.5-32B</td><td>1</td><td>awq</td><td>0.9</td><td>8192</td><td>prefix-caching+chunked-prefill</td></tr>
 </tbody>
 </table>
 
 <div class="principle-card warn">
-<div class="pc-title">&#9888; 常见部署陷阱</div>
+<div class="pc-title">&#9888; vLLM 部署常见陷阱</div>
 <div class="pc-body">
-<strong>1. max_tokens当成"期望长度"</strong>：它是<strong>上限</strong>不是目标！设4096不代表每次生成4096 Token，模型遇到EOS或stop序列会提前停止。但按max_tokens计费的API（如GPT-4）会按实际生成量计费，设太大只是容错，不额外收费。<br>
-<strong>2. temperature=0不保证完全确定性</strong>：Top-K/P截断后仍可能有概率相同的Token，不同平台实现略有差异。需要完全确定性应使用seed参数（如OpenAI的<code>seed</code>+<code>temperature=0</code>）。<br>
-<strong>3. 流式输出≠总延迟更低</strong>：stream只改变<strong>感知延迟</strong>（首Token更快），总生成时间不变。但对用户来说，"0.5秒出第一个字然后逐字流"远好于"5秒后一次性出全部"。<br>
-<strong>4. 并发≠吞吐</strong>：并发100但GPU只能同时处理16个请求时，其余84个在排队，平均延迟反而更差。压测时关注<strong>Tokens/秒</strong>而非RPS。
+<strong>1. max-model-len 设太大</strong>：128K窗口下KV Cache占用极大，并发暴跌。如果业务只需4K，设4096可将并发提升10倍以上。<br>
+<strong>2. gpu-memory-utilization 拉满到0.99</strong>：看似用满显存，但模型加载、临时Tensor、框架开销都需要余量，0.95以上容易OOM崩溃。建议0.85-0.9。<br>
+<strong>3. 张量并行≠线性加速</strong>：tp=2不是单卡2倍吞吐，实际约1.5-1.8倍（通信开销）。跨节点tp更慢，此时应考虑pp流水线并行。<br>
+<strong>4. 量化后不校验精度</strong>：AWQ/GPTQ在数学推理、长文本场景精度损失明显。部署后必须用业务数据集做<strong>回归评测</strong>，不能只看benchmark。
 </div>
 </div>
 </div>
