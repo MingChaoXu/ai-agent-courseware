@@ -212,7 +212,7 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <a class="nav-item" href="#s6-5" onclick="navClick(this)">├ GraphRAG知识图谱增强</a>
 <a class="nav-item" href="#s6-6" onclick="navClick(this)">├ CAG与LLM Wiki</a>
 <a class="nav-item" href="#s6-7" onclick="navClick(this)">└ 企业选型与落地</a>
-<a class="nav-item" href="#s7" onclick="navClick(this)">2.4 课程全景与Day2预告<span class="time-badge">10min</span></a>
+<a class="nav-item" href="#s7" onclick="navClick(this)">2.4 API中转站开源项目<span class="time-badge">扩展</span></a>
 </div>
 <div class="nav-group">
 <div class="nav-group-title">Day 1 总结</div>
@@ -2107,30 +2107,227 @@ LLM Wiki替代的不是RAG的全部，而是<strong>"对原始文档做chunk+嵌
 </div>
 
 <!-- ============================================================ -->
-<!-- 2.4 课程全景与Day2预告 -->
+<!-- 2.4 API中转站开源项目调研 -->
 <!-- ============================================================ -->
 <div class="section" id="s7">
 <div class="section-header">
 <span class="section-tag afternoon">下午 · 2.4</span>
-<h2>课程全景与Day2预告</h2>
-<p>5天能力进阶路线 · 10分钟</p>
+<h2>API中转站开源项目调研</h2>
+<p>大模型API网关与中转分发系统 · 选型参考</p>
 </div>
 
+<div class="topic-card" id="s8-1">
+<h3>背景：为什么需要API中转站？</h3>
+<p>企业AI落地中，混合使用GPT、Claude、Gemini及各类国产大模型已成为常态。但不同厂商API协议各异、海外支付门槛高、多渠道结算繁琐——<strong>API中转站</strong>应运而生，通过统一的API网关将多个模型厂商聚合为标准OpenAI兼容接口，实现Key管理、负载均衡、计费审计和渠道分发。</p>
+
+<div class="flow-diagram">┌──────────┐     ┌──────────────────┐     ┌──────────────────┐
+│  客户端    │────→│   API中转站网关    │────→│  OpenAI / Claude  │
+│  (Cursor  │     │  (统一OpenAI格式)  │     │  Gemini / 豆包    │
+│   Cherry  │     │  · Key管理与分发   │     │  通义 / 文心      │
+│   Codex)  │     │  · 负载均衡+重试   │     │  DeepSeek / ...   │
+└──────────┘     │  · 计费与额度管控   │     └──────────────────┘
+                 │  · 协议格式互转     │
+                 └──────────────────┘</div>
+</div>
+
+<!-- s8-2: 四大核心项目对比 -->
+<div class="topic-card" id="s8-2">
+<h3>四大核心项目横向对比</h3>
 <table class="compare-table">
-<thead>
-<tr><th>Day</th><th>主题</th><th>核心能力</th><th>课题数</th></tr>
-</thead>
+<thead><tr><th>维度</th><th>One API</th><th>New API</th><th>MetAPI</th><th>OneHub</th></tr></thead>
 <tbody>
-<tr><td>Day 1</td><td>AI理论与实践基础</td><td>LLM原理、Prompt工程、ReAct循环、RAG原理</td><td>7个原理工具</td></tr>
-<tr><td>Day 2</td><td>TeleAgent实战入门</td><td>智能问答、知识库RAG、MCP工具、上下文压缩</td><td>6个</td></tr>
-<tr><td>Day 3</td><td>文档生成与审核</td><td>合同审核(HITL)、文件生成、记忆管理、Prompt消融</td><td>7个</td></tr>
-<tr><td>Day 4</td><td>数据分析与多模态</td><td>BI分析、精准营销、多模态质检、MCP协议</td><td>7个</td></tr>
-<tr><td>Day 5</td><td>复杂智能体与路演</td><td>多Agent协同、事件驱动、消融评估、综合路演</td><td>5个</td></tr>
+<tr><td>GitHub</td><td>songquanpeng/one-api</td><td>QuantumNous/new-api</td><td>cita-777/metapi</td><td>MartialBE/one-hub</td></tr>
+<tr><td>Stars</td><td>35.7k</td><td>42.2k</td><td>3.1k</td><td>2.8k</td></tr>
+<tr><td>技术栈</td><td>Go + React</td><td>Go</td><td>Node.js/TS + React</td><td>Go + React</td></tr>
+<tr><td>开源协议</td><td>MIT</td><td>AGPL-3.0</td><td>MIT</td><td>Apache-2.0</td></tr>
+<tr><td>定位</td><td>原始鼻祖：LLM API管理与分发</td><td>One API增强版：下一代LLM网关</td><td>中转站的中转站：元聚合层</td><td>One API增强分支：更多模型+统计</td></tr>
+<tr><td>项目关系</td><td>原始项目</td><td>基于One API二次开发</td><td>独立项目，上游对接各中转站</td><td>基于One API二次开发</td></tr>
+<tr><td>数据存储</td><td>SQLite/MySQL/PostgreSQL</td><td>同左，兼容One API数据库</td><td>SQLite/MySQL/PostgreSQL</td><td>MySQL/PostgreSQL（不兼容原版）</td></tr>
+<tr><td>多用户体系</td><td>有（邮箱/GitHub/飞书/微信）</td><td>有（+Discord/Telegram/OIDC）</td><td>无（单管理员架构）</td><td>有（同One API）</td></tr>
+<tr><td>计费系统</td><td>额度管理+兑换码</td><td>EPay/Stripe在线充值</td><td>费用上限（无充值）</td><td>额度管理+兑换码</td></tr>
+<tr><td>智能路由</td><td>负载均衡</td><td>渠道加权随机+自动重试</td><td>成本/余额/使用率加权分配</td><td>负载均衡</td></tr>
+<tr><td>协议互转</td><td>无</td><td>OpenAI⇄Claude⇄Gemini</td><td>OpenAI⇄Claude</td><td>无</td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- s8-3: One API -->
+<div class="topic-card" id="s8-3">
+<h3>One API — 行业鼻祖</h3>
+<p><strong>作者</strong>：songquanpeng ｜ <strong>Stars</strong>：35.7k ｜ <strong>协议</strong>：MIT ｜ <strong>最新版</strong>：v0.6.10 (2025-02)</p>
+
+<div class="principle-card">
+<div class="pc-title">核心功能</div>
+<div class="pc-body">
+将所有大模型统一封装为OpenAI协议，支持20+模型厂商（OpenAI/Azure/Claude/Gemini/豆包/文心/通义/星火/ChatGLM/混元/DeepSeek等）。<br><br>
+<strong>架构</strong>：Go后端 + React前端，单可执行文件，Docker一键部署<br>
+<strong>核心能力</strong>：负载均衡多渠道 · 令牌管理（过期时间/额度/IP范围/模型限制）· 兑换码系统 · 用户分组与渠道分组 · 失败自动重试 · 多机部署（Redis+MySQL）<br>
+<strong>登录方式</strong>：邮箱 / GitHub / 飞书 / 微信公众号
+</div>
+</div>
+
+<div class="principle-card warn">
+<div class="pc-title">局限</div>
+<div class="pc-body">
+功能相对基础，无数据看板，UI较老旧，更新趋缓（最新版停留在2025年2月）。不支持协议互转、不支持Midjourney/Suno等非文本模型接口。
+</div>
+</div>
+
+<div class="principle-card green">
+<div class="pc-title">适用场景</div>
+<div class="pc-body">
+入门级需求，简单Key分发，对定制化要求不高的场景。MIT协议最宽松，商业使用无限制。<br>
+<strong>实际案例</strong>：苏州电信自研的「常熟TokenHub」(ctapi.csxdtx.com)即基于New API部署，HTML源码中保留了QuantumNous标识。
+</div>
+</div>
+</div>
+
+<!-- s8-4: New API -->
+<div class="topic-card" id="s8-4">
+<h3>New API — 当前最活跃的增强版</h3>
+<p><strong>作者</strong>：Calcium-Ion / QuantumNous团队 ｜ <strong>Stars</strong>：42.2k ｜ <strong>协议</strong>：AGPL-3.0 ｜ <strong>提交</strong>：6127次，274位贡献者</p>
+
+<div class="principle-card">
+<div class="pc-title">相比One API的核心增强</div>
+<div class="pc-body">
+<strong>全协议支持</strong>：OpenAI Chat/Responses/Realtime + Claude Messages + Gemini + Rerank<br>
+<strong>协议互转</strong>：OpenAI ⇄ Claude、OpenAI → Gemini、Gemini → OpenAI<br>
+<strong>Thinking模型支持</strong>：o3/gpt-5的reasoning effort、Claude thinking、Gemini thinking<br>
+<strong>现代化UI</strong>：数据看板、模型市场、统计图表、多语言（中/英/法/日）<br>
+<strong>计费系统</strong>：EPay/Stripe在线充值、按请求/用量/缓存命中计费<br>
+<strong>更多登录方式</strong>：Discord / LinuxDO / Telegram / OIDC<br>
+<strong>非文本模型</strong>：Midjourney-Proxy、Suno API、Dify ChatFlow<br>
+<strong>数据兼容</strong>：完全兼容One API数据库，可平滑迁移
+</div>
+</div>
+
+<div class="principle-card warn">
+<div class="pc-title">注意事项</div>
+<div class="pc-body">
+<strong>AGPL-3.0协议</strong>：修改版必须开源，且须保留作者署名和原始项目链接。企业闭源使用需联系 support@quantumnous.com 获取商业授权。<br>
+<strong>项目庞大</strong>：约39万行代码，1911个代码文件，部署和维护有一定复杂度。
+</div>
+</div>
+
+<div class="principle-card green">
+<div class="pc-title">适用场景</div>
+<div class="pc-body">
+生产级部署，需要完整功能栈的企业/团队。需要多用户分发、在线计费、协议互转、非文本模型支持的场景。<br>
+<strong>合作伙伴</strong>：Cherry Studio、北京大学、阿里云、UCloud、IO.NET 等。
+</div>
+</div>
+</div>
+
+<!-- s8-5: MetAPI -->
+<div class="topic-card" id="s8-5">
+<h3>MetAPI — 中转站之上的元聚合</h3>
+<p><strong>作者</strong>：cita-777 ｜ <strong>Stars</strong>：3.1k ｜ <strong>协议</strong>：MIT ｜ <strong>技术栈</strong>：Fastify + React 18 + TypeScript + Drizzle ORM</p>
+
+<div class="principle-card">
+<div class="pc-title">独特定位：中转站的中转站</div>
+<div class="pc-body">
+不对接各模型厂商，而是<strong>对接各中转站本身</strong>——把分散的New API/One API/OneHub等站点聚合为统一入口。<br><br>
+解决的核心痛点：在多个中转站有账号时，每个站一个Key、余额分散、模型列表不同、某个站挂了要手动切换。
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">核心功能</div>
+<div class="pc-body">
+<strong>自动模型发现</strong>：零配置发现上游所有站点的可用模型<br>
+<strong>智能路由引擎</strong>：按成本(40%)、余额(30%)、使用率(30%)加权分配，失败自动冷却+故障转移<br>
+<strong>四级成本信号</strong>：实测成本 → 账号配置成本 → 目录参考价 → 默认兜底<br>
+<strong>统一OpenAI + Claude下游格式</strong>，自动格式转换<br>
+<strong>自动签到</strong>：Cron定时执行各站签到领额度<br>
+<strong>集中看板</strong>：跨站余额分布、消费趋势、模型覆盖率对比<br>
+<strong>告警通知</strong>：Webhook/Bark/Server酱/Telegram/邮件 五渠道<br>
+<strong>模型操练场</strong>：在线交互测试<br>
+<strong>OAuth连接</strong>：Codex/Claude/Gemini CLI/Antigravity
+</div>
+</div>
+
+<div class="principle-card warn">
+<div class="pc-title">局限</div>
+<div class="pc-body">
+<strong>无多用户体系</strong>：单管理员架构，不适合对外分发Key<br>
+<strong>Key权限管理较简单</strong>：支持过期时间/费用上限/模型白名单/路由白名单，但无用户分组、兑换码、在线充值等<br>
+<strong>不直接对接模型厂商</strong>：必须先有上游中转站账号
+</div>
+</div>
+
+<div class="principle-card green">
+<div class="pc-title">适用场景</div>
+<div class="pc-body">
+在多个中转站有账号、需统一管理和智能调度的重度用户。特别适合"薅羊毛"场景：多站签到领额度 + 智能路由选最便宜通道。
+</div>
+</div>
+</div>
+
+<!-- s8-6: OneHub -->
+<div class="topic-card" id="s8-6">
+<h3>OneHub — One API的功能增强分支</h3>
+<p><strong>作者</strong>：MartialBE ｜ <strong>Stars</strong>：2.8k ｜ <strong>协议</strong>：Apache-2.0</p>
+
+<div class="principle-card">
+<div class="pc-title">增强点</div>
+<div class="pc-body">
+基于One API二次开发，主要增强：<br>
+· 支持更多模型供应商<br>
+· 增加统计页面（数据可视化）<br>
+· 完善非OpenAI模型的函数调用（Function Calling）<br>
+· 数据库与原版不兼容（需单独部署）<br><br>
+<strong>衍生项目</strong>：DoneHub（OneHub的进一步增强分支，by deanxv）
+</div>
+</div>
+
+<div class="principle-card green">
+<div class="pc-title">适用场景</div>
+<div class="pc-body">
+需要比One API更多模型支持和统计功能，但不需要New API那么重的功能栈的折中方案。Apache-2.0协议对商业使用友好。
+</div>
+</div>
+</div>
+
+<!-- s8-7: 生态关系与选型 -->
+<div class="topic-card" id="s8-7">
+<h3>生态关系与选型建议</h3>
+
+<div class="flow-diagram">模型厂商 (OpenAI / Claude / Gemini / 豆包 / 通义 / ...)
+    │
+    ├──→ One API ──────→ (原始项目, MIT)
+    │       │
+    │       ├──→ New API ──→ (全面增强版, AGPL-3.0, 42k Stars, 最活跃)
+    │       │
+    │       ├──→ OneHub ────→ (模型+统计增强, Apache-2.0)
+    │       │       │
+    │       │       └──→ DoneHub ──→ (OneHub增强分支)
+    │       │
+    │       └──→ 其他 Fork (Veloera / Sub2API / ...)
+    │
+    └──→ MetAPI ──────→ (元聚合层, 聚合以上所有中转站, 独立架构)</div>
+
+<table class="compare-table">
+<thead><tr><th>需求场景</th><th>推荐方案</th><th>原因</th></tr></thead>
+<tbody>
+<tr><td>刚入门，简单Key分发</td><td>One API</td><td>最轻量，MIT协议无限制</td></tr>
+<tr><td>生产级部署，需要完整功能</td><td>New API</td><td>功能最全，社区最活跃（注意AGPL协议）</td></tr>
+<tr><td>多站账号管理，智能调度</td><td>MetAPI</td><td>唯一做"中转站聚合"的项目，智能路由+成本优化</td></tr>
+<tr><td>只需比One API多点功能</td><td>OneHub</td><td>折中方案，Apache-2.0协议友好</td></tr>
+<tr><td>企业内部多团队Key分发</td><td>New API</td><td>多租户+计费+用户分组+速率限制</td></tr>
+<tr><td>个人多站统一入口省成本</td><td>MetAPI</td><td>智能路由+自动签到+跨站余额看板</td></tr>
 </tbody>
 </table>
 
-<div class="flow-diagram">
-能力进阶路线：理解原理 → 单场景实战 → 场景深耕 → 多模态扩展 → 复杂协同+评估</div>
+<div class="principle-card warn">
+<div class="pc-title">关键注意事项</div>
+<div class="pc-body">
+<strong>1. 协议差异</strong>：One API（MIT）最宽松；New API（AGPL-3.0）要求修改版必须开源且有署名要求，商业闭源需联系授权；OneHub/MetAPI（Apache-2.0/MIT）对商业友好。<br><br>
+<strong>2. 合规风险</strong>：所有项目均声明不得用于非法用途。对公众提供生成式AI服务需符合《生成式人工智能服务管理暂行办法》要求，完成备案、内容安全、实名验证等义务。<br><br>
+<strong>3. 架构选择</strong>：MetAPI不是"再做一个中转站"，而是解决"中转站碎片化"的更高层痛点。两者可叠加使用——MetAPI在前做智能路由，New API在后做多租户分发。
+</div>
+</div>
+</div>
+
 </div>
 
 <!-- ============================================================ -->
