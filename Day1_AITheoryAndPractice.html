@@ -532,6 +532,72 @@ Step 3: 输入变为「公积金提取需要哪些材料」→ 预测 → 「？
 - 代码生成：<code>temperature=0.2</code>（确定性优先）
 </div>
 </div>
+
+<div class="principle-card">
+<div class="pc-title">&#128295; Top-K 与 Top-P：精细控制采样空间</div>
+<div class="pc-body">
+Temperature控制概率分布的"陡峭程度"，而<strong>Top-K和Top-P</strong>控制从哪些Token中采样——两者配合使用效果更精细：<br><br>
+<strong>Top-K Sampling</strong>：<br>
+只从概率最高的K个Token中采样，其余直接截断。<br>
+&bull; <code>top_k=1</code>：等价于贪心解码（只选最高的1个）<br>
+&bull; <code>top_k=50</code>：从概率Top 50中按权重随机选（常用默认值）<br>
+&bull; K越大→多样性越强，K越小→确定性越强<br><br>
+<strong>Top-P（Nucleus Sampling）</strong>：<br>
+从概率最高的Token开始累加，直到累计概率 ≥ P，只在这个最小集合中采样。<br>
+&bull; <code>top_p=0.1</code>：极窄，几乎只选最高概率Token<br>
+&bull; <code>top_p=0.9</code>：常用默认值，累计覆盖90%概率质量<br>
+&bull; 优势：自适应——常见词自动少选（概率集中），罕见词自动多选（概率分散）<br><br>
+<strong>三者协同规则</strong>：先Top-K截断 → 再Top-P截断 → 最后Temperature缩放 → 采样<br>
+API中通常同时设置，<strong>更严格的那个生效</strong>。实战建议：<br>
+- 确定性场景：<code>temperature=0</code>（此时Top-K/P不生效）<br>
+- 平衡场景：<code>temperature=0.7, top_p=0.9</code>（Top-P为主，Temperature微调）<br>
+- 创意场景：<code>temperature=1.0, top_k=0, top_p=0.95</code>（放开Top-K限制）
+</div>
+</div>
+
+<div class="principle-card">
+<div class="pc-title">&#9881; 部署关键参数：从API调用到生产服务</div>
+<div class="pc-body">
+调用大模型API时，除了采样参数，还有一组<strong>控制生成边界和推理行为</strong>的参数，直接影响成本、延迟和并发能力：<br><br>
+<strong>一、生成边界参数</strong><br>
+&bull; <code>max_tokens</code>：单次请求最多生成的Token数。设太小→回答被截断；设太大→浪费配额/成本失控。<br>
+&nbsp;&nbsp;实战：问答类设256-512，报告生成设2048-4096，代码生成设1024<br>
+&bull; <code>stop</code>：自定义停止序列（如<code>["\n\n", "观察："]</code>），生成到该序列时提前终止<br>
+&bull; <code>presence_penalty / frequency_penalty</code>：抑制重复。值越大越不容易重复用词，0=不抑制<br><br>
+<strong>二、推理模式参数</strong><br>
+&bull; <code>stream=true</code>：流式输出，逐Token返回（SSE协议），首Token延迟从数秒降至数百毫秒，<strong>用户体验质变</strong><br>
+&bull; <code>reasoning_effort</code>（o3/gpt-5系列）：控制"思考深度"——<code>low/medium/high</code>，深度越高推理越强但成本和延迟指数增长<br><br>
+<strong>三、并发与吞吐参数</strong><br>
+&bull; <code>concurrency</code>（并发数）：同时处理的请求数。受GPU显存约束，通常vLLM部署单卡A100并发=8-16<br>
+&bull; <code>max_batch_size</code>：单批最大请求合并数。Continuous Batching下动态组批，越大吞吐越高，但延迟也略增<br>
+&bull; <strong>推理引擎选择</strong>：vLLM（PagedAttention，吞吐最优）/ TensorRT-LLM（NVIDIA官方，延迟最低）/ LMDeploy（国产，TurboMind引擎）<br><br>
+<strong>四、生产部署速查表</strong>
+</div>
+</div>
+
+<table class="compare-table">
+<thead>
+<tr><th>场景</th><th>temperature</th><th>top_p</th><th>max_tokens</th><th>stream</th><th>推理引擎</th></tr>
+</thead>
+<tbody>
+<tr><td>政务FAQ问答</td><td>0.1</td><td>0.9</td><td>512</td><td>true</td><td>vLLM</td></tr>
+<tr><td>合同风险审查</td><td>0</td><td>1</td><td>2048</td><td>false</td><td>TensorRT-LLM</td></tr>
+<tr><td>营销文案生成</td><td>0.8</td><td>0.95</td><td>1024</td><td>true</td><td>vLLM</td></tr>
+<tr><td>BI数据分析</td><td>0</td><td>1</td><td>4096</td><td>false</td><td>TensorRT-LLM</td></tr>
+<tr><td>代码生成</td><td>0.2</td><td>0.9</td><td>1024</td><td>true</td><td>vLLM</td></tr>
+<tr><td>多轮对话（客服）</td><td>0.5</td><td>0.9</td><td>256</td><td>true</td><td>vLLM</td></tr>
+</tbody>
+</table>
+
+<div class="principle-card warn">
+<div class="pc-title">&#9888; 常见部署陷阱</div>
+<div class="pc-body">
+<strong>1. max_tokens当成"期望长度"</strong>：它是<strong>上限</strong>不是目标！设4096不代表每次生成4096 Token，模型遇到EOS或stop序列会提前停止。但按max_tokens计费的API（如GPT-4）会按实际生成量计费，设太大只是容错，不额外收费。<br>
+<strong>2. temperature=0不保证完全确定性</strong>：Top-K/P截断后仍可能有概率相同的Token，不同平台实现略有差异。需要完全确定性应使用seed参数（如OpenAI的<code>seed</code>+<code>temperature=0</code>）。<br>
+<strong>3. 流式输出≠总延迟更低</strong>：stream只改变<strong>感知延迟</strong>（首Token更快），总生成时间不变。但对用户来说，"0.5秒出第一个字然后逐字流"远好于"5秒后一次性出全部"。<br>
+<strong>4. 并发≠吞吐</strong>：并发100但GPU只能同时处理16个请求时，其余84个在排队，平均延迟反而更差。压测时关注<strong>Tokens/秒</strong>而非RPS。
+</div>
+</div>
 </div>
 </div>
 
