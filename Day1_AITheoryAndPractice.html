@@ -210,11 +210,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <a class="nav-item" href="#s6-7" onclick="navClick(this)">└ 企业选型与落地</a>
 <a class="nav-item" href="#s7" onclick="navClick(this)">2.4 API中转站开源项目<span class="time-badge">扩展</span></a>
 </div>
-<div class="nav-group">
-<div class="nav-group-title">Day 1 总结</div>
-<a class="nav-item" href="#summary" onclick="navClick(this)">核心知识点回顾</a>
-<a class="nav-item" href="#preview" onclick="navClick(this)">Day 2 预告</a>
-</div>
 </nav>
 </aside>
 
@@ -2207,64 +2202,6 @@ LLM Wiki替代的不是RAG的全部，而是<strong>"对原始文档做chunk+嵌
 <strong>2. 合规风险</strong>：所有项目均声明不得用于非法用途。对公众提供生成式AI服务需符合《生成式人工智能服务管理暂行办法》要求，完成备案、内容安全、实名验证等义务。<br><br>
 <strong>3. 架构选择</strong>：MetAPI不是"再做一个中转站"，而是解决"中转站碎片化"的更高层痛点。两者可叠加使用——MetAPI在前做智能路由，New API在后做多租户分发。
 </div>
-</div>
-</div>
-
-</div>
-
-<!-- ============================================================ -->
-<!-- Day 1 总结 -->
-<!-- ============================================================ -->
-<div class="section" id="summary">
-<div class="summary-card">
-<h3>Day 1 核心知识点回顾</h3>
-<p>7个核心概念，建立AI Agent技术直觉</p>
-</div>
-
-<div class="concept-grid">
-<div class="concept-card">
-<div class="cc-icon">&#127919;</div>
-<div class="cc-name">1. 涌现能力</div>
-<div class="cc-desc">千亿参数→推理/指令遵循/上下文学习突然涌现，Agent的前提条件</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">&#9889;</div>
-<div class="cc-name">2. 自回归生成</div>
-<div class="cc-desc">逐Token预测，早期错误会传播，这就是幻觉的根源之一</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">&#128230;</div>
-<div class="cc-name">3. Token与窗口</div>
-<div class="cc-desc">1汉字≈1-2 Token，窗口有限，首尾信息注意力最强</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">&#127922;</div>
-<div class="cc-name">4. 温度参数</div>
-<div class="cc-desc">temperature=0确定性，=1创造性，政务场景用0.1-0.3</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">&#129302;</div>
-<div class="cc-name">5. Agent三组件</div>
-<div class="cc-desc">LLM(推理)+Context(记忆)+Tools(行动)，缺一不可</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">&#128260;</div>
-<div class="cc-name">6. ReAct循环</div>
-<div class="cc-desc">Thought→Action→Observation循环，推理指导行动</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">&#128269;</div>
-<div class="cc-name">7. RAG检索</div>
-<div class="cc-desc">嵌入→向量检索→注入上下文→生成，混合检索最优</div>
-</div>
-</div>
-</div>
-
-<div class="section" id="preview">
-<div class="summary-card">
-<h3>Day 2 预告：TeleAgent实战入门</h3>
-<p>明天将动手搭建第一个智能体——政务服务问答助手，从创建Agent到构建知识库到RAG问答全流程实战。</p>
-<p style="font-size:13px;color:var(--accent)">课题0: ReAct循环实验 | 课题1: 政务问答助手 | 课题2: 工业知识库 | 课题2.5: RAG原理深入 | 课题3: 病历生成 | 课题3.5: 上下文压缩</p>
 </div>
 </div>
 
