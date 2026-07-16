@@ -15,7 +15,7 @@ from fastapi.staticfiles import StaticFiles
 
 from config import settings
 from agent import agent
-from api import chat, health, incidents
+from api import chat, health, incidents, police
 from db.database import init_db, seed_if_empty
 
 # ---- App Init ----
@@ -64,6 +64,7 @@ async def startup():
 app.include_router(health.router, prefix="/api")
 app.include_router(chat.router, prefix="/api")
 app.include_router(incidents.router, prefix="/api")
+app.include_router(police.router, prefix="/api")
 
 # Serve frontend static files
 frontend_dir = Path(__file__).resolve().parent.parent / "frontend"

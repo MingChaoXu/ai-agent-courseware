@@ -117,6 +117,63 @@
     .map-info-bar .info-tags { display: flex; gap: 6px; margin-top: 6px; }
     .map-info-bar .info-tag { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
 
+    /* Police Allocation Panel */
+    .police-panel { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 10px 14px; font-size: 12px; margin-top: 10px; }
+    .police-panel-title { font-size: 12px; font-weight: 700; color: #065f46; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .police-unit-row { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: white; border: 1px solid #d1fae5; border-radius: 6px; margin-bottom: 4px; cursor: pointer; transition: all 0.2s; }
+    .police-unit-row:hover { border-color: #6ee7b7; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .police-unit-row .pu-type-badge { font-size: 10px; padding: 1px 5px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+    .pu-badge-jj { background: #dbeafe; color: #1d4ed8; }
+    .pu-badge-xj { background: #fef3c7; color: #92400e; }
+    .pu-badge-tj { background: #fce7f3; color: #be185d; }
+    .pu-badge-pc { background: #e0e7ff; color: #4338ca; }
+    .police-unit-row .pu-name { font-size: 12px; font-weight: 600; color: var(--text); }
+    .police-unit-row .pu-count { font-size: 11px; color: var(--text-secondary); }
+    .police-unit-row .pu-eta { font-size: 11px; font-weight: 600; color: #065f46; margin-left: auto; }
+    .police-summary { font-size: 12px; color: #065f46; line-height: 1.6; white-space: pre-wrap; margin-top: 6px; padding: 6px 10px; background: white; border-radius: 6px; border: 1px solid #d1fae5; }
+    .police-coverage-ok { color: #059669; font-weight: 600; }
+    .police-coverage-warn { color: #d97706; font-weight: 600; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+
+    /* Personnel Database */
+    .pdb-header { padding: 16px 20px 12px; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .pdb-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .pdb-stat { padding: 4px 10px; border-radius: 6px; font-size: 11px; background: var(--bg); border: 1px solid var(--border); }
+    .pdb-stat strong { color: var(--primary); }
+    .pdb-search { display: flex; gap: 8px; margin-top: 10px; }
+    .pdb-search input { flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; }
+    .pdb-search input:focus { border-color: var(--primary-light); }
+    .pdb-search button { padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; }
+    .pdb-search button:hover { background: #1d4ed8; }
+    .pdb-filters { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .pdb-filter-chip { padding: 4px 10px; border-radius: 14px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); transition: all 0.15s; font-weight: 500; }
+    .pdb-filter-chip:hover { border-color: var(--primary-light); }
+    .pdb-filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .pdb-list { display: flex; flex-direction: column; gap: 6px; }
+    .personnel-card { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); cursor: pointer; transition: all 0.15s; }
+    .personnel-card:hover { border-color: var(--primary-light); box-shadow: 0 1px 6px rgba(0,0,0,0.06); }
+    .pc-top { display: flex; align-items: center; gap: 8px; }
+    .pc-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
+    .pc-info { flex: 1; min-width: 0; }
+    .pc-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .pc-rank { font-size: 11px; color: var(--text-secondary); margin-left: 4px; }
+    .pc-sub { font-size: 11px; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pc-badges { display: flex; gap: 4px; flex-shrink: 0; align-items: center; }
+    .pc-badge { font-size: 10px; padding: 1px 6px; border-radius: 8px; font-weight: 600; white-space: nowrap; }
+    .pc-badge-type { }
+    .pc-badge-status { }
+    .pc-phone-btn { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .pc-phone-btn:hover { background: #d1fae5; }
+    .pc-detail { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+    .personnel-card.expanded .pc-detail { display: block; }
+    .pc-detail-row { display: flex; gap: 6px; margin-bottom: 3px; font-size: 12px; }
+    .pc-detail-label { color: var(--text-secondary); min-width: 56px; flex-shrink: 0; }
+    .pc-detail-value { color: var(--text); }
+    .pc-skills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+    .pc-skill-tag { padding: 1px 6px; background: #eff6ff; color: var(--primary); border-radius: 4px; font-size: 10px; }
+    .no-results { text-align: center; color: var(--text-secondary); padding: 30px 20px; font-size: 13px; }
+
+
     /* Incident Archive */
     .archive-list { display: flex; flex-direction: column; gap: 8px; }
     .incident-card { padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s; background: var(--surface); }
@@ -169,6 +226,7 @@
         <div class="tabs">
           <div class="tab" :class="{active: tab === 'chat'}" @click="tab = 'chat'">事件处置</div>
           <div class="tab" :class="{active: tab === 'archive'}" @click="tab = 'archive'; loadIncidents()">事件档案</div>
+          <div class="tab" :class="{active: tab === 'personnel'}" @click="tab = 'personnel'; loadPersonnel()">警力数据库</div>
         </div>
       </div>
 
@@ -223,6 +281,24 @@
                 <div v-if="msg.amapData.detour_routes && msg.amapData.detour_routes.length" class="amap-section">
                   <div class="amap-section-label">分流路线</div>
                   <div v-for="(r, idx) in msg.amapData.detour_routes" :key="idx" class="amap-route-item">{{ r.route }} | {{ r.distance }} | {{ r.duration }}</div>
+                </div>
+              </div>
+
+              <!-- Police Allocation Panel -->
+              <div v-if="msg.policeAllocation" class="police-panel">
+                <div class="police-panel-title">警力调度推荐 {{ msg.policeAllocation.coverage_complete ? '' : '(未完全覆盖)' }}</div>
+                <div v-for="u in msg.policeAllocation.recommended_units" :key="u.unit_id" class="police-unit-row" @click="highlightPoliceUnit(u)">
+                  <span class="pu-type-badge" :class="policeTypeBadge(u.unit_type)">{{ policeTypeLabel(u.unit_type) }}</span>
+                  <span class="pu-name">{{ u.name }}</span>
+                  <span class="pu-count">{{ u.personnel_count }}人</span>
+                  <span class="pu-eta">{{ u.eta_min }}分钟</span>
+                </div>
+                <div class="police-summary">
+                  <span :class="msg.policeAllocation.coverage_complete ? 'police-coverage-ok' : 'police-coverage-warn'">
+                    {{ msg.policeAllocation.coverage_complete ? '覆盖完整' : '部分类型未覆盖' }}
+                  </span>
+                  | 共{{ msg.policeAllocation.total_personnel }}人 (需{{ msg.policeAllocation.min_personnel_needed }}人)
+                  | 最快{{ msg.policeAllocation.estimated_earliest_arrival }}分钟到达
                 </div>
               </div>
 
@@ -336,6 +412,71 @@
           </div>
         </div>
       </template>
+
+      <!-- Personnel Database Tab -->
+      <template v-if="tab === 'personnel'">
+        <div class="pdb-header">
+          <div style="font-size:15px;font-weight:700;color:var(--text);">警力数据库</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">OA系统可调度人员</div>
+          <div class="pdb-stats" v-if="personnelStats">
+            <span class="pdb-stat">总计 <strong>{{ personnelStats.total }}</strong> 人</span>
+            <span class="pdb-stat">待命 <strong>{{ personnelStats.by_status['待命'] || 0 }}</strong></span>
+            <span class="pdb-stat">执勤 <strong>{{ personnelStats.by_status['执勤'] || 0 }}</strong></span>
+            <span class="pdb-stat">休假 <strong>{{ personnelStats.by_status['休假'] || 0 }}</strong></span>
+          </div>
+          <div class="pdb-search">
+            <input v-model="pdbKeyword" placeholder="搜索姓名/警号/单位/电话/技能..." @keydown.enter.prevent="loadPersonnel" />
+            <button @click="loadPersonnel">搜索</button>
+          </div>
+          <div class="pdb-filters">
+            <span class="pdb-filter-chip" :class="{active: pdbTypeFilter === ''}" @click="pdbTypeFilter = ''; loadPersonnel()">全部</span>
+            <span class="pdb-filter-chip" :class="{active: pdbTypeFilter === '交警'}" @click="pdbTypeFilter = '交警'; loadPersonnel()" style="">交警</span>
+            <span class="pdb-filter-chip" :class="{active: pdbTypeFilter === '巡警'}" @click="pdbTypeFilter = '巡警'; loadPersonnel()">巡警</span>
+            <span class="pdb-filter-chip" :class="{active: pdbTypeFilter === '特警'}" @click="pdbTypeFilter = '特警'; loadPersonnel()">特警</span>
+            <span class="pdb-filter-chip" :class="{active: pdbTypeFilter === '派出所'}" @click="pdbTypeFilter = '派出所'; loadPersonnel()">派出所</span>
+            <span style="width:1px;height:16px;background:var(--border);margin:0 2px;"></span>
+            <span class="pdb-filter-chip" :class="{active: pdbStatusFilter === '待命'}" @click="pdbStatusFilter = pdbStatusFilter === '待命' ? '' : '待命'; loadPersonnel()">待命</span>
+            <span class="pdb-filter-chip" :class="{active: pdbStatusFilter === '执勤'}" @click="pdbStatusFilter = pdbStatusFilter === '执勤' ? '' : '执勤'; loadPersonnel()">执勤</span>
+          </div>
+        </div>
+        <div class="messages" style="padding-top:8px;">
+          <div v-if="personnelList.length === 0" class="no-results">
+            <div style="font-size:28px;margin-bottom:8px;opacity:0.3;">🔍</div>
+            <div>未找到匹配的人员</div>
+          </div>
+          <div class="pdb-list">
+            <div v-for="p in personnelList" :key="p.officer_id" class="personnel-card" :class="{expanded: expandedOfficer === p.officer_id}" @click="toggleOfficerDetail(p)">
+              <div class="pc-top">
+                <div class="pc-avatar" :style="{background: policeTypeConfig[p.unit_type]?.color || '#6b7280'}">{{ p.name[0] }}</div>
+                <div class="pc-info">
+                  <div><span class="pc-name">{{ p.name }}</span><span class="pc-rank">{{ p.rank }}</span></div>
+                  <div class="pc-sub">{{ p.unit_name }} · {{ p.role }}</div>
+                </div>
+                <div class="pc-badges">
+                  <span class="pc-badge pc-badge-type" :class="policeTypeBadge(p.unit_type)">{{ policeTypeLabel(p.unit_type) }}</span>
+                  <span class="pc-badge pc-badge-status" :style="{background: p.status==='待命'?'#ecfdf5':p.status==='执勤'?'#fffbeb':'#f1f5f9', color: p.status==='待命'?'#059669':p.status==='执勤'?'#d97706':'#64748b'}">{{ p.status }}</span>
+                </div>
+                <a class="pc-phone-btn" :href="'tel:' + p.phone" @click.stop>{{ p.phone }}</a>
+              </div>
+              <div class="pc-detail">
+                <div class="pc-detail-row"><span class="pc-detail-label">警号</span><span class="pc-detail-value">{{ p.officer_id }}</span></div>
+                <div class="pc-detail-row"><span class="pc-detail-label">性别/年龄</span><span class="pc-detail-value">{{ p.gender }} / {{ p.age }}岁</span></div>
+                <div class="pc-detail-row"><span class="pc-detail-label">从警年限</span><span class="pc-detail-value">{{ p.years_of_service }}年</span></div>
+                <div class="pc-detail-row"><span class="pc-detail-label">单位</span><span class="pc-detail-value">{{ p.unit_name }}</span></div>
+                <div class="pc-detail-row"><span class="pc-detail-label">岗位</span><span class="pc-detail-value">{{ p.role }}</span></div>
+                <div class="pc-detail-row"><span class="pc-detail-label">资质</span><span class="pc-detail-value">{{ p.certifications }}</span></div>
+                <div class="pc-skills">
+                  <span v-for="s in p.skills.split(', ')" :key="s" class="pc-skill-tag">{{ s }}</span>
+                </div>
+                <div style="margin-top:6px;display:flex;gap:6px;">
+                  <button style="padding:4px 12px;border-radius:6px;font-size:11px;background:var(--primary);color:white;border:none;cursor:pointer;" @click.stop="locateOfficerOnMap(p)">📍 地图定位</button>
+                  <button style="padding:4px 12px;border-radius:6px;font-size:11px;background:#ecfdf5;color:#059669;border:1px solid #a7f3d0;cursor:pointer;" @click.stop="copyPhone(p.phone)">📋 复制电话</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
 
     <!-- ====== Right Panel: Map ====== -->
@@ -361,10 +502,11 @@
         <div class="map-legend" v-if="amapLoaded">
           <div class="legend-title">图例</div>
           <div class="legend-item"><div class="legend-dot" style="background:#ef4444;">!</div> 事件位置</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#ef4444;">医</div> 医院</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;">消</div> 消防站</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;">警</div> 交警队</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#10b981;">油</div> 加油站</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#3b82f6;">警</div> 交警</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;">巡</div> 巡警</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#ec4899;">特</div> 特警</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6;">所</div> 派出所</div>
+          <div class="legend-item" v-if="policeAllocation"><div class="legend-dot" style="background:#10b981;border:2px dashed #10b981;font-size:7px;">推</div> 推荐调配</div>
         </div>
       </div>
     </div>
@@ -392,6 +534,10 @@ createApp({
     let currentMarker = null;  // Current incident marker
     let currentInfoWin = null; // Current info window
     let poiMarkers = [];       // POI markers
+    let policeMarkers = [];    // Police unit markers on map
+    let allocationMarkers = []; // Recommended allocation markers (dashed ring)
+    const policeUnits = ref([]); // All police units from API
+    const policeAllocation = ref(null); // Current allocation result
 
     // Map info bar
     const mapInfo = reactive({ visible: false, title: '', address: '', severity: '', type: '' });
@@ -417,6 +563,17 @@ createApp({
       traffic_police: '交警队',
       gas_stations: '加油站',
     };
+
+    // Police unit helpers
+    const policeTypeConfig = {
+      '交警': { color: '#3b82f6', label: '警', badge: 'pu-badge-jj', badgeLabel: '交警' },
+      '巡警': { color: '#f59e0b', label: '巡', badge: 'pu-badge-xj', badgeLabel: '巡警' },
+      '特警': { color: '#ec4899', label: '特', badge: 'pu-badge-tj', badgeLabel: '特警' },
+      '派出所': { color: '#8b5cf6', label: '所', badge: 'pu-badge-pc', badgeLabel: '派出所' },
+    };
+    function policeTypeBadge(t) { return (policeTypeConfig[t] || policeTypeConfig['交警']).badge; }
+    function policeTypeLabel(t) { return (policeTypeConfig[t] || policeTypeConfig['交警']).badgeLabel; }
+
 
     const samples = [
       { title: '多车追尾事故', text: '三环路辅路与人民路交叉口发生多车追尾事故，涉及4辆小轿车，1人受伤，占用外侧两条车道，交通中断', tagClass: 'tag-accident', tagLabel: '交通事故' },
@@ -485,6 +642,11 @@ createApp({
         resizeEnable: true,
       });
       _mapInitialized = true;
+
+      // Load police units onto the map after initialization
+      loadPoliceUnits().then(() => {
+        nextTick(() => renderPoliceOnMap());
+      });
 
       // Execute any pending map operations that were queued before the map was ready
       if (_pendingMapOp) {
@@ -626,6 +788,138 @@ createApp({
       return null;
     }
 
+    // ======== Police Force Methods ========
+
+    async function loadPoliceUnits() {
+      try {
+        const res = await fetch('/api/police/units');
+        if (!res.ok) return;
+        const data = await res.json();
+        policeUnits.value = data.units || [];
+      } catch (e) { /* ignore */ }
+    }
+
+    function renderPoliceOnMap() {
+      const map = getMap();
+      if (!map) return;
+      // Clear previous police markers
+      policeMarkers.forEach(m => { try { map.remove(m); } catch(e){} });
+      policeMarkers = [];
+
+      for (const unit of policeUnits.value) {
+        const cfg = policeTypeConfig[unit.unit_type] || policeTypeConfig['交警'];
+        const size = unit.personnel_count >= 10 ? 28 : (unit.personnel_count >= 6 ? 22 : 18);
+        const m = new AMap.Marker({ position: [unit.lng, unit.lat], zIndex: 40 });
+        const statusDot = unit.status === '待命' ? '#10b981' : (unit.status === '执勤' ? '#f59e0b' : '#ef4444');
+        m.setContent(
+          `<div style="display:flex;align-items:center;justify-content:center;position:relative;">
+            <div style="background:${cfg.color};color:white;border-radius:50%;width:${size}px;height:${size}px;display:flex;align-items:center;justify-content:center;font-size:${size > 24 ? 12 : 10}px;font-weight:bold;border:2px solid white;box-shadow:0 1px 6px rgba(0,0,0,0.2);">${cfg.label}</div>
+            <div style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:${statusDot};border:1px solid white;"></div>
+          </div>`
+        );
+        // Hover/click to show unit detail
+        m.on('mouseover', () => {
+          const win = new AMap.InfoWindow({
+            content: `<div style="padding:8px 12px;font-size:12px;max-width:260px;">
+              <div style="font-weight:700;color:${cfg.color};margin-bottom:4px;font-size:13px;">${unit.name}</div>
+              <div style="color:#475569;margin-bottom:4px;">${unit.location_text}</div>
+              <div style="display:flex;gap:8px;font-size:11px;margin-bottom:2px;">
+                <span style="background:${cfg.color}22;color:${cfg.color};padding:1px 5px;border-radius:8px;font-weight:600;">${unit.unit_type}</span>
+                <span style="background:#f1f5f9;padding:1px 5px;border-radius:8px;">${unit.personnel_count}人</span>
+                <span style="background:${statusDot}22;color:${statusDot};padding:1px 5px;border-radius:8px;">${unit.status}</span>
+              </div>
+              <div style="color:#64748b;font-size:11px;">车辆: ${unit.vehicles || '无'}<br/>装备: ${unit.equipment || '标准配置'}<br/>电话: ${unit.contact_phone}</div>
+            </div>`,
+            offset: new AMap.Pixel(0, -size),
+          });
+          win.open(map, [unit.lng, unit.lat]);
+        });
+        m.on('mouseout', () => {
+          // InfoWindow auto-closes on next mouseover of another marker, so we don't force-close
+        });
+        map.add(m);
+        policeMarkers.push(m);
+      }
+    }
+
+    function renderAllocationOnMap(allocation) {
+      const map = getMap();
+      if (!map) return;
+      // Clear previous allocation markers
+      allocationMarkers.forEach(m => { try { map.remove(m); } catch(e){} });
+      allocationMarkers = [];
+
+      if (!allocation || !allocation.recommended_units) return;
+      const incidentLoc = allocation.incident_location;
+
+      for (const u of allocation.recommended_units) {
+        const cfg = policeTypeConfig[u.unit_type] || policeTypeConfig['交警'];
+        // Dashed circle ring to indicate "recommended allocation"
+        const m = new AMap.Marker({ position: [u.lng, u.lat], zIndex: 55 });
+        m.setContent(
+          `<div style="position:relative;display:flex;align-items:center;justify-content:center;">
+            <div style="background:${cfg.color};color:white;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;border:3px dashed #10b981;box-shadow:0 2px 8px rgba(16,185,129,0.4);animation:pulse 2s ease-in-out infinite;">${cfg.label}</div>
+          </div>`
+        );
+        // Draw line from incident to this unit
+        m.on('click', () => {
+          const win = new AMap.InfoWindow({
+            content: `<div style="padding:8px 12px;font-size:12px;max-width:280px;">
+              <div style="font-weight:700;color:#065f46;margin-bottom:4px;font-size:13px;">调度: ${u.name}</div>
+              <div style="color:#475569;margin-bottom:4px;">${u.location_text}</div>
+              <div style="display:flex;gap:8px;font-size:11px;margin-bottom:4px;">
+                <span style="background:${cfg.color}22;color:${cfg.color};padding:1px 5px;border-radius:8px;font-weight:600;">${u.unit_type}</span>
+                <span style="background:#f1f5f9;padding:1px 5px;border-radius:8px;">${u.personnel_count}人</span>
+                <span style="background:#ecfdf5;color:#065f46;padding:1px 5px;border-radius:8px;font-weight:600;">${u.eta_min}分钟</span>
+                <span style="background:#f1f5f9;padding:1px 5px;border-radius:8px;">${u.distance_km}km</span>
+              </div>
+              <div style="color:#64748b;font-size:11px;">车辆: ${u.vehicles || '无'}<br/>装备: ${u.equipment || '标准配置'}<br/>电话: ${u.contact_phone}</div>
+            </div>`,
+            offset: new AMap.Pixel(0, -34),
+          });
+          win.open(map, [u.lng, u.lat]);
+        });
+        map.add(m);
+        allocationMarkers.push(m);
+      }
+
+      // Draw connecting lines from incident to each recommended unit
+      if (incidentLoc && window.AMap) {
+        for (const u of allocation.recommended_units) {
+          const polyline = new AMap.Polyline({
+            path: [[incidentLoc.lng, incidentLoc.lat], [u.lng, u.lat]],
+            strokeColor: '#10b981',
+            strokeWeight: 2,
+            strokeStyle: 'dashed',
+            strokeOpacity: 0.6,
+            zIndex: 35,
+          });
+          map.add(polyline);
+          allocationMarkers.push(polyline);
+        }
+      }
+    }
+
+    function highlightPoliceUnit(u) {
+      // When user clicks a unit row in the allocation panel, pan map to that unit
+      const map = getMap();
+      if (!map) return;
+      map.setZoomAndCenter(16, [u.lng, u.lat]);
+    }
+
+    async function requestPoliceAllocation(lng, lat, severity) {
+      try {
+        const res = await fetch(`/api/police/allocate?lng=${lng}&lat=${lat}&severity=${encodeURIComponent(severity || '一般')}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        policeAllocation.value = data;
+        renderAllocationOnMap(data);
+        return data;
+      } catch (e) {
+        return null;
+      }
+    }
+
     // ======== API Methods ========
 
     async function checkHealth() {
@@ -671,26 +965,42 @@ createApp({
             results,
             amapData: results._amap_data || null,
             amapMode: results._amap_mode || '',
+            policeAllocation: null,
           };
           messages.value.push(msg);
 
           // Show on map immediately
           const amap = results._amap_data;
+          let incidentCoords = null; // Will hold [lng, lat] for police allocation
+          let incidentSeverity = results.impact_assessment ? extractSeverity(results.impact_assessment) : '一般';
+
           if (amap && amap.geocode) {
             const loc = parseLocation(amap.geocode.location) ? amap.geocode.location : amap.geocode.formatted_address;
             showOnMap(
               loc,
               '交通事件',
               amap.geocode.formatted_address || amap.geocode.location,
-              results.impact_assessment ? extractSeverity(results.impact_assessment) : '',
+              incidentSeverity,
               results.incident_analysis ? extractType(results.incident_analysis) : '',
               amap.around || null,
             );
+            // Extract coordinates for police allocation
+            if (amap.geocode.location) {
+              incidentCoords = parseLocation(amap.geocode.location);
+            }
           } else {
             // Fallback: try to extract address from user text and geocode
             const extracted = extractAddress(text);
             if (extracted) {
               showOnMap(extracted, '交通事件', extracted, '', '', null);
+            }
+          }
+
+          // Request police allocation if we have coordinates
+          if (incidentCoords) {
+            const alloc = await requestPoliceAllocation(incidentCoords[0], incidentCoords[1], incidentSeverity);
+            if (alloc) {
+              msg.policeAllocation = alloc;
             }
           }
 
@@ -768,8 +1078,86 @@ createApp({
             inc.incident_type || '',
             null,
           );
+          // Request police allocation for archived incident
+          let coords = parseLocation(inc.location);
+          if (!coords) {
+            // Try geocode via backend
+            try {
+              const geoRes = await fetch(`/api/geocode?address=${encodeURIComponent(inc.location)}`);
+              if (geoRes.ok) {
+                const geoData = await geoRes.json();
+                if (geoData.location) coords = parseLocation(geoData.location);
+              }
+            } catch(e) {}
+          }
+          if (coords) {
+            requestPoliceAllocation(coords[0], coords[1], inc.severity || '一般');
+          }
         }
       } catch (e) { /* ignore */ }
+    }
+
+    // ======== Personnel Database ========
+    const personnelList = ref([]);
+    const personnelStats = ref(null);
+    const pdbKeyword = ref('');
+    const pdbTypeFilter = ref('');
+    const pdbStatusFilter = ref('');
+    const expandedOfficer = ref(null);
+
+    async function loadPersonnelStats() {
+      try {
+        const res = await fetch('/api/police/personnel/stats');
+        if (res.ok) personnelStats.value = await res.json();
+      } catch(e) {}
+    }
+
+    async function loadPersonnel() {
+      try {
+        const params = new URLSearchParams();
+        if (pdbKeyword.value) params.set('keyword', pdbKeyword.value);
+        if (pdbTypeFilter.value) params.set('unit_type', pdbTypeFilter.value);
+        if (pdbStatusFilter.value) params.set('status', pdbStatusFilter.value);
+        const res = await fetch(`/api/police/personnel?${params}`);
+        if (res.ok) {
+          const data = await res.json();
+          personnelList.value = data.personnel || [];
+        }
+      } catch(e) {}
+      // Refresh stats
+      loadPersonnelStats();
+    }
+
+    function toggleOfficerDetail(p) {
+      expandedOfficer.value = expandedOfficer.value === p.officer_id ? null : p.officer_id;
+    }
+
+    function locateOfficerOnMap(p) {
+      // Find the unit this officer belongs to and pan to its location
+      const unit = policeUnits.value.find(u => u.unit_id === p.unit_id);
+      const map = getMap();
+      if (map && unit) {
+        map.setZoomAndCenter(16, [unit.lng, unit.lat]);
+        // Flash the corresponding police marker
+        const marker = policeMarkers.find((_, i) => policeUnits.value[i]?.unit_id === p.unit_id);
+        if (marker) {
+          const win = new AMap.InfoWindow({
+            content: `<div style="padding:8px 12px;font-size:12px;max-width:260px;">
+              <div style="font-weight:700;color:var(--primary);margin-bottom:4px;font-size:13px;">${p.name} · ${p.unit_name}</div>
+              <div style="color:#475569;">${p.rank} | ${p.role}</div>
+              <div style="color:#059669;font-weight:600;margin-top:4px;">${p.phone}</div>
+            </div>`,
+            offset: new AMap.Pixel(0, -30),
+          });
+          win.open(map, [unit.lng, unit.lat]);
+        }
+      }
+    }
+
+    function copyPhone(phone) {
+      navigator.clipboard.writeText(phone).then(() => {
+        // Quick visual feedback - couldn't use alert in Vue easily, so we just do the copy
+      }).catch(() => {});
     }
 
     onMounted(() => {
@@ -781,8 +1169,12 @@ createApp({
       agentKeys, agentLabels, amapLabels, samples,
       amapLoaded, mapInfo,
       incidents, archiveKeyword, archiveStatus, selectedIncident, selectedDispatches,
+      policeUnits, policeAllocation, policeTypeConfig,
+      personnelList, personnelStats, pdbKeyword, pdbTypeFilter, pdbStatusFilter, expandedOfficer,
       useSample, send, loadIncidents, selectIncident,
+      loadPersonnel, loadPersonnelStats, toggleOfficerDetail, locateOfficerOnMap, copyPhone,
       getTypeClass, getStatusLabel, severityColor, severityBg,
+      policeTypeBadge, policeTypeLabel, highlightPoliceUnit,
     };
   }
 }).mount('#app');
