@@ -1,5 +1,27 @@
 # 区县AI赋能培训课程
 
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '01161922-45bc-4015-b9ff-c2c4ef3e7643'
+  PropagateID: '01161922-45bc-4015-b9ff-c2c4ef3e7643'
+  ReservedCode1: 'c1c88f91-a65f-48d7-bd77-d4bd088585e2'
+  ReservedCode2: 'c1c88f91-a65f-48d7-bd77-d4bd088585e2'
+---
+
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '18ba22d0-03b6-4207-9cfb-94fe103ee02f'
+  PropagateID: '18ba22d0-03b6-4207-9cfb-94fe103ee02f'
+  ReservedCode1: '61e0a501-a0a9-4e4d-bd47-3b6802531014'
+  ReservedCode2: '61e0a501-a0a9-4e4d-bd47-3b6802531014'
+---
+
 # 区县AI赋能培训课程
 
 面向电信行业客户经理与解决方案经理的5天AI智能体实战培训课程，涵盖AI理论与实践、RAG知识库、文档审核、多模态数据分析、复杂智能体等16+行业场景。
@@ -71,7 +93,6 @@
 | ex11 | 舆情情感分析 | ex11_sentiment/ |
 | ex12 | 质量检测报告 | ex12_quality_inspect/ |
 | ex13 | CV安全巡检 | ex13_cv_safety/ |
-| ex13.5 | MCP协议实践 | ex13_5_mcp_protocol/ |
 
 ### Day 5 — 复杂智能体评估与路演
 

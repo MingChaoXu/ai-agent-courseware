@@ -133,10 +133,6 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--
 <div class="nav-group-title">下午 · CV与工具生态</div>
 <a class="nav-item" href="#s12" onclick="navClick(this)">课题12: AI质量检测<span class="time-badge">25min</span></a>
 <a class="nav-item" href="#s13" onclick="navClick(this)">课题13: CV安全助手<span class="time-badge">25min</span></a>
-<a class="nav-item" href="#s135" onclick="navClick(this)">课题13.5: MCP协议<span class="time-badge">25min</span></a>
-<a class="nav-item" href="#s135-1" onclick="navClick(this)">├ MCP协议概念</a>
-<a class="nav-item" href="#s135-2" onclick="navClick(this)">├ 三大工具类型</a>
-<a class="nav-item" href="#s135-3" onclick="navClick(this)">└ 事件驱动Agent</a>
 </div>
 <div class="nav-group">
 <div class="nav-group-title">总结与测验</div>
@@ -601,152 +597,6 @@ safety_tools = [
 </div>
 </div>
 
-<div class="section" id="s135">
-<div class="section-header">
-<div class="section-tag afternoon">下午 · 原理层</div>
-<h2>课题13.5: MCP工具协议演示</h2>
-<p>MCP (Model Context Protocol) — 让Agent以标准化方式连接外部工具和数据源</p>
-</div>
-
-<div class="topic-card" id="s135-1">
-<h3>步骤1: MCP协议概念</h3>
-
-<div class="flow-diagram">┌──────────────┐  MCP协议   ┌──────────────┐
-│  AI应用      │ ◄────────► │  MCP Server  │
-│  (TeleAgent) │  JSON-RPC  │  (工具服务)   │
-└──────────────┘            └──────────────┘
-      │                           │
-      │ 可连接多个Server           │ 可提供多个Tool
-      ├─► 感知服务器              ├─► web_search
-      ├─► 执行服务器              ├─► code_execute
-      └─► 协作服务器              └─► send_notification
-
-核心流程：
-  1. Client → Server: 连接（connect）
-  2. Client → Server: 发现工具（discover_tools）
-  3. Client → Server: 调用工具（call_tool）
-  4. Server → Client: 返回结果</div>
-
-<div class="principle-card">
-<div class="pc-title">MCP的核心价值：标准化、可插拔、安全、生态</div>
-<div class="pc-body">
-- <strong>标准化</strong>：统一工具接口协议，任何Agent都能使用任何MCP工具<br>
-- <strong>可插拔</strong>：工具服务器独立部署，按需组合，新增工具无需修改Agent代码<br>
-- <strong>安全</strong>：工具执行有安全沙箱和审批机制<br>
-- <strong>生态</strong>：社区共享工具服务器，形成工具生态
-</div>
-</div>
-</div>
-
-<div class="topic-card" id="s135-2">
-<h3>步骤2: 三大工具类型</h3>
-
-<div class="concept-grid">
-<div class="concept-card">
-<div class="cc-icon">📡</div>
-<div class="cc-name">感知工具</div>
-<div class="cc-desc">获取外部信息：web_search, image_analyze, file_read, database_query</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">⚙️</div>
-<div class="cc-name">执行工具</div>
-<div class="cc-desc">执行操作和代码：code_execute, file_write, chart_generate</div>
-</div>
-<div class="concept-card">
-<div class="cc-icon">🤝</div>
-<div class="cc-name">协作工具</div>
-<div class="cc-desc">通知、审批和人机协同：send_notification, request_approval, schedule_task</div>
-</div>
-</div>
-
-<div class="code-block">
-<div class="code-header">
-<span class="lang-badge">Python - MCP工具调用演示</span>
-<button class="copy-btn" onclick="copyCode(this)">复制</button>
-</div>
-<div class="code-body">mcp = <span class="cls">MCPClient</span>()
-mcp.<span class="fn">connect</span>(<span class="str">"mcp://teleagent-perception:3001"</span>)
-tools = mcp.<span class="fn">discover_tools</span>()
-
-<span class="com"># 感知工具调用</span>
-perception_server.<span class="fn">call_tool</span>(<span class="str">"web_search"</span>, {<span class="str">"query"</span>: <span class="str">"2026年电信行业数字化转型政策"</span>})
-perception_server.<span class="fn">call_tool</span>(<span class="str">"image_analyze"</span>, {<span class="str">"image_url"</span>: <span class="str">"https://example.com/pcb.jpg"</span>, <span class="str">"prompt"</span>: <span class="str">"检测缺陷"</span>})
-
-<span class="com"># 执行工具调用</span>
-execution_server.<span class="fn">call_tool</span>(<span class="str">"code_execute"</span>, {<span class="str">"code"</span>: <span class="str">"import pandas as pd\ndf = pd.read_csv('data.csv')\nprint(df.describe())"</span>})
-execution_server.<span class="fn">call_tool</span>(<span class="str">"chart_generate"</span>, {<span class="str">"data"</span>: {...}, <span class="str">"chart_type"</span>: <span class="str">"bar"</span>})
-
-<span class="com"># 协作工具调用</span>
-collaboration_server.<span class="fn">call_tool</span>(<span class="str">"send_notification"</span>, {<span class="str">"channel"</span>: <span class="str">"dingtalk"</span>, <span class="str">"message"</span>: <span class="str">"产线A缺陷率超过阈值"</span>})
-collaboration_server.<span class="fn">call_tool</span>(<span class="str">"request_approval"</span>, {<span class="str">"task"</span>: <span class="str">"批量返工工单审批"</span>, <span class="str">"risk_level"</span>: <span class="str">"medium"</span>})</div>
-</div>
-</div>
-
-<div class="topic-card" id="s135-3">
-<h3>步骤3-4: MCP集成 + 事件驱动Agent</h3>
-
-<div class="flow-diagram">传统模式：人看报表 → 人发现问题 → 人写邮件 → 人等审批 → 人下工单
-MCP模式：  数据异常 → Agent自动检测 → Agent调工具分析 → Agent发告警 → Agent等审批 → Agent下工单
-
-关键变化：
-  - 从「人驱动」变成「事件驱动」
-  - 从「一个一个操作」变成「全自动链路」
-  - 人只做关键决策（审批），其余AI自动完成</div>
-
-<div class="code-block">
-<div class="code-header">
-<span class="lang-badge">Python - 事件驱动Agent</span>
-<button class="copy-btn" onclick="copyCode(this)">复制</button>
-</div>
-<div class="code-body">evt_agent = <span class="cls">EventDrivenAgent</span>(name=<span class="str">"生产监控Agent"</span>, client=client)
-
-<span class="com"># 注册事件处理器</span>
-evt_agent.<span class="fn">register_handler</span>(<span class="str">"data_alert"</span>,
-    <span class="kw">lambda</span> e: <span class="fn">print</span>(<span class="str">f"📊 数据告警: </span>{e.data.<span class="fn">get</span>(<span class="str">'metric'</span>)}<span class="str">=</span>{e.data.<span class="fn">get</span>(<span class="str">'value'</span>)}<span class="str">"</span>))
-evt_agent.<span class="fn">register_handler</span>(<span class="str">"approval_result"</span>,
-    <span class="kw">lambda</span> e: <span class="fn">print</span>(<span class="str">f"✅ 审批结果: </span>{e.data.<span class="fn">get</span>(<span class="str">'decision'</span>)}<span class="str">"</span>))
-
-<span class="com"># 模拟事件流</span>
-alert_event = <span class="cls">EventDrivenAgent</span>.<span class="cls">Event</span>(
-    event_type=<span class="str">"data_alert"</span>,
-    source=<span class="str">"生产监控系统"</span>,
-    data={<span class="str">"metric"</span>: <span class="str">"缺陷率"</span>, <span class="str">"value"</span>: <span class="str">"5.2%"</span>, <span class="str">"threshold"</span>: <span class="str">"3%"</span>, <span class="str">"line"</span>: <span class="str">"产线A"</span>}
-)
-evt_agent.<span class="fn">emit_event</span>(alert_event)
-
-<span class="com"># Agent自动推理流程：</span>
-<span class="com"># 1. 检测到缺陷率5.2%超过阈值3%</span>
-evt_agent.<span class="fn">add_todo</span>(<span class="str">"查询缺陷率趋势数据"</span>, <span class="str">"high"</span>)
-<span class="com"># 2. 通过MCP感知工具查询近1小时缺陷率趋势</span>
-evt_agent.<span class="fn">add_todo</span>(<span class="str">"运行异常归因分析"</span>, <span class="str">"high"</span>)
-<span class="com"># 3. 通过MCP执行工具运行Python做异常归因分析</span>
-evt_agent.<span class="fn">add_todo</span>(<span class="str">"发送告警+请求返工审批"</span>, <span class="str">"high"</span>)
-<span class="com"># 4. 通过MCP协作工具发送告警通知+请求审批</span>
-
-<span class="com"># 审批回调</span>
-approval_event = <span class="cls">EventDrivenAgent</span>.<span class="cls">Event</span>(
-    event_type=<span class="str">"approval_result"</span>,
-    source=<span class="str">"审批系统"</span>,
-    data={<span class="str">"decision"</span>: <span class="str">"approved"</span>, <span class="str">"approver"</span>: <span class="str">"产线主管王工"</span>}
-)
-evt_agent.<span class="fn">emit_event</span>(approval_event)
-<span class="com"># → 审批通过，自动触发返工工单创建</span></div>
-</div>
-
-<div class="principle-card green">
-<div class="pc-title">MCP + 事件驱动 = 智能自动化</div>
-<div class="pc-body">
-传统模式：人看报表 → 人发现问题 → 人写邮件 → 人等审批 → 人下工单<br>
-MCP模式：数据异常 → Agent自动检测 → Agent调工具分析 → Agent发告警 → Agent等审批 → Agent下工单<br><br>
-关键变化：<br>
-- 从「人驱动」变成「事件驱动」<br>
-- 从「一个一个操作」变成「全自动链路」<br>
-- 人只做关键决策（审批），其余AI自动完成
-</div>
-</div>
-</div>
-</div>
-
 <div class="section" id="quiz">
 <div class="section-header">
 <div class="section-tag afternoon">总结</div>
@@ -769,14 +619,6 @@ MCP模式：数据异常 → Agent自动检测 → Agent调工具分析 → Agen
 <div class="quiz-a" onclick="checkQuiz(this, false)">C. 支持更多数据格式</div>
 <div class="quiz-a" onclick="checkQuiz(this, false)">D. 不需要人工确认</div>
 </div>
-
-<div class="quiz-box">
-<div class="quiz-q">Q3: MCP协议的核心价值是？</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">A. 让LLM更聪明</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">B. 替代所有API</div>
-<div class="quiz-a" onclick="checkQuiz(this, true)">C. 标准化工具接口，让任何Agent都能使用任何MCP工具，可插拔、安全、生态</div>
-<div class="quiz-a" onclick="checkQuiz(this, false)">D. 减少Token消耗</div>
-</div>
 </div>
 </div>
 
@@ -798,7 +640,7 @@ MCP模式：数据异常 → Agent自动检测 → Agent调工具分析 → Agen
 
 <div class="footer">
 <p>区县AI赋能培训 · Day 4 · 数据分析与多模态场景</p>
-<p>5天21个实战课题 · 从理论到路演 · 2026年7月</p>
+<p>5天20个实战课题 · 从理论到路演 · 2026年7月</p>
 </div>
 </div>
 
