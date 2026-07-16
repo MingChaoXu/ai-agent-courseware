@@ -1,3 +1,9 @@
+﻿---
+name: construction-doc
+description: "施工文档生成：多类型文档动态风格切换"
+name_cn: "施工文档智能生成"
+description_cn: "施工文档生成：多类型文档动态风格切换"
+---
 # Construction Document Generation Skill
 
 ## Description

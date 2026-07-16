@@ -1,3 +1,9 @@
+﻿---
+name: hr-review
+description: "人事制度审查：5维度合规性分析+结构化输出"
+name_cn: "人事制度智能审查"
+description_cn: "人事制度审查：5维度合规性分析+结构化输出"
+---
 # HR Policy Intelligent Review Skill
 
 ## Description

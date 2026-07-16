@@ -1,3 +1,9 @@
+﻿---
+name: mcp-protocol
+description: "MCP协议：感知/执行/协作三类工具演示"
+name_cn: "MCP工具协议演示Agent"
+description_cn: "MCP协议：感知/执行/协作三类工具演示"
+---
 # MCP Protocol Demo Agent Skill
 
 ## Description

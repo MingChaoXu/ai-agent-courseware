@@ -1,3 +1,9 @@
+﻿---
+name: marketing-rfm
+description: "精准营销：RFM客户分群+策略推荐"
+name_cn: "精准营销RFM分析"
+description_cn: "精准营销：RFM客户分群+策略推荐"
+---
 # Precision Marketing RFM Analysis Skill
 
 ## Description

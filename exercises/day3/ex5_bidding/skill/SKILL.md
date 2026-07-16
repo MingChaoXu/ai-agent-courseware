@@ -1,3 +1,9 @@
+﻿---
+name: bidding-analysis
+description: "招标文件分析：关键信息提取+结构化输出"
+name_cn: "招标文件智能分析"
+description_cn: "招标文件分析：关键信息提取+结构化输出"
+---
 # Bidding Document Intelligent Analysis Skill
 
 ## Description

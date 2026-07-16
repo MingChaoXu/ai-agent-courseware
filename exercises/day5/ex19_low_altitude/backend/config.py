@@ -43,6 +43,10 @@ class Settings:
     # AMap (高德地图)
     AMAP_API_KEY: str = os.getenv("AMAP_API_KEY", "")
 
+    # City center (成都)
+    CITY_CENTER_LAT: float = float(os.getenv("CITY_CENTER_LAT", "30.5728"))
+    CITY_CENTER_LNG: float = float(os.getenv("CITY_CENTER_LNG", "104.0668"))
+
     def is_amap_configured(self) -> bool:
         return bool(self.AMAP_API_KEY)
 

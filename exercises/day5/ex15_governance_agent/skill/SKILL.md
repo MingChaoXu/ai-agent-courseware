@@ -1,3 +1,9 @@
+﻿---
+name: governance-agent
+description: "社会治理：4Agent并行+条件分支"
+name_cn: "社会治理综合智能体"
+description_cn: "社会治理：4Agent并行+条件分支"
+---
 # Social Governance Multi-Agent Skill
 
 ## Description

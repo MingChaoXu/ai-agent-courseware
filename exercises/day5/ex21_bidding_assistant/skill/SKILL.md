@@ -1,3 +1,9 @@
+﻿---
+name: bidding-assistant
+description: "招投标：采集+LLM提取+客户匹配+Excel导出"
+name_cn: "招投标助手"
+description_cn: "招投标：采集+LLM提取+客户匹配+Excel导出"
+---
 # Bidding Assistant Skill
 
 ## Description

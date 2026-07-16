@@ -1,3 +1,9 @@
+﻿---
+name: quality-inspect
+description: "PCB质检：多工具ReAct Agent+多模态对比"
+name_cn: "PCB质量AI检测Agent"
+description_cn: "PCB质检：多工具ReAct Agent+多模态对比"
+---
 # PCB Quality Inspection Agent Skill
 
 ## Description

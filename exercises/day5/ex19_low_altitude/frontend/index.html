@@ -377,6 +377,7 @@ createApp({
         if (data.error) throw new Error(data.error);
         const msg = {role: 'ai', content: data.answer || '(无回复)', agent: data.agent_used};
         if (data.cv_results) {
+          console.log('[CV] Received cv_results:', data.cv_results.detect_type, 'threat:', data.cv_results.threat_level, 'detections:', data.cv_results.summary?.total, 'has_image:', !!data.cv_results.annotated_image);
           msg.cvResult = data.cv_results;
           cvResult.value = data.cv_results;
         }

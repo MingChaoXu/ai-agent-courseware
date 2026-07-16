@@ -1,3 +1,9 @@
+﻿---
+name: gov-service
+description: "政务服务：5Agent串行全链路协作"
+name_cn: "政务服务全链路Agent"
+description_cn: "政务服务：5Agent串行全链路协作"
+---
 # Government Service Full-Chain Agent Skill
 
 ## Description

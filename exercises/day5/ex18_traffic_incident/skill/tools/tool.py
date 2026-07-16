@@ -1,10 +1,12 @@
 """
-Traffic Incident Management Skill Tool - 5-Agent Pipeline + AMap + Incident DB
+Traffic Incident Management Skill Tool - 5-Agent Pipeline + AMap + Incident DB + Police Force
 Usage:
     from tools.tool import (
         traffic_analyze, traffic_health_check,
         incident_list, incident_detail,
         amap_query_location,
+        police_units, police_allocate,
+        police_personnel, police_personnel_stats,
     )
 """
 
@@ -139,16 +141,82 @@ def amap_query_location(address: str) -> str:
     return get_tool().run_amap_query(address)
 
 
+# ============================================================
+# Police Force Tools
+# ============================================================
+
+def police_units() -> str:
+    """获取所有警力单位信息：单位名称、类型（交警/巡警/特警/派出所）、位置、人数、状态、联系方式。
+    数据模拟来自警务指挥系统实时接口。"""
+    from services.police_service import get_all_units
+    units = get_all_units()
+    return json.dumps({"units": units, "total": len(units)}, ensure_ascii=False, indent=2)
+
+
+def police_allocate(lng: float, lat: float, severity: str = "一般") -> str:
+    """根据事故位置和严重程度，计算最优警力调配方案。
+
+    算法综合考虑直线距离、可用人数、单位类型覆盖和预计到达时间。
+    不同严重程度对应不同配置：
+    - 轻微: 3人, 1单位, 交警
+    - 一般: 6人, 2单位, 交警
+    - 严重: 12人, 3单位, 交警+巡警
+    - 特重大: 20人, 4单位, 交警+特警+巡警
+
+    Args:
+        lng: 事故经度 (GCJ-02坐标系)
+        lat: 事故纬度 (GCJ-02坐标系)
+        severity: 严重程度，可选值: 轻微/一般/严重/特重大
+    """
+    from services.police_service import allocate_police
+    result = allocate_police(incident_lng=lng, incident_lat=lat, incident_severity=severity)
+    return json.dumps(result, ensure_ascii=False, indent=2)
+
+
+# ============================================================
+# Personnel Database Tools
+# ============================================================
+
+def police_personnel(keyword: str = "", unit_type: str = "", status: str = "", role: str = "") -> str:
+    """搜索警力人员数据库（OA系统）：支持按姓名/警号/单位/电话/技能搜索，按单位类型/状态/岗位筛选。
+    返回人员详细信息包括警衔、岗位、联系方式、技能特长、资质证书等。"""
+    from services.police_service import search_personnel
+    results = search_personnel(
+        keyword=keyword or None,
+        unit_type=unit_type or None,
+        status=status or None,
+        role=role or None,
+    )
+    return json.dumps({"personnel": results, "total": len(results)}, ensure_ascii=False, indent=2)
+
+
+def police_personnel_stats() -> str:
+    """获取警力人员统计摘要：总人数、按单位类型分布（交警/巡警/特警/派出所）、按状态分布（待命/执勤/休假）、按岗位分布。"""
+    from services.police_service import get_personnel_stats
+    result = get_personnel_stats()
+    return json.dumps(result, ensure_ascii=False, indent=2)
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="Traffic Incident Management Skill Tool")
-    parser.add_argument("action", choices=["analyze", "health", "incident-list", "incident-detail", "amap-query"],
-                        help="Action to perform")
+    parser.add_argument("action", choices=[
+        "analyze", "health",
+        "incident-list", "incident-detail",
+        "amap-query",
+        "police-units", "police-allocate",
+        "police-personnel", "police-personnel-stats",
+    ], help="Action to perform")
     parser.add_argument("-q", "--question", help="Input text for AI analysis")
     parser.add_argument("--incident-id", type=int, help="Incident ID")
     parser.add_argument("--keyword", help="Search keyword")
     parser.add_argument("--status", help="Filter by status")
     parser.add_argument("--address", help="Address for AMap query")
+    parser.add_argument("--lng", type=float, help="Longitude for police allocation (GCJ-02)")
+    parser.add_argument("--lat", type=float, help="Latitude for police allocation (GCJ-02)")
+    parser.add_argument("--severity", default="一般", help="Severity for police allocation: 轻微/一般/严重/特重大")
+    parser.add_argument("--unit-type", help="Filter by unit type: 交警/巡警/特警/派出所")
+    parser.add_argument("--role", help="Filter by role: 指挥员/巡逻员/...")
     args = parser.parse_args()
 
     if args.action == "health":
@@ -170,3 +238,18 @@ if __name__ == "__main__":
         if not args.address:
             print("Please provide --address"); sys.exit(1)
         print(amap_query_location(args.address))
+    elif args.action == "police-units":
+        print(police_units())
+    elif args.action == "police-allocate":
+        if args.lng is None or args.lat is None:
+            print("Please provide --lng and --lat"); sys.exit(1)
+        print(police_allocate(args.lng, args.lat, args.severity))
+    elif args.action == "police-personnel":
+        print(police_personnel(
+            keyword=args.keyword or "",
+            unit_type=args.unit_type or "",
+            status=args.status or "",
+            role=args.role or "",
+        ))
+    elif args.action == "police-personnel-stats":
+        print(police_personnel_stats())

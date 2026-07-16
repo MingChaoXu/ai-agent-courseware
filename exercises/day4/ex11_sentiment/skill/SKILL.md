@@ -1,3 +1,9 @@
+﻿---
+name: sentiment-analysis
+description: "金融舆情：批量情感分析+三级风险评估"
+name_cn: "金融舆情智能分析"
+description_cn: "金融舆情：批量情感分析+三级风险评估"
+---
 # Financial Sentiment Analysis Skill
 
 ## Description

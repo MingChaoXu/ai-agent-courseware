@@ -1,3 +1,9 @@
+﻿---
+name: governance-brief
+description: "政务通报生成：分类型规范化公文输出"
+name_cn: "政务通报智能生成"
+description_cn: "政务通报生成：分类型规范化公文输出"
+---
 # Governance Brief Generation Skill
 
 ## Description

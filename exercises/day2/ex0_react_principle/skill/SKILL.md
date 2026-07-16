@@ -1,3 +1,9 @@
+﻿---
+name: react-principle
+description: "ReAct推理原理实验：Agent工具调用循环"
+name_cn: "ReAct推理原理"
+description_cn: "ReAct推理原理实验：Agent工具调用循环"
+---
 # ReAct Reasoning Principle Skill
 
 ## Description

@@ -1,3 +1,9 @@
+﻿---
+name: manufacturing-bi
+description: "制造业BI：ReAct Agent自主数据分析"
+name_cn: "制造业BI分析Agent"
+description_cn: "制造业BI：ReAct Agent自主数据分析"
+---
 # Manufacturing BI Analysis Agent Skill
 
 ## Description

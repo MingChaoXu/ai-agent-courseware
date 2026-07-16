@@ -1,3 +1,9 @@
+﻿---
+name: gov-qa
+description: "RAG政务问答：FAISS向量知识库+检索增强生成"
+name_cn: "政务服务智能问答"
+description_cn: "RAG政务问答：FAISS向量知识库+检索增强生成"
+---
 # Government Services QA Skill
 
 ## Description

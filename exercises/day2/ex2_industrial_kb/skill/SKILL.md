@@ -1,3 +1,9 @@
+﻿---
+name: industrial-kb
+description: "工业运维RAG：FAISS向量检索+多轮问答"
+name_cn: "工业运维知识库"
+description_cn: "工业运维RAG：FAISS向量检索+多轮问答"
+---
 # Industrial Maintenance Knowledge Base Skill
 
 ## Description

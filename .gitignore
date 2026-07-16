@@ -44,3 +44,6 @@ agent-react循环.png
 *.rar
 *.zip
 *.7z
+
+# Test images
+exercises/day5/ex19_low_altitude/backend/data/test_images/

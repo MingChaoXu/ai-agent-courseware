@@ -1,3 +1,9 @@
+﻿---
+name: low-altitude-agent
+description: "低空管控：4Agent+YOLOv8 CV+地图可视化"
+name_cn: "低空智能体协同管控"
+description_cn: "低空管控：4Agent+YOLOv8 CV+地图可视化"
+---
 # Low-Altitude Agent Platform Skill
 
 ## Description

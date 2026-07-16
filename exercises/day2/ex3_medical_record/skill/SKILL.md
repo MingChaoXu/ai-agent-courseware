@@ -1,12 +1,29 @@
-# Medical AI Assistant Skill
+---
+name: medical-assistant
+description: "基层门诊AI辅助诊疗 skill. Provides 5 AI modules (medical record generation, lab report interpretation, treatment plan recommendation, medical record quality control, patient timeline analysis) and patient database management (vitals, medications, diagnoses). Use when user asks about medical record generation, lab interpretation, treatment recommendation, quality control, patient timeline analysis, or patient database operations (list/detail/add vital/add medication/add diagnosis)."
+name_cn: "基层门诊AI辅助诊疗"
+description_cn: "基层门诊AI辅助诊疗：5个AI分析模块 + 患者档案管理"
+---
 
-## Description
+# 基层门诊AI辅助诊疗
 
-基层门诊AI辅助诊疗 skill for TeleAgent. Provides 5 AI modules + patient database management: medical record generation, lab report interpretation, treatment plan recommendation, medical record quality control, patient timeline analysis, and patient DB operations (vitals, medications, diagnoses).
+## Configuration
 
-## Tools
+This skill requires the backend project running. Set the environment variable before use:
 
-### AI Analysis Modules
+```
+MEDICAL_PROJECT_ROOT=D:\电信\工作文档\培训\2607区县AI培训\ai-agent-courseware\exercises\day2\ex3_medical_record
+```
+
+Also ensure `.env` in the project root has valid LLM API credentials:
+
+| Variable | Description |
+|----------|-------------|
+| `OPENAI_API_KEY` | LLM API key |
+| `OPENAI_API_BASE` | LLM API base URL |
+| `OPENAI_MODEL_NAME` | Model name |
+
+## AI Analysis Modules
 
 | Tool | Description | Parameters |
 |------|-------------|------------|
@@ -17,7 +34,7 @@
 | `medical_timeline_analysis` | Analyze patient disease progression across multiple visits | input_text (str) |
 | `medical_health_check` | Check agent health and available modules | - |
 
-### Patient Database Tools
+## Patient Database Tools
 
 | Tool | Description | Parameters |
 |------|-------------|------------|
@@ -48,39 +65,24 @@
 | ldl_c | LDL-C | mmol/L | 0-3.4 |
 | ua | 尿酸 | μmol/L | 150-420 |
 
-## Installation
-
-Copy or symlink the `skill/` directory into the TeleAgent skills folder:
-
-```bash
-ln -s /path/to/ex3_medical_record/skill ~/.config/TeleAgent/skills/ex3_medical_record
-```
-
-## Configuration
-
-Requires a `.env` file in the project root:
-
-| Variable | Description |
-|----------|-------------|
-| `OPENAI_API_KEY` | LLM API key |
-| `OPENAI_API_BASE` | LLM API base URL |
-| `OPENAI_MODEL_NAME` | Model name |
-
 ## CLI Usage
 
 ```bash
-  # AI modules
-  python skill/tools/tool.py record -q "55岁男性，反复咳嗽1月余"
-  python skill/tools/tool.py lab -q "血红蛋白95g/L，MCV 72fL"
-  python skill/tools/tool.py treatment -q "慢阻肺急性加重"
-  python skill/tools/tool.py qc -q "门诊病历：患者张某..."
-  python skill/tools/tool.py timeline -q "患者张建国，男55岁，3次就诊记录..."
-  python skill/tools/tool.py health
+# Set project root first
+set MEDICAL_PROJECT_ROOT=D:\电信\工作文档\培训\2607区县AI培训\ai-agent-courseware\exercises\day2\ex3_medical_record
 
-  # Patient DB
-  python skill/tools/tool.py patient-list --keyword 张
-  python skill/tools/tool.py patient-detail --patient-id 1
-  python skill/tools/tool.py patient-add-vital --patient-id 1 --metric systolic_bp --value 130
-  python skill/tools/tool.py patient-add-med --patient-id 1 --drug "氨氯地平" --dosage "5mg"
-  python skill/tools/tool.py patient-add-diag --patient-id 1 --diagnosis "高血压病" --chronic
+# AI modules
+python skill/tools/tool.py record -q "55岁男性，反复咳嗽1月余"
+python skill/tools/tool.py lab -q "血红蛋白95g/L，MCV 72fL"
+python skill/tools/tool.py treatment -q "慢阻肺急性加重"
+python skill/tools/tool.py qc -q "门诊病历：患者张某..."
+python skill/tools/tool.py timeline -q "患者张建国，男55岁，3次就诊记录..."
+python skill/tools/tool.py health
+
+# Patient DB
+python skill/tools/tool.py patient-list --keyword 张
+python skill/tools/tool.py patient-detail --patient-id 1
+python skill/tools/tool.py patient-add-vital --patient-id 1 --metric systolic_bp --value 130
+python skill/tools/tool.py patient-add-med --patient-id 1 --drug "氨氯地平" --dosage "5mg"
+python skill/tools/tool.py patient-add-diag --patient-id 1 --diagnosis "高血压病" --chronic
 ```

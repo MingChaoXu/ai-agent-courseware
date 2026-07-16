@@ -268,28 +268,32 @@ def _dispatch(agent_data: dict, question: str) -> str:
 
 # ---- CV decision: should agent call CV? ----
 def _decide_cv_call(agent_name: str, question: str) -> Optional[dict]:
-    """Decide if and how to call CV service based on agent and question."""
+    """Decide if and how to call CV service based on agent and question.
+    
+    Uses a two-tier matching strategy:
+    1. Agent-specific keywords (higher priority)
+    2. Cross-agent keywords (fallback, works regardless of which agent handles it)
+    """
     q = question.lower()
 
+    # Cross-agent keywords: always trigger regardless of routing
+    cross_agent_map = {
+        "降落": "landing", "着陆": "landing", "降落点": "landing", "起降": "landing",
+        "交通": "traffic", "车流": "traffic", "拥堵": "traffic", "路口": "traffic",
+        "灾害": "disaster", "火灾": "disaster", "烟雾": "disaster", "洪水": "disaster",
+        "事故": "disaster", "滑坡": "disaster", "侦察": "disaster",
+        "航拍": "aerial", "画面": "aerial", "视觉": "aerial", "图像": "aerial",
+        "入侵": "intruder", "鸟击": "intruder",
+        "障碍": "obstacle", "电线": "obstacle", "建筑遮挡": "obstacle",
+    }
+    for keyword, detect_type in cross_agent_map.items():
+        if keyword in q:
+            return {"detect_type": detect_type, "sample": None}
+
+    # Agent-specific keywords (supplementary)
     if agent_name == "perception":
-        if any(k in q for k in ["感知", "航拍", "画面", "检测", "识别", "监控", "cv", "视觉", "图像"]):
+        if any(k in q for k in ["检测", "识别", "监控", "cv"]):
             return {"detect_type": "aerial", "sample": None}
-        if any(k in q for k in ["入侵", "鸟", "飞行器"]):
-            return {"detect_type": "intruder", "sample": None}
-        if any(k in q for k in ["障碍", "电线", "建筑"]):
-            return {"detect_type": "obstacle", "sample": None}
-
-    if agent_name == "logistics":
-        if any(k in q for k in ["降落", "着陆", "降落点", "起降"]):
-            return {"detect_type": "landing", "sample": None}
-
-    if agent_name == "traffic":
-        if any(k in q for k in ["交通", "车流", "拥堵", "路口"]):
-            return {"detect_type": "traffic", "sample": None}
-
-    if agent_name == "emergency":
-        if any(k in q for k in ["灾害", "火灾", "烟雾", "洪水", "事故", "灾", "滑坡", "侦察", "航拍"]):
-            return {"detect_type": "disaster", "sample": None}
 
     return None
 
@@ -305,6 +309,7 @@ def chat(agent_data: dict, question: str, force_agent: str = None) -> dict:
         agent_name = force_agent
     else:
         agent_name = _dispatch(agent_data, question) if chains else "auto"
+    logger.info(f"[Chat] Dispatch result: agent={agent_name}, question={question[:50]}")
 
     # 2. If auto, use a general approach: run perception as default with full context
     if agent_name == "auto" or agent_name not in chains:
@@ -314,17 +319,23 @@ def chat(agent_data: dict, question: str, force_agent: str = None) -> dict:
     cv_decision = _decide_cv_call(agent_name, question)
     cv_result = None
     cv_context_text = ""
+    logger.info(f"[Chat] CV decision: {cv_decision}")
 
     if cv_decision:
         cv_result = agent_cv_detect(
             cv_decision["detect_type"],
             sample_name=cv_decision.get("sample")
         )
+        logger.info(f"[Chat] CV result: detect_type={cv_result.detect_type if cv_result else None}, threat={cv_result.threat_level if cv_result else None}, total={cv_result.summary.get('total') if cv_result else None}")
         if cv_result:
             cv_context_text = f"\n\n=== CV视觉检测结果 ===\n{cv_result.analysis_text}\n检测类型: {cv_result.detect_type}\n威胁等级: {cv_result.threat_level}\n检测到目标数: {cv_result.summary.get('total', 0)}"
+            logger.info(f"[Chat] CV context text length: {len(cv_context_text)}")
+        else:
+            logger.warning("[Chat] CV detection returned None!")
 
     # 4. Build agent input with context
     full_input = f"{context}\n\n=== 用户指令 ===\n{question}{cv_context_text}"
+    logger.info(f"[Chat] Full input length: {len(full_input)}, has_cv_context: {bool(cv_context_text)}")
 
     # 5. Execute agent
     answer = ""

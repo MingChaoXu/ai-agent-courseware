@@ -1,3 +1,9 @@
+﻿---
+name: cv-safety
+description: "电力安全：PPE/距离/环境三维度CV检测"
+name_cn: "电力安全CV检测Agent"
+description_cn: "电力安全：PPE/距离/环境三维度CV检测"
+---
 # Power Safety CV Inspection Agent Skill
 
 ## Description

@@ -1,3 +1,9 @@
+﻿---
+name: contract-audit
+description: "合同风险审查：6维度结构化输出"
+name_cn: "合同风险智能审查"
+description_cn: "合同风险审查：6维度结构化输出"
+---
 # Contract Risk Intelligent Audit Skill
 
 ## Description

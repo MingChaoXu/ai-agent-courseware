@@ -1,3 +1,9 @@
+﻿---
+name: event-driven
+description: "事件驱动：定时/数据/外部三种触发模式"
+name_cn: "事件驱动Agent实战"
+description_cn: "事件驱动：定时/数据/外部三种触发模式"
+---
 # Event-Driven Agent Practice Skill
 
 ## Description

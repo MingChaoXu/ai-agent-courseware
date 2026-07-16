@@ -1,3 +1,9 @@
+﻿---
+name: consumer-ai-ops
+description: "消费运营：BI+客服+营销三大AI模块"
+name_cn: "消费领域AI智能运营"
+description_cn: "消费运营：BI+客服+营销三大AI模块"
+---
 # Consumer AI Ops Skill
 
 ## Description
