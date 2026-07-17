@@ -16,6 +16,39 @@ AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
+  ProduceID: '3b860357-fbcf-4aa6-9e11-203ef8278e80'
+  PropagateID: '3b860357-fbcf-4aa6-9e11-203ef8278e80'
+  ReservedCode1: 'c2adbac1-271b-47af-8ea3-cad9758a9200'
+  ReservedCode2: 'c2adbac1-271b-47af-8ea3-cad9758a9200'
+---
+
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '6f72a3e7-302a-42a1-a07a-3229949c25cf'
+  PropagateID: '6f72a3e7-302a-42a1-a07a-3229949c25cf'
+  ReservedCode1: 'c77414dd-fbef-4131-a43f-02418bf41e09'
+  ReservedCode2: 'c77414dd-fbef-4131-a43f-02418bf41e09'
+---
+
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
+  ProduceID: '01161922-45bc-4015-b9ff-c2c4ef3e7643'
+  PropagateID: '01161922-45bc-4015-b9ff-c2c4ef3e7643'
+  ReservedCode1: 'c1c88f91-a65f-48d7-bd77-d4bd088585e2'
+  ReservedCode2: 'c1c88f91-a65f-48d7-bd77-d4bd088585e2'
+---
+
+---
+AIGC:
+  ContentProducer: '001191110102MAD55U9H0F10002'
+  ContentPropagator: '001191110102MAD55U9H0F10002'
+  Label: '1'
   ProduceID: '18ba22d0-03b6-4207-9cfb-94fe103ee02f'
   PropagateID: '18ba22d0-03b6-4207-9cfb-94fe103ee02f'
   ReservedCode1: '61e0a501-a0a9-4e4d-bd47-3b6802531014'
@@ -82,7 +115,6 @@ AIGC:
 | ex5 | 招标文件分析 | ex5_bidding/ |
 | ex6 | 工程建设文档 | ex6_construction_doc/ |
 | ex7 | HR简历筛选 | ex7_hr_review/ |
-| ex8 | 治理简报生成 | ex8_governance_brief/ |
 
 ### Day 4 — 多模态工具生态与数据分析
 
