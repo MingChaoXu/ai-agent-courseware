@@ -1,14 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'b97eaf8e-dc0b-47ec-be32-96f80fecd2c3'
-  PropagateID: 'b97eaf8e-dc0b-47ec-be32-96f80fecd2c3'
-  ReservedCode1: '0889b6c5-7c9f-4df7-b07a-e743f9109388'
-  ReservedCode2: '0889b6c5-7c9f-4df7-b07a-e743f9109388'
----
-
 ## 课题名称
 
 交通事件智能处置Agent

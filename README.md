@@ -1,14 +1,12 @@
-# 区县AI赋能培训课程
-
 ---
 AIGC:
   ContentProducer: '001191110102MAD55U9H0F10002'
   ContentPropagator: '001191110102MAD55U9H0F10002'
   Label: '1'
-  ProduceID: '01161922-45bc-4015-b9ff-c2c4ef3e7643'
-  PropagateID: '01161922-45bc-4015-b9ff-c2c4ef3e7643'
-  ReservedCode1: 'c1c88f91-a65f-48d7-bd77-d4bd088585e2'
-  ReservedCode2: 'c1c88f91-a65f-48d7-bd77-d4bd088585e2'
+  ProduceID: 'c68a6c0e-5764-4c6a-b8f2-f5379f25eca0'
+  PropagateID: 'c68a6c0e-5764-4c6a-b8f2-f5379f25eca0'
+  ReservedCode1: '17ea5925-1a6d-4788-91e4-6b0b8a616d22'
+  ReservedCode2: '17ea5925-1a6d-4788-91e4-6b0b8a616d22'
 ---
 
 ---

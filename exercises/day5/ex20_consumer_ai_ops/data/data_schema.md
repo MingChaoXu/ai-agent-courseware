@@ -7,7 +7,7 @@
 | 数据集 | 文件 | 记录数 | 说明 |
 |--------|------|--------|------|
 | 销售记录 | sales.json | ~540条 | 18个月×5区域×8品类×3渠道 |
-| 客户 | customers.json | 120个 | 含RFM分群和LTV |
+| 客户 | customers.json | 120个 | 含RFM分群、LTV和流失风险 |
 | 商品 | products.json | 30个 | 8个品类 |
 | 评论 | reviews.json | 60条 | 含情感标签和评分 |
 | FAQ | faq.json | 30条 | 6个分类 |
@@ -16,15 +16,15 @@
 
 | 字段 | 类型 | 说明 | 示例 |
 |------|------|------|------|
-| date | string | 月份 (YYYY-MM) | "2024-01" |
+| date | string | 月份 (YYYY-MM) | "2024-07" |
 | region | string | 区域 | "华东" |
 | category | string | 品类 | "美妆个护" |
 | channel | string | 渠道 | "线上直营" |
-| product_id | string | 商品ID | "P001" |
-| product_name | string | 商品名称 | "鲜萃拿铁咖啡24罐装" |
-| amount | float | 销售额(元) | 12580.5 |
-| orders | int | 订单数 | 142 |
-| quantity | int | 销售件数 | 180 |
+| sales_amount | float | 销售额(元) | 12580.5 |
+| order_count | int | 订单数 | 142 |
+| customer_count | int | 下单客户数 | 98 |
+| avg_order_value | float | 客单价(元) | 88.5 |
+| return_rate | float | 退货率 | 0.0523 |
 
 **区域**: 华东、华南、华北、西南、华中
 
@@ -36,23 +36,31 @@
 
 | 字段 | 类型 | 说明 | 示例 |
 |------|------|------|------|
-| customer_id | string | 客户ID | "C001" |
-| name | string | 姓名 | "张三" |
+| id | string | 客户ID | "C001" |
+| name | string | 姓名 | "张伟" |
 | gender | string | 性别 | "男" |
 | age | int | 年龄 | 32 |
-| phone | string | 电话 | "138****1234" |
+| region | string | 所在区域 | "华东" |
+| city | string | 所在城市 | "上海" |
 | member_level | string | 会员等级 | "金卡" |
-| segment | string | RFM分群 | "高价值活跃" |
-| recency | int | 最近消费天数 | 5 |
+| recency_days | int | 最近消费天数 | 5 |
 | frequency | int | 消费频次 | 28 |
 | monetary | float | 消费总额(元) | 15800.0 |
-| ltv | float | 客户终身价值 | 25000.0 |
+| r_score | int | R评分(1-5) | 5 |
+| f_score | int | F评分(1-5) | 4 |
+| m_score | int | M评分(1-5) | 4 |
+| segment | string | RFM分群 | "高价值活跃" |
+| churn_risk | string | 流失风险 | "高" |
+| preferred_category | string | 偏好品类 | "美妆个护" |
 | preferred_channel | string | 偏好渠道 | "线上直营" |
-| register_date | string | 注册日期 | "2023-06-15" |
+| ltv | float | 客户终身价值 | 45000.0 |
+| is_active | bool | 是否活跃(60天内) | true |
 
 **RFM分群**: 高价值活跃、高价值沉睡、中价值成长、中价值稳定、低价值潜力、低价值流失
 
 **会员等级**: 普通、银卡、金卡、黑卡
+
+**流失风险**: 高、中、低
 
 ## products.json 字段
 
@@ -68,21 +76,24 @@
 
 | 字段 | 类型 | 说明 | 示例 |
 |------|------|------|------|
-| review_id | string | 评论ID | "R001" |
+| id | string | 评论ID | "R001" |
 | product_id | string | 商品ID | "P001" |
-| customer_id | string | 客户ID | "C005" |
+| product_name | string | 商品名称 | "鲜萃拿铁咖啡24罐装" |
+| category | string | 品类 | "食品饮料" |
 | rating | int | 评分(1-5) | 5 |
-| content | string | 评论内容 | "非常好用，推荐！" |
-| sentiment | string | 情感标签 | "positive" |
+| content | string | 评论内容 | "质量很好，鲜萃拿铁咖啡24罐装用着很舒服，回购了" |
+| sentiment | string | 情感标签 | "正面" |
 | date | string | 评论日期 | "2025-06-10" |
+
+**情感标签**: 正面、中性、负面
 
 ## faq.json 字段
 
 | 字段 | 类型 | 说明 | 示例 |
 |------|------|------|------|
-| id | string | FAQ ID | "F001" |
+| id | string | FAQ ID | "FAQ001" |
+| category | string | 分类 | "退换货" |
 | question | string | 问题 | "如何退货退款？" |
 | answer | string | 回答 | "收到商品7天内..." |
-| category | string | 分类 | "售后政策" |
 
-**FAQ分类**: 售后政策、物流配送、会员服务、支付问题、商品咨询、优惠活动
+**FAQ分类**: 订单相关、退换货、会员权益、配送物流、促销活动
