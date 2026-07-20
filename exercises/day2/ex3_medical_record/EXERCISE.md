@@ -1,36 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '599d0a55-8866-4948-b964-8bfb476a370b'
-  PropagateID: '599d0a55-8866-4948-b964-8bfb476a370b'
-  ReservedCode1: '090f5f96-aa8f-41d5-94a2-2c07f14d0247'
-  ReservedCode2: '090f5f96-aa8f-41d5-94a2-2c07f14d0247'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'b37fad14-9c87-425a-a901-833ec1a3f12f'
-  PropagateID: 'b37fad14-9c87-425a-a901-833ec1a3f12f'
-  ReservedCode1: 'd0870fee-afc6-4997-8737-252e00ec20e1'
-  ReservedCode2: 'd0870fee-afc6-4997-8737-252e00ec20e1'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '419de141-c54c-466c-ac16-b94c39a14a43'
-  PropagateID: '419de141-c54c-466c-ac16-b94c39a14a43'
-  ReservedCode1: 'ca39f9ec-a554-4574-8f03-3c4c32897ee9'
-  ReservedCode2: 'ca39f9ec-a554-4574-8f03-3c4c32897ee9'
----
-
 ## 课题名称
 
 基层门诊AI辅助诊疗

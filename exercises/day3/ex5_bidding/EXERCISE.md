@@ -1,36 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '641b0cf1-eeb9-4c93-b9d9-98cdadb3de5a'
-  PropagateID: '641b0cf1-eeb9-4c93-b9d9-98cdadb3de5a'
-  ReservedCode1: '3a2b943e-5b81-410d-b090-bc55496b4789'
-  ReservedCode2: '3a2b943e-5b81-410d-b090-bc55496b4789'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'd8533191-5540-4d85-9858-e01eb75092de'
-  PropagateID: 'd8533191-5540-4d85-9858-e01eb75092de'
-  ReservedCode1: 'dc9ab253-6eee-432e-9294-c8e096eb0022'
-  ReservedCode2: 'dc9ab253-6eee-432e-9294-c8e096eb0022'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'cf972833-3f9f-40ff-9f64-c56fae703b3b'
-  PropagateID: 'cf972833-3f9f-40ff-9f64-c56fae703b3b'
-  ReservedCode1: '10b18829-26c8-4880-9d2d-ddf7c43c9cd8'
-  ReservedCode2: '10b18829-26c8-4880-9d2d-ddf7c43c9cd8'
----
-
 ## 课题名称
 
 招标文件智能分析

@@ -1,36 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '513d92e4-f48d-4aef-9770-3bcce87444be'
-  PropagateID: '513d92e4-f48d-4aef-9770-3bcce87444be'
-  ReservedCode1: '0952eb8c-dd05-40ef-9dec-bd5011b5cbe7'
-  ReservedCode2: '0952eb8c-dd05-40ef-9dec-bd5011b5cbe7'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '71d4d253-da9b-4446-97e5-3055ba0ceb94'
-  PropagateID: '71d4d253-da9b-4446-97e5-3055ba0ceb94'
-  ReservedCode1: '2afd2624-307d-4487-9e57-e1a986f51b33'
-  ReservedCode2: '2afd2624-307d-4487-9e57-e1a986f51b33'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '528a0ef6-8687-4e5f-b479-be2b76074014'
-  PropagateID: '528a0ef6-8687-4e5f-b479-be2b76074014'
-  ReservedCode1: '90c610d6-43d6-4771-9989-230d4c986d21'
-  ReservedCode2: '90c610d6-43d6-4771-9989-230d4c986d21'
----
-
 ## 课题名称
 
 招投标智能助手

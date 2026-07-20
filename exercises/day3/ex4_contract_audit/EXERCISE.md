@@ -1,36 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '4f933ee3-7f91-4883-80fd-f7d5a98efe27'
-  PropagateID: '4f933ee3-7f91-4883-80fd-f7d5a98efe27'
-  ReservedCode1: '4ae848bb-da51-45d1-8bec-3891b8dadd36'
-  ReservedCode2: '4ae848bb-da51-45d1-8bec-3891b8dadd36'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '9f89e819-9c7e-4953-96a3-5874ca9f2797'
-  PropagateID: '9f89e819-9c7e-4953-96a3-5874ca9f2797'
-  ReservedCode1: '9017f704-4b20-400c-a213-f23030842609'
-  ReservedCode2: '9017f704-4b20-400c-a213-f23030842609'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '6bb35c0f-15aa-4db6-a6ac-3521256fc701'
-  PropagateID: '6bb35c0f-15aa-4db6-a6ac-3521256fc701'
-  ReservedCode1: '0aef56e7-10db-4662-9f19-b0f40de92043'
-  ReservedCode2: '0aef56e7-10db-4662-9f19-b0f40de92043'
----
-
 ## 课题名称
 
 合同风险智能审查

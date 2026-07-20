@@ -1,36 +1,3 @@
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: '13933463-28f3-46fe-90ed-a6db5becabae'
-  PropagateID: '13933463-28f3-46fe-90ed-a6db5becabae'
-  ReservedCode1: 'be270be9-9177-42b7-811d-412fba5a9316'
-  ReservedCode2: 'be270be9-9177-42b7-811d-412fba5a9316'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'bdb1b195-a0e4-4d3e-bacb-30fa41cae597'
-  PropagateID: 'bdb1b195-a0e4-4d3e-bacb-30fa41cae597'
-  ReservedCode1: 'cab47f3a-296f-4c24-985e-2e57a10e1219'
-  ReservedCode2: 'cab47f3a-296f-4c24-985e-2e57a10e1219'
----
-
----
-AIGC:
-  ContentProducer: '001191110102MAD55U9H0F10002'
-  ContentPropagator: '001191110102MAD55U9H0F10002'
-  Label: '1'
-  ProduceID: 'a0c70a58-cecd-4e37-929f-f737fa6b7589'
-  PropagateID: 'a0c70a58-cecd-4e37-929f-f737fa6b7589'
-  ReservedCode1: '9a72621d-1346-4aa4-ae0c-39df6714a174'
-  ReservedCode2: '9a72621d-1346-4aa4-ae0c-39df6714a174'
----
-
 ## 课题名称
 
 电力安全CV检测Agent
